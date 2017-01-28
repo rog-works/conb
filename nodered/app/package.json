@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "node_modules/webpack/bin/webpack.js --progress --colors --display-error-details --watch"
+    "build": "node node_modules/webpack/bin/webpack.js --progress --colors --display-error-details --watch"
   },
   "author": "",
   "license": "ISC",

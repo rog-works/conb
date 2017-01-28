@@ -28,12 +28,12 @@ $ docker-compose build
 # install node packages
 $ docker run --rm -v $(pwd)/nodered/app:/opt nodered-webpack:latest sh -c 'cd /opt && npm install --no-bin-links'
 
-# initialize mongo database
-$ docker run --rm nodered-db:latest mongo nodered --eval 'db.entry.ensureIndex({signature: 1})'
-
 # create flows.json
 $ echo '{}' > ./nodered/data/flows.json
 
 # start docker container
-$ docker-compose up -d 
+$ docker-compose up -d
+
+# initialize mongo database
+$ docker exec nodered-db mongo nodered --eval 'db.entry.ensureIndex({signature: 1})'
 ```
