@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"outDir": "./dist/",
+		"sourceMap": true,
+		"noImplicitAny": true,
+		"module": "amd",
+		"target": "es5",
+		"strictNullChecks": true
+	},
+	"files": [
+		"./src/Index.ts"
+	]
+}
+

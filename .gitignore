@@ -1,0 +1,7 @@
+.vagrant
+.bundle
+.vscode
+downloads
+node_modules
+bundle.js
+bundle.js.map

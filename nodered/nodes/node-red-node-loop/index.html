@@ -1,0 +1,46 @@
+<script type="text/javascript">
+	RED.nodes.registerType('loop', {
+		category: 'function',
+		color: '#a6bbcf',
+		defaults: {
+			from: { value: 'payload' },
+			subject: { value: '' },
+			replace: { value: '' },
+			fill: { value: '000' },
+			name: { value: '' }
+		},
+		inputs: 1,
+		outputs: 1,
+		icon: 'change.png',
+		label: function() {
+			return this.name || 'loop';
+		}
+	});
+</script>
+
+<script type="text/x-red" data-template-name="loop">
+	<div class="form-row">
+		<label for="node-input-from"><i class="icon-tag"></i> From</label>
+		<input type="text" id="node-input-from" placeholder="From">
+	</div>
+	<div class="form-row">
+		<label for="node-input-subject"><i class="icon-tag"></i> Subject</label>
+		<input type="text" id="node-input-subject" placeholder="Subject">
+	</div>
+	<div class="form-row">
+		<label for="node-input-replace"><i class="icon-tag"></i> Replace</label>
+		<input type="text" id="node-input-replace" placeholder="Replace">
+	</div>
+	<div class="form-row">
+		<label for="node-input-fill"><i class="icon-tag"></i> Fill</label>
+		<input type="text" id="node-input-fill" placeholder="Fill">
+	</div>
+	<div class="form-row">
+		<label for="node-input-name"><i class="icon-tag"></i> Name</label>
+		<input type="text" id="node-input-name" placeholder="Name">
+	</div>
+</script>
+
+<script type="text/x-red" data-help-name="loop">
+	<p>node loop</p>
+</script>

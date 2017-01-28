@@ -1,0 +1,15 @@
+{
+	"name": "node-red-pluck",
+	"version": "0.0.1",
+	"keywords": [
+		"node-red"
+	],
+	"node-red": {
+		"nodes": {
+			"test": "index.js"
+		}
+	},
+	"engines": {
+		"node": "4.7.0"
+	}
+}

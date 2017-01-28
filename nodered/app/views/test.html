@@ -1,0 +1,79 @@
+<DOCTYPE html>
+<html lang="ja">
+	<head>
+		<title>Conb</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+		<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+		<link rel="stylesheet" href="css/vendors/normalize-5.0.0.min.css">
+		<link rel="stylesheet" href="css/style.css">
+	</head>
+	<body>
+	<div id="main" class="flex fill wrap">
+		<!-- content -->
+		<div class="w-1 fill-y grow-1">
+			<div class="fill">
+				<div class="fill flex column" data-bind="visible: focus() === 'entry', css: entries.css, event: events">
+					<!-- search -->
+					<div class="fill-x h-1 grow-0 flex">
+						<div class="w-1 fill-y grow-1">
+							<div class="fill">
+								<input type="text" class="bc-2 fill-x h-1 less" placeholder="Search" list="list" data-bind="value: searcher.url.value, event: searcher.events">
+							</div>
+							<datalist id="list" data-bind="foreach: searcher.urls">
+								<option data-bind="text: text, value: value"></option>
+							</datalist>
+						</div>
+						<div class="w-4 fill-y grow-0">
+							<div class="fill bc-1 table">
+								<div class="row">
+									<i class="wh-1 cell center fa fa-search hover" data-bind="click: searched"></i>
+									<div class="wh-1 cell center less" data-bind="text: searcher.page.curr.value"></div>
+									<i class="wh-1 cell center fa fa-cloud-download hover" data-bind="click: downloadedAll"></i>
+									<i class="wh-1 cell center fa fa-trash hover" data-bind="click: cleared"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- entry -->
+					<div class="fill-x h-1 grow-1 scroll" data-bind="foreach: entries.list">
+						<!-- ko if: type === 'post' -->
+							<div class="post bc-1 wh-8 m-q2 left shadow-1" data-bind="css: css">
+								<div class="w-8 h-8 table">
+									<span class="cell center"><img class="wh-max-8" data-bind="attr: { src: src.length > 0 ? src : 'image/404.gif' }"></span>
+								</div>
+								<div class="w-8 h-2 relative py--8">
+									<div class="table w-8 h-1">
+										<div class="w-7 cell center"></div>
+										<div class="w-1 cell center hover" data-bind="click: $root.entries.remove.bind($root.entries, $data)"><i class="fa fa-remove"></i></div>
+									</div>
+									<div class="w-8 h-5"></div>
+									<div class="bc-b fc-w trans w-8 h-1 text-wrap">
+										<a class="visit" data-bind="attr: { href: href }"></a><a data-bind="text: text, attr: { href: href, title: text }"></a>
+									</div>
+									<div class="bc-b fc-w trans table w-8 h-1">
+										<div class="w-6 cell middle" data-bind="text: date"></div>
+										<div class="wh-1 cell center hover" data-bind="click: $root.downloaded.bind($root, $data)"><i class="fa fa-cloud-download"></i></div>
+										<div class="wh-1 cell center hover"><i class="fa fa-bookmark" data-bind="click: retention.bookmark.bind($data.retention), style: { color: retention.bookmarked() ? '#a00' : false }"></i></div>
+									</div>
+								</div>
+							</div>
+						<!-- /ko -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- toolbar -->
+		<div class="w-1 fill-y grow-0">
+			<div class="fill">
+				<div class="w-1 table">
+					<div class="row"><i class="wh-1 cell center fa fa-globe hover bc-1 primary" data-bind="click: focused.bind($data, 'entry')"></i></div>
+					<div class="row"><i class="wh-1 cell center fa fa-comment hover" data-bind="click: focused.bind($data, 'log')"></i></div>
+					<div class="row"><i class="wh-1 cell center fa fa-wifi" data-bind="style: wsObserver.style"></i></div>
+					<div class="row"><i class="wh-1 cell center fa fc-1 primary" data-bind="css: webObserver.css"></i></div>
+					<div class="row"><i class="wh-1 cell center fa fa-question hover" data-bind="click: test"></i></div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

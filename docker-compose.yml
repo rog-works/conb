@@ -1,0 +1,35 @@
+version: '2'
+services:
+  app:
+    container_name: nodered-app
+    image: nodered-app:latest
+    build: ./nodered/docker
+    volumes:
+      - ./nodered/data/settings.js:/data/settings.js
+      - ./nodered/data/flows.json:/data/flows.json
+      - ./nodered/app:/data/app
+      - ./nodered/nodes/node-red-node-loop:/data/node_modules/node-red-node-loop
+      - ./nodered/nodes/node-red-node-pluck:/data/node_modules/node-red-node-pluck
+    ports:
+      - 1880:1880
+    depends_on:
+      - db
+    links:
+      - db:database
+  db:
+    container_name: nodered-db
+    image: nodered-db:latest
+    build: ./db/docker
+    volumes:
+      - /data:/data/db
+    ports:
+      - 27017:27017
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+  webpack:
+    container_name: nodered-webpack
+    image: nodered-webpack:latest
+    build: ./webpack/docker
+    volumes:
+      - ./nodered/app:/opt
+    command: 'npm run build'

@@ -1,0 +1,36 @@
+<script type="text/javascript">
+	RED.nodes.registerType('pluck', {
+		category: 'function',
+		color: '#a6bbcf',
+		defaults: {
+			from: { value: 'payload' },
+			to: { value: 'payload' },
+			name: { value: '' }
+		},
+		inputs: 1,
+		outputs: 1,
+		icon: 'join.png',
+		label: function() {
+			return this.name || 'pluck';
+		}
+	});
+</script>
+
+<script type="text/x-red" data-template-name="pluck">
+	<div class="form-row">
+		<label for="node-input-from"><i class="icon-tag"></i> From</label>
+		<input type="text" id="node-input-from" placeholder="From">
+	</div>
+	<div class="form-row">
+		<label for="node-input-to"><i class="icon-tag"></i> To</label>
+		<input type="text" id="node-input-to" placeholder="To">
+	</div>
+	<div class="form-row">
+		<label for="node-input-name"><i class="icon-tag"></i> Name</label>
+		<input type="text" id="node-input-name" placeholder="Name">
+	</div>
+</script>
+
+<script type="text/x-red" data-help-name="pluck">
+	<p>node pluck</p>
+</script>
