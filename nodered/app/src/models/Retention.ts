@@ -1,6 +1,5 @@
-import * as Promise from 'promise';
 import * as ko from 'knockout';
-import {Model, Serializer} from './Model';
+import {Serializer} from './Model';
 
 export interface RetentionEntity {
 	visit: boolean

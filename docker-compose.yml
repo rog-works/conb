@@ -24,8 +24,6 @@ services:
       - /data:/data/db
     ports:
       - 27017:27017
-    environment:
-      MYSQL_ROOT_PASSWORD: password
   webpack:
     container_name: nodered-webpack
     image: nodered-webpack:latest

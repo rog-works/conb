@@ -1,69 +1,10 @@
-import * as Promise from 'promise';
 import * as ko from 'knockout';
-import EventEmitter from '../lib/EventEmitter';
-import DAO from '../lib/DAO';
 import Sign from '../lib/Sign';
 import {Model, ModelEntity} from './Model';
 import {default as Retention, RetentionEntity} from './Retention';
 import File from './File';
 
-export default class Entries extends EventEmitter {
-	public list: KnockoutObservableArray<Entry>
-	private __resolve: Function
-	public constructor() {
-		super('update');
-		this.list = ko.observableArray([]);
-		this.__resolve = this._resolve.bind(this); // FIXME
-	}
-	public load(url: string, path: string, query: string, page: number) {
-		return DAO.self.many('posts', {
-				url: url.replace(/{page}/, `${page}`),
-				path: path,
-				query: query,
-				page: page
-			})
-			.then(this.__resolve); // FIXME
-	}
-	private _resolve(self: any, message: MessageEvent) { // FIXME
-		const response = JSON.parse(message.data);
-		console.log('many respond', response);
-		this.list.push(EntryFactory.create(response.data));
-		this.emit('update', this);
-	}
-	public remove(entry: Entry) {
-		this.list.remove(entry);
-	}
-	public clear() {
-		this.list.removeAll();
-	}
-	public fliped() {
-		this.list().forEach(entry => entry.closed = !entry.closed);
-	}
-	public filtered(query: string) {
-		this.list().forEach(entry => entry.closed = true)
-		this.findByQuery(query).forEach(entry => entry.closed = false);
-	}
-	public export(): string {
-		return JSON.stringify(this.list());
-	}
-	public import(json: string) {
-		JSON.parse(json).forEach((entry: Entry) => this.list.push(entry));
-		this.emit('update', this);
-	}
-	public selectedEntries(): Array<Entry> {
-		return this.list().filter(entry => entry.selected);
-	}
-	public findByQuery(query: string): Array<Entry> {
-		if (/^\/[^\/]*\//.test(query)) {
-			const reg = new RegExp(query.substr(1, query.length - 2));
-			return this.list().filter(entry => reg.test(entry.description));
-		} else {
-			return this.list().filter(entry => entry.description.indexOf(query) !== -1);
-		}
-	}
-}
-
-interface EntryEntity extends ModelEntity {
+export interface EntryEntity extends ModelEntity {
 	type: string;
 	uri: string;
 	retention: RetentionEntity
@@ -75,7 +16,7 @@ export abstract class Entry extends Model {
 	public retention: Retention
 	public css: any // XXX
 	public constructor(type: string, uri: string) {
-		super(Sign.digest(uri));
+		super(Entry.sign(uri));
 		this.type = type;
 		this.uri = uri;
 		this.retention = new Retention();
@@ -84,6 +25,9 @@ export abstract class Entry extends Model {
 			selected: ko.observable(false)
 		};
 		this.find(); // FIXME
+	}
+	public static sign(uri: string): string {
+		return Sign.digest(uri);
 	}
 	abstract get description(): string
 	// @override
@@ -184,11 +128,5 @@ export class Post extends Entry {
 		}
 		File.save(this.href, dir);
 		this.stored();
-	}
-}
-
-export class EntryFactory {
-	static create(entity: PostEntity): Entry {
-		return new Post(entity);
 	}
 }

@@ -1,18 +1,13 @@
 import * as ko from 'knockout';
 import * as $ from 'jquery';
-import * as Promise from 'promise';
-import WS from './lib/WS';
 import DAO from './lib/DAO';
-import Sign from './lib/Sign';
-import Input from './components/Input';
-import {Option} from './components/Select';
 import {Events} from './events/Events';
 import Scroll from './events/Scroll';
 import WSObserver from './models/WSObserver';
 import WebObserver from './models/WebObserver';
 import Logger from './models/Logger';
-import {default as Entries, Entry, Post, EntryFactory} from './models/Entry';
-import Retention from './models/Retention';
+import Entries from './models/Entries';
+import {Entry} from './models/Entry';
 import Searcher from './models/Searcher';
 import {default as Selector, Range} from './models/Selector';
 import File from './models/File';
@@ -27,17 +22,15 @@ export default class Main {
 	public selector: Selector
 	public entries: Entries
 	public events: Events
-	public urls: KnockoutObservableArray<Option>
 	public focus: KnockoutObservable<string>
-	private _ws: WS
 	private constructor() {}
 	public static get self(): Main {
-		if (Main._self === undefined) { // XXX null safe???
-			Main._self = new Main();
-		}
-		return Main._self;
+		return Main._self || (Main._self = new Main());
 	}
 	public init(e: HTMLElement) {
+		DAO.create('ws://localhost:1880/ws/api')
+			.on('open', this._onOpen.bind(this))
+			.on('close', this._onClose.bind(this));
 		this._scroll = new Scroll(256);
 		this.wsObserver = new WSObserver();
 		this.webObserver = new WebObserver();
@@ -53,80 +46,19 @@ export default class Main {
 			mousedown: this.selector.onDown.bind(this.selector),
 			mousemove: this.selector.onMove.bind(this.selector)
 		};
-		this.urls = ko.observableArray([]);
 		this.focus = ko.observable('entry'); // XXX magic string
-		this.entries.on('update', this._onEntryUpdate.bind(this));
-		DAO.create('ws://localhost:1880/ws/api')
-			.on('open', this._onOpen.bind(this))
-			.on('close', this._onClose.bind(this));
 		this._scroll.on('bottom', this._onBottom.bind(this));
 		this.selector.on('select', this._onSelect.bind(this));
 		this.searcher.on('accept', this.searched.bind(this));
+		this.entries.on('beforeUpdate', this._onEntryBeforeUpdate.bind(this));
+		this.entries.on('update', this._onEntryUpdate.bind(this));
 		ko.applyBindings(this, e);
-		this._loadUrls();
-	}
-	private _request(url: string, data: any = {}) {
-		return new Promise((resolve: Function, reject: Function) => {
-			console.log('request', url, data);
-			$.ajax({
-				url: url,
-				// type: 'text', XXX unknown content type...
-				success: resolve.bind(this),
-				error: reject.bind(this)
-			});
-		});
-	}
-	private _loadUrls() {
-		this._request('http://localhost:1880/urls')
-			.then((data: string) => {
-				console.log('respond', data);
-				JSON.parse(data).forEach(([value, text]: any) => {
-					this.searcher.urls.push(new Option(value, text));
-				});
-			})
-			.catch((err) => {
-				console.error('error', err);
-			});
-	}
-	private _loadPosts(url: string, path: string, query: string, page: number) {
-		if (!url) {
-			console.log('url empty');
-			return;
-		}
-		this.entries.load(url, path, query, page);
-		this.searcher.page.next.number = page;
-		// this.webObserver.update(`begin ${data.digest}`);
-		this.webObserver.update(`begin none`);
-	}
-	public test() {
-		for (let i = 0; i < 5; i += 1) {
-			const entity = {
-				signature: Sign.digest('https://google.co.jp/' + i),
-				_id: '',
-				uri: 'https://google.co.jp/' + i,
-				type: 'post',
-				retention: {
-					visit: false,
-					store: false,
-					bookmark: false
-				},
-				href: 'https://google.co.jp/' + i,
-				src: '',
-				text: 'hogehoge, ' + i,
-				date: 'none'
-			};
-			this.entries.list.push(new Post(entity));
-		}
 	}
 	public focused(tag: string) {
 		this.focus(tag);
 	}
-	public cleared() {
-		this.searcher.clear();
-		this.entries.clear();
-	}
-	public searched(self: Main) {
-		this._loadPosts(
+	public searched() {
+		this.entries.load(
 			this.searcher.url.value(),
 			this.searcher.path.value(),
 			this.searcher.query.value(),
@@ -136,54 +68,34 @@ export default class Main {
 	public filtered() {
 		this.entries.filtered(this.searcher.filter.value());
 	}
-	public downloadedAll(self: Main) {
-		const entries = this.entries.selectedEntries();
-		if (entries.length === 0) {
-			console.log('selected empty');
-			return;
-		}
-		const baseDir = File.confirm(File.real(''));
-		if (!baseDir) {
-			console.log('download cancel');
-			return;
-		}
-		for(const entry of entries) {
-			if (entry instanceof Post) {
-				const post = <Post>entry;
-				const matches = post.href.match(/^[^:]+:\/\/([^\/]+)/) || [];
-				if (matches.length > 0) {
-					const host = matches[1];
-					const dir = `${baseDir}${host}/`;
-					File.save(post.href, dir); // XXX save to host dir
-				}
-			}
-		}
+	private _onEntryBeforeUpdate(sender: Entries, page: number): boolean {
+		this.searcher.page.next.number = page;
+		this.webObserver.update(`begin none`);
+		return true;
 	}
 	private _onEntryUpdate(self: Main, message: MessageEvent): boolean { // FIXME has many called
 		console.log('message', message);
 		this.searcher.page.curr.number = this.searcher.page.next.number;
-		// this.webObserver.update(`end ${data.digest}`); // XXX
 		this.webObserver.update(`end none`);
 		return true;
 	}
 	private _onOpen(self: Main): boolean {
-		console.log('open');
 		this.wsObserver.update('open');
 		return true;
 	}
 	private _onClose(self: Main): boolean {
-		console.log('close');
 		this.wsObserver.update('close');
 		return true;
 	}
 	private _onBottom (self: Main, event: any): boolean {
 		// console.log('bottom');
-		if (this.searcher.page.next.number === this.searcher.page.curr.number) {
-			this._loadPosts(
+		if (this.entries.list().length > 0 && this.searcher.page.next.number === this.searcher.page.curr.number) {
+			this.entries.load(
 				this.searcher.url.value(),
 				this.searcher.path.value(),
 				this.searcher.query.value(),
-				this.searcher.page.curr.number + 1);
+				this.searcher.page.curr.number + 1
+			);
 		}
 		return true;
 	}

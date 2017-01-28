@@ -1,5 +1,6 @@
 import * as ko from 'knockout';
 import EventEmitter from '../lib/EventEmitter';
+import DAO from '../lib/DAO';
 import {default as Input, KeyCodes} from '../components/Input';
 import {Option} from '../components/Select';
 
@@ -24,11 +25,27 @@ export default class Searcher extends EventEmitter {
 		};
 		this.urls = ko.observableArray([]);
 		this.events = {
+			focus: this.url.onFocus.bind(this.url),
 			keyup: this.url.onKeyup.bind(this.url)
 		};
+		this.url.on('focus', this._onFocus.bind(this));
 		this.url.on('accept', this._onAccept.bind(this));
 		this.url.on('cancel', this._onCancel.bind(this));
 		this.url.on('keyup', this._onKeyup.bind(this));
+	}
+	private _loadUrls() {
+		DAO.self.once('urls', {})
+			.then((entities: Array<Array<string>>) => {
+				entities.forEach(([value, text]) => {
+					this.urls.push(new Option(value, text));
+				});
+			});
+	}
+	private _onFocus(sender: Input): boolean {
+		if (this.urls().length === 0) {
+			this._loadUrls();
+		}
+		return true;
 	}
 	private _onAccept(self: Searcher): boolean {
 		this.emit('accept', self);

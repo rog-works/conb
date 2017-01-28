@@ -29,8 +29,8 @@
 								<div class="row">
 									<i class="wh-1 cell center font-3 fa fa-search hover" data-bind="click: searched"></i>
 									<div class="wh-1 cell center less" data-bind="text: searcher.page.curr.value"></div>
-									<i class="wh-1 cell center font-3 fa fa-cloud-download hover" data-bind="click: downloadedAll"></i>
-									<i class="wh-1 cell center font-3 fa fa-trash hover" data-bind="click: cleared"></i>
+									<i class="wh-1 cell center font-3 fa fa-cloud-download hover" data-bind="click: entries.downloaded.bind($data.entries)"></i>
+									<i class="wh-1 cell center font-3 fa fa-trash hover" data-bind="click: entries.cleared.bind($data.entries)"></i>
 								</div>
 							</div>
 						</div>
@@ -92,7 +92,7 @@
 					<div class="row"><i class="bc-1 fc-1 wh-1 cell center font-3 fa fa-commenting hover" data-bind="css: { primary: focus() === 'log' }, click: focused.bind($data, 'log')"></i></div>
 					<div class="row"><i class="wh-1 cell center font-3 fa fa-wifi" data-bind="style: wsObserver.style"></i></div>
 					<div class="row"><i class="wh-1 cell center font-3 fa fc-1" data-bind="css: webObserver.css"></i></div>
-					<div class="row"><i class="wh-1 cell center font-3 fa fa-question hover" data-bind="click: test"></i></div>
+					<div class="row"><i class="wh-1 cell center font-3 fa fa-question hover" data-bind="click: entries.test.bind($data.entries)"></i></div>
 				</div>
 			</div>
 		</div>

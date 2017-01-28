@@ -1,6 +1,3 @@
-import * as Promise from 'promise';
-import * as ko from 'knockout';
-import * as $ from 'jquery';
 import DAO from '../lib/DAO';
 
 export interface Serializer {

@@ -1,6 +1,5 @@
 import * as ko from 'knockout';
 import EventEmitter from '../lib/EventEmitter';
-import Mouse from '../events/Mouse';
 
 export interface Range {
 	x: number;
