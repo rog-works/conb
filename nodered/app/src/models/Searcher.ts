@@ -9,10 +9,10 @@ export default class Searcher extends EventEmitter {
 	public readonly path: Input
 	public readonly query: Input
 	public readonly filter: Input
-	public page: {curr: Input, next: Input}
-	public css: any
-	public urls: KnockoutObservableArray<Option>
-	public events: any
+	public readonly page: { curr: Input, next: Input }
+	public readonly css: any
+	public readonly urls: KnockoutObservableArray<Option>
+	public readonly events: any
 	public constructor() {
 		super('accept');
 		this.url = new Input('');
@@ -33,25 +33,25 @@ export default class Searcher extends EventEmitter {
 		this.url.on('cancel', this._onCancel.bind(this));
 		this.url.on('keyup', this._onKeyup.bind(this));
 	}
-	private _loadUrls() {
+	private _loadUrls(): void {
 		DAO.self.once('urls', {})
-			.then((entities: Array<Array<string>>) => {
+			.then((entities: string[][]) => {
 				entities.forEach(([value, text]) => {
 					this.urls.push(new Option(value, text));
 				});
 			});
 	}
-	private _onFocus(sender: Input): boolean {
+	private _onFocus(sender: any): boolean {
 		if (this.urls().length === 0) {
 			this._loadUrls();
 		}
 		return true;
 	}
-	private _onAccept(self: Searcher): boolean {
-		this.emit('accept', self);
+	private _onAccept(sender: any): boolean {
+		this.emit('accept', sender);
 		return true;
 	}
-	private _onCancel(self: Searcher): boolean {
+	private _onCancel(sender: any): boolean {
 		this.clear();
 		return true;
 	}
@@ -63,7 +63,7 @@ export default class Searcher extends EventEmitter {
 		}
 		return true;
 	}
-	public clear() {
+	public clear(): void {
 		this.url.value('');
 		this.path.value('');
 		this.query.value('');

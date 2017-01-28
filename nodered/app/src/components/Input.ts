@@ -12,7 +12,7 @@ export enum KeyCodes {
 
 export default class Input extends EventEmitter {
 	public value: KnockoutObservable<string>
-	public constructor (value: string) {
+	public constructor(value: string) {
 		super('focus', 'accept', 'cancel', 'keyup');
 		this.value = ko.observable(value);
 	}
@@ -22,17 +22,17 @@ export default class Input extends EventEmitter {
 	public set number(number: number) {
 		this.value(`${number}`);
 	}
-	public onFocus(self: any): boolean {
-		this.emit('focus', this);
+	public onFocus(sender: any): boolean {
+		this.emit('focus', sender);
 		return true;
 	}
-	public onKeyup(self: any, event: KeyboardEvent): boolean {
+	public onKeyup(sender: any, event: KeyboardEvent): boolean {
 		if (event.keyCode === KeyCodes.Enter) {
-			this.emit('accept', self);
+			this.emit('accept', sender);
 		} else if (event.keyCode === KeyCodes.Esc) {
-			this.emit('cancel', self);
+			this.emit('cancel', sender);
 		}
-		this.emit('keyup', self, event);
+		this.emit('keyup', sender, event);
 		return true;
 	}
 }

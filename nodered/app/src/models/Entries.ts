@@ -18,40 +18,40 @@ export default class Entries extends EventEmitter {
 			this.emit('update', this);
 		};
 	}
-	public load(url: string, path: string, query: string, page: number) {
+	public load(url: string, path: string, query: string, page: number): void {
 		this.emit('beforeUpdate', this, page); // XXX page?
-		return DAO.self.many('posts', {
+		DAO.self.many('posts', {
 				url: url.replace(/{page}/, `${page}`),
 				path: path,
 				query: query,
 				page: page
 			})
-			.then(this._resolve);
+			.then(this._resolve); // FIXME mock
 	}
-	public remove(entry: Entry) {
+	public remove(entry: Entry): void {
 		this.list.remove(entry);
 	}
-	public cleared() {
+	public cleared(): void {
 		this.list.removeAll();
 	}
-	public fliped() {
+	public fliped(): void {
 		this.list().forEach(entry => entry.closed = !entry.closed);
 	}
-	public filtered(query: string) {
+	public filtered(query: string): void {
 		this.list().forEach(entry => entry.closed = true)
 		this.findByQuery(query).forEach(entry => entry.closed = false);
 	}
 	public export(): string {
 		return JSON.stringify(this.list().map((entry: Entry) => entry.export()));
 	}
-	public import(entities: Array<any>) {
+	public import(entities: any[]): void {
 		entities.forEach((entity: any) => this.list.push(EntryFactory.create(entity)));
 		this.emit('update', this);
 	}
-	public selectedEntries(): Array<Entry> {
+	public selectedEntries(): Entry[] {
 		return this.list().filter(entry => entry.selected);
 	}
-	public findByQuery(query: string): Array<Entry> {
+	public findByQuery(query: string): Entry[] {
 		if (/^\/[^\/]*\//.test(query)) {
 			const reg = new RegExp(query.substr(1, query.length - 2));
 			return this.list().filter(entry => reg.test(entry.description));
@@ -59,7 +59,7 @@ export default class Entries extends EventEmitter {
 			return this.list().filter(entry => entry.description.indexOf(query) !== -1);
 		}
 	}
-	public downloaded() {
+	public downloaded(): void {
 		const entries = this.selectedEntries();
 		if (entries.length === 0) {
 			console.log('selected empty');
@@ -82,7 +82,7 @@ export default class Entries extends EventEmitter {
 			}
 		}
 	}
-	public test() {
+	public test(): void {
 		for (let i = 0; i < 5; i += 1) {
 			const entity = {
 				signature: Entry.sign('https://google.co.jp/' + i),
@@ -105,7 +105,7 @@ export default class Entries extends EventEmitter {
 }
 
 export class EntryFactory {
-	static create(entity: PostEntity): Entry {
+	public static create(entity: PostEntity): Entry {
 		return new Post(entity);
 	}
 }

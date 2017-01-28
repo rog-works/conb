@@ -16,7 +16,7 @@ export default class Retention implements Serializer {
 		this.store = ko.observable(false);
 		this.bookmark = ko.observable(false);
 	}
-	public import(entity: RetentionEntity) {
+	public import(entity: RetentionEntity): void {
 		this.visit(entity.visit || this.visit());
 		this.store(entity.store || this.store());
 		this.bookmark(entity.bookmark || this.bookmark());
@@ -28,13 +28,13 @@ export default class Retention implements Serializer {
 			bookmark: this.bookmark()
 		};
 	}
-	public visited() {
+	public visited(): void {
 		this.visit(true);
 	}
-	public stored() {
+	public stored(): void {
 		this.store(true);
 	}
-	public bookmarked() {
+	public bookmarked(): void {
 		this.bookmark(!this.bookmark());
 	}
 }

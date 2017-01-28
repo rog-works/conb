@@ -27,7 +27,7 @@ export default class Main {
 	public static get self(): Main {
 		return Main._self || (Main._self = new Main());
 	}
-	public init(e: HTMLElement) {
+	public init(e: HTMLElement): void {
 		DAO.create('ws://localhost:1880/ws/api')
 			.on('open', this._onOpen.bind(this))
 			.on('close', this._onClose.bind(this));
@@ -54,10 +54,10 @@ export default class Main {
 		this.entries.on('update', this._onEntryUpdate.bind(this));
 		ko.applyBindings(this, e);
 	}
-	public focused(tag: string) {
+	public focused(tag: string): void {
 		this.focus(tag);
 	}
-	public searched() {
+	public searched(): void {
 		this.entries.load(
 			this.searcher.url.value(),
 			this.searcher.path.value(),
@@ -65,7 +65,7 @@ export default class Main {
 			this.searcher.page.curr.number
 		);
 	}
-	public filtered() {
+	public filtered(): void {
 		this.entries.filtered(this.searcher.filter.value());
 	}
 	private _onEntryBeforeUpdate(sender: Entries, page: number): boolean {
@@ -73,23 +73,23 @@ export default class Main {
 		this.webObserver.update(`begin none`);
 		return true;
 	}
-	private _onEntryUpdate(self: Main, message: MessageEvent): boolean { // FIXME has many called
+	private _onEntryUpdate(sender: Entries, message: MessageEvent): boolean { // FIXME has many called
 		console.log('message', message);
 		this.searcher.page.curr.number = this.searcher.page.next.number;
 		this.webObserver.update(`end none`);
 		return true;
 	}
-	private _onOpen(self: Main): boolean {
+	private _onOpen(sender: any): boolean {
 		this.wsObserver.update('open');
 		return true;
 	}
-	private _onClose(self: Main): boolean {
+	private _onClose(sender: any): boolean {
 		this.wsObserver.update('close');
 		return true;
 	}
-	private _onBottom (self: Main, event: any): boolean {
+	private _onBottom (sender: any, event: any): boolean {
 		// console.log('bottom');
-		if (this.entries.list().length > 0 && this.searcher.page.next.number === this.searcher.page.curr.number) {
+		if (this.entries.list().length > 0 && this.searcher.url.value().length > 0 && this.searcher.page.next.number === this.searcher.page.curr.number) {
 			this.entries.load(
 				this.searcher.url.value(),
 				this.searcher.path.value(),
@@ -99,12 +99,12 @@ export default class Main {
 		}
 		return true;
 	}
-	private _onSelect (self: Main, event: MouseEvent): boolean {
+	private _onSelect (sender: any, event: MouseEvent): boolean {
 		this._getEntriesByRange(this.selector.range).forEach(entry => entry.selected = !entry.selected);
 		return true;
 	}
-	private _getEntriesByRange(selectRange: Range): Array<Entry> {
-		const entries: Array<Entry> = [];
+	private _getEntriesByRange(selectRange: Range): Entry[] {
+		const entries: Entry[] = [];
 		// XXX jQuery
 		$('.post').each((index, elem) => {
 			const e = $(elem);

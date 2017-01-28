@@ -3,14 +3,15 @@ import Observer from '../lib/Observer';
 
 export default class WSObserver extends Observer {
 	public style: any
-	constructor() {
+	public constructor() {
 		super();
 		this.style = {
 			color: ko.observable('#aaa')
 		};
 		this.on('update', this._onUpdate.bind(this));
 	}
-	_onUpdate(self: WSObserver, message: string) {
+	public _onUpdate(sender: any, message: string): boolean {
 		this.style.color(message === 'open' ? '#4c4' : '#aaa');
+		return true;
 	}
 }

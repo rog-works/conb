@@ -20,10 +20,10 @@ export default class WS extends EventEmitter {
 			throw new Error(err);
 		}
 	}
-	public send (data: any) {
+	public send(data: any): void {
 		this._ws.send(JSON.stringify(data));
 	}
-	private _retry() {
+	private _retry(): void {
 		try {
 			this._ws = this.connect(this.url);
 		} catch (err) {
@@ -34,11 +34,11 @@ export default class WS extends EventEmitter {
 		this.emit('message', this, message);
 		return true;
 	}
-	private _onOpen (): boolean {
+	private _onOpen(): boolean {
 		this.emit('open', this);
 		return true;
 	}
-	private _onClose (): boolean {
+	private _onClose(): boolean {
 		this.emit('close', this);
 		this._retry();
 		return true;

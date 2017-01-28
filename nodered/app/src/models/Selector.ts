@@ -9,9 +9,9 @@ export interface Range {
 }
 
 export default class Selector extends EventEmitter {
-	public css: any
-	public style: any
-	public start: Range
+	public readonly css: any
+	public readonly style: any
+	public readonly start: Range
 	constructor() {
 		super('select');
 		this.css = {
@@ -58,27 +58,27 @@ export default class Selector extends EventEmitter {
 	set h(value: number) {
 		this.style.height(value);
 	}
-	public onEnter(self: any, event: MouseEvent): boolean {
+	public onEnter(sender: any, event: MouseEvent): boolean {
 		// console.log('enter');
 		// this.closed = true;
 		return true;
 	}
-	public onLeave(self: any, event: MouseEvent): boolean {
+	public onLeave(sender: any, event: MouseEvent): boolean {
 		// console.log('leave');
 		this.closed = true;
 		return true;
 	}
-	public onUp(self: any, event: MouseEvent): boolean {
+	public onUp(sender: any, event: MouseEvent): boolean {
 		// console.log('up');
 		this.closed = true;
 		this.x = (this.start.x < event.pageX ? this.start.x : event.pageX);
 		this.y = (this.start.y < event.pageY ? this.start.y : event.pageY);
 		this.w = (Math.abs(event.pageX - this.start.x));
 		this.h = (Math.abs(event.pageY - this.start.y));
-		this.emit('select', this, event);
+		this.emit('select', sender, event);
 		return true;
 	}
-	public onDown(self: any, event: MouseEvent): boolean {
+	public onDown(sender: any, event: MouseEvent): boolean {
 		// console.log('down');
 		this.start.x = event.pageX;
 		this.start.y = event.pageY;
@@ -91,7 +91,7 @@ export default class Selector extends EventEmitter {
 		this.closed = false;
 		return true;
 	}
-	public onMove(self: any, event: MouseEvent): boolean {
+	public onMove(sender: any, event: MouseEvent): boolean {
 		// console.log('move', this.range);
 		if (!this.closed) {
 			this.x = (this.start.x < event.pageX ? this.start.x : event.pageX);

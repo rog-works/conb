@@ -6,24 +6,24 @@ export interface Serializer {
 }
 
 export interface ModelEntity {
-	signature: string;
-	_id: string;
+	_id: string
 }
 
-export abstract class Model implements Serializer {
+export class Model implements Serializer {
 	public constructor(
-		public signature: string,
 		private _id: string = ''
 	) {}
 	public import(entity: ModelEntity): void {
-		this.signature = entity.signature;
 		this._id = entity._id;
 	}
 	public export(): ModelEntity {
-		return {
-			signature: this.signature,
-			_id: this._id
-		};
+		return { _id: this._id };
+	}
+	public get uniqueKey(): string {
+		return '_id';
+	}
+	public get unique(): any {
+		return this._id;
 	}
 	public get resource(): string {
 		return (<any>this).constructor.name.toLowerCase(); // XXX any???
@@ -31,32 +31,38 @@ export abstract class Model implements Serializer {
 	public get exists(): boolean {
 		return this._id !== '';
 	}
-	public find() {
+	public get(): Promise.IThenable<void> {
 		return DAO.self.once(
 				`${this.resource}/show`,
-				{ signature: this.signature }
+				{ [this.uniqueKey]: this.unique }
 			)
-			.then((entities: Array<any>) => {
+			.then((entities: any[]) => {
 				if (entities.length > 0) {
 					this.import(entities[0]);
 				}
 			});
 	}
-	public insert() {
+	public find(where: any): Promise.IThenable<ModelEntity[]> {
+		return DAO.self.once(
+				`${this.resource}/index`,
+				where
+			);
+	}
+	public insert(): Promise.IThenable<void> {
 		return DAO.self.once(
 				`${this.resource}/create`,
 				this.export()
 			)
-			.then((result: any) => this.find());
+			.then((result: any) => this.get());
 	}
-	public update() {
+	public update(): Promise.IThenable<void> {
 		return DAO.self.once(
 				`${this.resource}/edit`,
 				this.export()
 			)
-			.then((result: any) => true);
+			.then((result: any): void => {});
 	}
-	public upsert() {
+	public upsert(): Promise.IThenable<void> {
 		return this.exists ? this.update() : this.insert();
 	}
 }

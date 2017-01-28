@@ -4,24 +4,24 @@ export default class Mouse extends EventEmitter {
 	public constructor() {
 		super('enter', 'leave', 'up', 'down', 'move');
 	}
-	public onEnter(self: Mouse, event: MouseEvent): boolean {
-		this.emit('enter', this, event);
+	public onEnter(sender: any, event: MouseEvent): boolean {
+		this.emit('enter', sender, event);
 		return true;
 	}
-	public onLeave(self: Mouse, event: MouseEvent): boolean {
-		this.emit('leave', this, event);
+	public onLeave(sender: any, event: MouseEvent): boolean {
+		this.emit('leave', sender, event);
 		return true;
 	}
-	public onUp(self: Mouse, event: MouseEvent): boolean {
-		this.emit('up', this, event);
+	public onUp(sender: any, event: MouseEvent): boolean {
+		this.emit('up', sender, event);
 		return true;
 	}
-	public onDown(self: Mouse, event: MouseEvent): boolean {
-		this.emit('down', this, event);
+	public onDown(sender: any, event: MouseEvent): boolean {
+		this.emit('down', sender, event);
 		return true;
 	}
-	public onMove(self: Mouse, event: MouseEvent): boolean {
-		this.emit('move', this, event);
+	public onMove(sender: any, event: MouseEvent): boolean {
+		this.emit('move', sender, event);
 		return true;
 	}
 }

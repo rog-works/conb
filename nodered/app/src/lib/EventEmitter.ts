@@ -3,12 +3,12 @@ export interface EventHandler {
 }
 
 interface EventHandlers {
-	[tag: string]: Array<EventHandler>
+	[tag: string]: EventHandler[]
 }
 
 export default class EventEmitter {
-	private _handlers: EventHandlers
-	public constructor(...tags: Array<string>) {
+	private readonly _handlers: EventHandlers
+	public constructor(...tags: string[]) {
 		this._handlers = {};
 		for (const tag of tags) {
 			this._handlers[tag] = [];
@@ -27,9 +27,9 @@ export default class EventEmitter {
 		}
 		return this;
 	}
-	public emit(tag: string, self: any, event: any = undefined) {
+	public emit(tag: string, sender: any, event: any = undefined): void {
 		for (const handler of this._handlers[tag]) {
-			if (!handler(self, event)) {
+			if (!handler(sender, event)) {
 				break;
 			}
 		}

@@ -23,7 +23,7 @@ export default class Mediator {
 	private constructor(
 		private _tasks: Tasks = {},
 		private _results: Results = {},
-		private _workers: Array<Worker> = [],
+		private _workers: Worker[] = [],
 		private _id: number = 0,
 		private _state: States = States.STANBY,
 		private _seq: number = 0
@@ -46,17 +46,17 @@ export default class Mediator {
 		delete this._results[future];
 		return result;
 	}
-	public complete(future: string, result: any) {
+	public complete(future: string, result: any): void {
 		this._results[future] = result;
 		console.log('complete task', future, result);
 	}
-	public start() {
+	public start(): void {
 		if (this._state === States.STANBY) {
 			this._state = States.RUN;
 			this._id = setTimeout(this.run.bind(this), Mediator.STARTED_INTERVAL_MSEC);
 		}
 	}
-	public run() {
+	public run(): void {
 		clearTimeout(this._id);
 		for (const future in this._tasks) {
 			if (this._workers.length < Mediator.MAX_WORKERS) {
@@ -82,7 +82,7 @@ class Worker {
 		private _future: string,
 		private _task: Task
 	) {}
-	public run() {
+	public run(): void {
 		const result = this._task.run();
 		if (result instanceof Promise) {
 			result.then((response) => {
@@ -110,7 +110,7 @@ export class Future<T> extends EventEmitter {
 		this._future = Mediator.self.request(new Task(callback));
 		this._id = setTimeout(this.inquiry.bind(this), 50);
 	}
-	public inquiry() {
+	public inquiry(): void {
 		clearTimeout(this._id);
 		if (Mediator.self.completed(this._future)) {
 			this.emit('update', this, Mediator.self.response(this._future));
