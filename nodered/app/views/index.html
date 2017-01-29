@@ -54,9 +54,10 @@
 											<a data-bind="text: text, attr: { href: href, title: text }, click: opened"></a>
 										</div>
 										<div class="bc-b fc-w trans table w-8 h-1">
-											<div class="w-6 cell middle" data-bind="text: date"></div>
+											<div class="w-5 cell middle" data-bind="text: date"></div>
 											<div class="wh-1 cell center hover" data-bind="click: downloaded"><i class="font-3 fa fa-cloud-download" data-bind="css: { 'fc-g': store() }"></i></div>
 											<div class="wh-1 cell center hover" data-bind="click: bookmarked"><i class="font-3 fa fa-bookmark" data-bind="css: { 'fc-r': bookmark() }"></i></div>
+											<div class="wh-1 cell center hover" data-bind="click: favorited"><i class="font-3 fa fa-thumbs-up" data-bind="css: { 'fc-y': favorite() }"></i></div>
 										</div>
 									</div>
 								<!-- /ko -->

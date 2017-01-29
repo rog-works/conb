@@ -11,6 +11,7 @@ export interface PostEntity extends ModelEntity {
 	visit?: boolean
 	store?: boolean
 	bookmark?: boolean
+	favorite?: boolean
 }
 
 export default class Post extends Model {
@@ -22,6 +23,7 @@ export default class Post extends Model {
 	public visit: KnockoutObservable<boolean>
 	public store: KnockoutObservable<boolean>
 	public bookmark: KnockoutObservable<boolean>
+	public favorite: KnockoutObservable<boolean>
 	public constructor(entity: PostEntity) {
 		super(['update']);
 		this.href = entity.href;
@@ -32,6 +34,7 @@ export default class Post extends Model {
 		this.visit = ko.observable(false);
 		this.store = ko.observable(false);
 		this.bookmark = ko.observable(false);
+		this.favorite = ko.observable(false);
 	}
 	// @override
 	public get uniqueKey(): string { return ''; } // XXX
@@ -41,6 +44,7 @@ export default class Post extends Model {
 		this.visit(entity.visit || this.visit());
 		this.store(entity.store || this.store());
 		this.bookmark(entity.bookmark || this.bookmark());
+		this.favorite(entity.favorite || this.favorite());
 	}
 	// @override
 	public export(): PostEntity {
@@ -52,6 +56,7 @@ export default class Post extends Model {
 		entity.visit = this.visit();
 		entity.store = this.store();
 		entity.bookmark = this.bookmark();
+		entity.favorite = this.favorite();
 		return entity;
 	}
 	// @override
@@ -60,8 +65,10 @@ export default class Post extends Model {
 	}
 	public opened() {
 		window.open(this.href); // XXX not pure js
-		this.visit(true);
-		this.emit('update', this);
+		if (!this.visit()) {
+			this.visit(true);
+			this.emit('update', this);
+		}
 	}
 	public downloaded() {
 		let dir = File.real(this.text);
@@ -78,6 +85,10 @@ export default class Post extends Model {
 	}
 	public bookmarked() {
 		this.bookmark(!this.bookmark());
+		this.emit('update', this);
+	}
+	public favorited() {
+		this.favorite(!this.favorite());
 		this.emit('update', this);
 	}
 }

@@ -5,7 +5,8 @@ export default class File {
 		return `images/${path}`;
 	}
 	public static confirm(dir: string): string {
-		return prompt('input save dir', dir) || '';
+		dir = prompt('input save dir', dir) || '';
+		return File.valid(dir) ? dir : '';
 	}
 	public static valid(path: string): boolean {
 		return !/[\\:*?"<>|]+/.test(path);
