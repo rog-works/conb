@@ -1,4 +1,4 @@
-import {ModelEntity} from './Model';
+import {Model, ModelEntity} from './Model';
 import StringUtil from '../utils/StringUtil';
 
 interface ConstructorMap {
@@ -16,9 +16,9 @@ export default class ModelFactory {
 	public regist(construct: any): void {
 		this._map[StringUtil.snakelize(construct.name)] = construct;
 	}
-	public create(entity: ModelEntity): any {
+	public create(entity: ModelEntity): Model {
 		if (entity.type in this._map) {
-			return new this._map[entity.type](entity);
+			return <Model>(new this._map[entity.type](entity));
 		}
 		throw new Error(`Unknown model. ${JSON.stringify(entity)}`);
 	}

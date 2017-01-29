@@ -8,9 +8,9 @@ export interface PostEntity extends ModelEntity {
 	text: string
 	date: string
 	thumb?: string
-	visit: boolean
-	store: boolean
-	bookmark: boolean
+	visit?: boolean
+	store?: boolean
+	bookmark?: boolean
 }
 
 export default class Post extends Model {

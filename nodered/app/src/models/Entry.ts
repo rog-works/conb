@@ -5,7 +5,7 @@ import ModelFactory from './ModelFactory';
 
 export interface EntryEntity extends ModelEntity {
 	_id?: string
-	signature: string
+	signature?: string
 	type: string
 	uri: string
 	attrs: ModelEntity[]
@@ -22,11 +22,7 @@ export default class Entry extends Model {
 		this._id = entity._id || '';
 		this.signature = Entry.sign(entity.uri);
 		this.uri = entity.uri;
-		this.attrs = ko.observableArray(entity.attrs.map((attr) => {
-			const model = ModelFactory.self.create(attr);
-			model.on('update', this.tracking.bind(this));
-			return model;
-		}));
+		this.attrs = ko.observableArray(entity.attrs.map((attrEntity) => this._createAttr(attrEntity)));
 		this.css = {
 			close: ko.observable(false),
 			selected: ko.observable(false)
@@ -56,19 +52,17 @@ export default class Entry extends Model {
 		super.import(entity);
 		this._id = entity._id || '';
 		const types = entity.attrs.map((attr: ModelEntity) => attr.type);
-		for(const model of this.attrs()) {
-			if (types.indexOf(model.type) === -1) {
-				this.attrs.remove(model);
+		for(const attrModel of this.attrs()) {
+			if (types.indexOf(attrModel.type) === -1) {
+				this.attrs.remove(attrModel);
 			}
 		}
-		for(const attr of entity.attrs) {
-			const model = this.attrs().filter((model) => model.type === attr.type).pop();
+		for(const attrEntity of entity.attrs) {
+			const model = this.attrs().filter((model) => model.type === attrEntity.type).pop();
 			if (model) {
-				model.import(attr);
+				model.import(attrEntity);
 			} else {
-				const model = ModelFactory.self.create(attr); // XXX copy & past
-				model.on('update', this.tracking.bind(this));
-				this.attrs.push(model);
+				this.attrs.push(this._createAttr(attrEntity));
 			}
 		}
 	}
@@ -96,8 +90,13 @@ export default class Entry extends Model {
 	public set closed(enabled: boolean) {
 		this.css.close(enabled);
 	}
-	public tracking(sender: Model) {
+	private _createAttr(entity: ModelEntity): Model {
+		return ModelFactory.self.create(entity)
+			.on('update', this._onUpdate.bind(this));
+	}
+	private _onUpdate(sender: Model): boolean {
 		console.log('tracking update', sender);
 		this.upsert();
+		return true;
 	}
 }
