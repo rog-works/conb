@@ -9,7 +9,6 @@ import Logger from './models/Logger';
 import ModelFactory from './models/ModelFactory';
 import Entries from './models/Entries';
 import {Entry, Post} from './models/Entry';
-import Retention from './models/Retention';
 import Searcher from './models/Searcher';
 import {default as Selector, Range} from './models/Selector';
 import File from './models/File';
@@ -35,7 +34,6 @@ export default class Main {
 			.on('close', this._onClose.bind(this));
 		ModelFactory.self.regist(Entry);
 		ModelFactory.self.regist(Post);
-		ModelFactory.self.regist(Retention);
 		this._scroll = new Scroll(256);
 		this.wsObserver = new WSObserver();
 		this.webObserver = new WebObserver();

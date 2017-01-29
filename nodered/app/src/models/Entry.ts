@@ -2,7 +2,6 @@ import * as ko from 'knockout';
 import Sign from '../lib/Sign';
 import {Model, ModelEntity} from './Model';
 import ModelFactory from './ModelFactory';
-import {default as Retention, RetentionEntity} from './Retention';
 import File from './File';
 
 export interface EntryEntity extends ModelEntity {
