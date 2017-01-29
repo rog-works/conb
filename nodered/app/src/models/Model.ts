@@ -1,4 +1,6 @@
 import DAO from '../lib/DAO';
+import EventEmitter from '../lib/EventEmitter';
+import StringUtil from '../utils/StringUtil';
 
 export interface Serializer {
 	import(entity: any): void
@@ -6,36 +8,29 @@ export interface Serializer {
 }
 
 export interface ModelEntity {
-	_id: string
 	type: string
 }
 
-export default class Model implements Serializer {
-	public constructor(
-		public type: string,
-		private _id: string = ''
-	) {}
-	public import(entity: ModelEntity): void {
-		this._id = entity._id;
-		this.type = entity.type;
+export abstract class Model extends EventEmitter implements Serializer {
+	public constructor(tags: string[] = []) {
+		super(...tags);
 	}
-	public export(): ModelEntity {
-		return {
-			_id: this._id,
-			type: this.type
-		};
-	}
-	public get uniqueKey(): string {
-		return '_id';
-	}
+	public abstract get uniqueKey(): string
 	public get unique(): any {
-		return this._id;
+		return (<any>this)[this.uniqueKey]; // XXX any...
 	}
-	public get resource(): string {
-		return (<any>this).constructor.name.toLowerCase(); // XXX any???
+	public get type(): string {
+		return StringUtil.snakalize((<any>this).constructor.name); // XXX any???
+	}
+	public get resource(): string { 
+		return this.type;
 	}
 	public get exists(): boolean {
-		return this._id !== '';
+		return this.unique;
+	}
+	public import(entity: ModelEntity): void {}
+	public export(): ModelEntity {
+		return { type: this.type };
 	}
 	public get(): Promise.IThenable<void> {
 		return DAO.self.once(

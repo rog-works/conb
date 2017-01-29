@@ -33,8 +33,9 @@ export default class Main {
 		DAO.create('ws://localhost:1880/ws/api')
 			.on('open', this._onOpen.bind(this))
 			.on('close', this._onClose.bind(this));
-		ModelFactory.self.regist('post', Post);
-		ModelFactory.self.regist('retention', Retention);
+		ModelFactory.self.regist(Entry);
+		ModelFactory.self.regist(Post);
+		ModelFactory.self.regist(Retention);
 		this._scroll = new Scroll(256);
 		this.wsObserver = new WSObserver();
 		this.webObserver = new WebObserver();

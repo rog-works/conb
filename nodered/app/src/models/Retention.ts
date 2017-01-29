@@ -1,5 +1,5 @@
 import * as ko from 'knockout';
-import {default as Model, ModelEntity} from './Model';
+import {Model, ModelEntity} from './Model';
 
 export interface RetentionEntity extends ModelEntity {
 	visit: boolean
@@ -12,17 +12,21 @@ export default class Retention extends Model {
 	public store: KnockoutObservable<boolean>
 	public bookmark: KnockoutObservable<boolean>
 	public constructor() {
-		super('retention');
+		super();
 		this.visit = ko.observable(false);
 		this.store = ko.observable(false);
 		this.bookmark = ko.observable(false);
 	}
+	// @override
+	public get uniqueKey(): string { return ''; } // XXX
+	// @override
 	public import(entity: RetentionEntity): void {
 		super.import(entity);
 		this.visit(entity.visit || this.visit());
 		this.store(entity.store || this.store());
 		this.bookmark(entity.bookmark || this.bookmark());
 	}
+	// @override
 	public export(): RetentionEntity {
 		const entity = <any>super.export();
 		entity.visit = this.visit();

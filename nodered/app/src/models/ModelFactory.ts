@@ -1,7 +1,8 @@
 import {ModelEntity} from './Model';
+import StringUtil from '../utils/StringUtil';
 
 interface ConstructorMap {
-	[type: string]: Function // FIXME actual constructor
+	[type: string]: ObjectConstructor
 }
 
 export default class ModelFactory {
@@ -12,16 +13,13 @@ export default class ModelFactory {
 	public static get self(): ModelFactory {
 		return ModelFactory._self || (ModelFactory._self = new ModelFactory());
 	}
-	public regist(type: string, construct: Function): void {
-		this._map[type] = construct;
+	public regist(construct: any): void {
+		this._map[StringUtil.snakalize(construct.name)] = construct;
 	}
 	public create(entity: ModelEntity): any {
 		if (entity.type in this._map) {
-			return new (<any>this._map[entity.type])(entity); // XXX any...
+			return new this._map[entity.type](entity);
 		}
 		throw new Error(`Unknown model. ${JSON.stringify(entity)}`);
-	}
-	private static _camerize(str: string): string {
-		return str.split('_').map((word) => `${word[0].toUpperCase()}${word.substr(1).toLowerCase()}`).join('');
 	}
 }

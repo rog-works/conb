@@ -37,29 +37,31 @@
 					</div>
 					<!-- entry -->
 					<div class="fill-x h-1 grow-1 scroll" data-bind="foreach: entries.list, css: entries.css, event: events">
-						<!-- ko if: type === 'post' -->
-							<div class="post bc-1 wh-8 m-q2 left shadow-1" data-bind="css: css">
-								<div class="w-8 h-8 table">
-									<span class="cell center"><img class="wh-max-8" data-bind="attr: { src: thumb ? thumb : src || 'image/404.gif' }"></span>
-								</div>
-								<div class="w-8 h-2 relative py--8">
-									<div class="table w-8 h-1">
-										<div class="fc-g wh-1 cell center"><i class="font-3 fa fa-check" data-bind="visible: retention.visit"></i></div>
-										<div class="w-6 h-1 cell center"></div>
-										<div class="wh-1 cell center hover" data-bind="click: $root.entries.remove.bind($root.entries, $data)"><i class="font-3 fa fa-remove"></i></div>
+						<div class="post bc-1 wh-8 m-q2 left shadow-1" data-bind="css: css">
+							<!-- ko foreach: $data.attrs -->
+								<!-- ko if: type === 'post' -->
+									<div class="w-8 h-8 table">
+										<span class="cell center"><img class="wh-max-8" data-bind="attr: { src: thumb ? thumb : src || 'image/404.gif' }"></span>
 									</div>
-									<div class="w-8 h-5"></div>
-									<div class="bc-b fc-w trans w-8 h-1 text-wrap">
-										<a data-bind="text: text, attr: { href: href, title: text }, click: opened"></a>
+									<div class="w-8 h-8 relative py--8">
+										<div class="table w-8 h-1">
+											<div class="fc-g wh-1 cell center"><i class="font-3 fa fa-check" data-bind="visible: visit"></i></div>
+											<div class="w-6 h-1 cell center"></div>
+											<div class="wh-1 cell center hover" data-bind="click: $root.entries.remove.bind($root.entries, $parent)"><i class="font-3 fa fa-remove"></i></div>
+										</div>
+										<div class="w-8 h-5"></div>
+										<div class="bc-b fc-w trans w-8 h-1 text-wrap">
+											<a data-bind="text: text, attr: { href: href, title: text }, click: opened"></a>
+										</div>
+										<div class="bc-b fc-w trans table w-8 h-1">
+											<div class="w-6 cell middle" data-bind="text: date"></div>
+											<div class="wh-1 cell center hover" data-bind="click: downloaded"><i class="font-3 fa fa-cloud-download" data-bind="css: { 'fc-g': store() }"></i></div>
+											<div class="wh-1 cell center hover" data-bind="click: bookmarked"><i class="font-3 fa fa-bookmark" data-bind="css: { 'fc-r': bookmark() }"></i></div>
+										</div>
 									</div>
-									<div class="bc-b fc-w trans table w-8 h-1">
-										<div class="w-6 cell middle" data-bind="text: date"></div>
-										<div class="wh-1 cell center hover" data-bind="click: downloaded"><i class="font-3 fa fa-cloud-download" data-bind="css: { 'fc-g': retention.store() }"></i></div>
-										<div class="wh-1 cell center hover" data-bind="click: bookmarked"><i class="font-3 fa fa-bookmark" data-bind="css: { 'fc-r': retention.bookmark() }"></i></div>
-									</div>
-								</div>
-							</div>
-						<!-- /ko -->
+								<!-- /ko -->
+							<!-- /ko -->
+						</div>
 					</div>
 					<!-- selector -->
 					<div id="selector" class="bc-1 selected trans absolute" data-bind="css: selector.css, style: selector.style"></div>

@@ -84,27 +84,25 @@ export default class Entries extends EventEmitter {
 		}
 	}
 	public test(): void {
-		for (let i = 0; i < 5; i += 1) {
+		for (let i = 0; i < 1; i += 1) {
 			const entity = {
-				_id: '',
-				type: 'post',
+				type: 'entry',
 				signature: Entry.sign('https://google.co.jp/' + i),
 				uri: 'https://google.co.jp/' + i,
 				attrs: [
 					{
-						_id: '',
-						type: 'retention',
+						type: 'post',
+						href: 'https://google.co.jp/' + i,
+						src: '',
+						text: 'hogehoge, ' + i,
+						date: 'none',
 						visit: false,
 						store: false,
 						bookmark: false
 					}
-				],
-				href: 'https://google.co.jp/' + i,
-				src: '',
-				text: 'hogehoge, ' + i,
-				date: 'none'
+				]
 			};
-			this.list.push(new Post(entity));
+			this.list.push(ModelFactory.self.create(entity));
 		}
 	}
 }
