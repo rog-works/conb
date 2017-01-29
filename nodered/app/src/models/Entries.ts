@@ -1,6 +1,7 @@
 import * as ko from 'knockout';
 import EventEmitter from '../lib/EventEmitter';
 import DAO from '../lib/DAO';
+import ModelFactory from './ModelFactory';
 import {Entry, Post, PostEntity} from './Entry';
 import File from './File';
 
@@ -14,7 +15,7 @@ export default class Entries extends EventEmitter {
 		this._resolve = (self: any, message: MessageEvent) => {
 			const response = JSON.parse(message.data);
 			console.log('many respond', response);
-			this.list.push(EntryFactory.create(response.data));
+			this.list.push(ModelFactory.self.create(response.data));
 			this.emit('update', this);
 		};
 	}
@@ -45,7 +46,7 @@ export default class Entries extends EventEmitter {
 		return JSON.stringify(this.list().map((entry: Entry) => entry.export()));
 	}
 	public import(entities: any[]): void {
-		entities.forEach((entity: any) => this.list.push(EntryFactory.create(entity)));
+		entities.forEach((entity: any) => this.list.push(ModelFactory.self.create(entity)));
 		this.emit('update', this);
 	}
 	public selectedEntries(): Entry[] {
@@ -85,15 +86,19 @@ export default class Entries extends EventEmitter {
 	public test(): void {
 		for (let i = 0; i < 5; i += 1) {
 			const entity = {
-				signature: Entry.sign('https://google.co.jp/' + i),
 				_id: '',
-				uri: 'https://google.co.jp/' + i,
 				type: 'post',
-				retention: {
-					visit: false,
-					store: false,
-					bookmark: false
-				},
+				signature: Entry.sign('https://google.co.jp/' + i),
+				uri: 'https://google.co.jp/' + i,
+				attrs: [
+					{
+						_id: '',
+						type: 'retention',
+						visit: false,
+						store: false,
+						bookmark: false
+					}
+				],
 				href: 'https://google.co.jp/' + i,
 				src: '',
 				text: 'hogehoge, ' + i,
@@ -101,11 +106,5 @@ export default class Entries extends EventEmitter {
 			};
 			this.list.push(new Post(entity));
 		}
-	}
-}
-
-export class EntryFactory {
-	public static create(entity: PostEntity): Entry {
-		return new Post(entity);
 	}
 }

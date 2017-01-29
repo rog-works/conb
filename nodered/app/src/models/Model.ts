@@ -7,17 +7,23 @@ export interface Serializer {
 
 export interface ModelEntity {
 	_id: string
+	type: string
 }
 
-export class Model implements Serializer {
+export default class Model implements Serializer {
 	public constructor(
+		public type: string,
 		private _id: string = ''
 	) {}
 	public import(entity: ModelEntity): void {
 		this._id = entity._id;
+		this.type = entity.type;
 	}
 	public export(): ModelEntity {
-		return { _id: this._id };
+		return {
+			_id: this._id,
+			type: this.type
+		};
 	}
 	public get uniqueKey(): string {
 		return '_id';

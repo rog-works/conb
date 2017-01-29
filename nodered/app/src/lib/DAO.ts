@@ -15,7 +15,7 @@ interface RequestEntity {
 }
 
 export default class DAO {
-	private static _self: DAO;
+	private static _self: DAO
 	private constructor(private _ws: WS) {}
 	public static create(dsn: string): DAO {
 		return DAO._self || (DAO._self = new DAO(new WS(dsn)));

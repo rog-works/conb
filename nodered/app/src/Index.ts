@@ -6,8 +6,10 @@ import Scroll from './events/Scroll';
 import WSObserver from './models/WSObserver';
 import WebObserver from './models/WebObserver';
 import Logger from './models/Logger';
+import ModelFactory from './models/ModelFactory';
 import Entries from './models/Entries';
-import {Entry} from './models/Entry';
+import {Entry, Post} from './models/Entry';
+import Retention from './models/Retention';
 import Searcher from './models/Searcher';
 import {default as Selector, Range} from './models/Selector';
 import File from './models/File';
@@ -31,6 +33,8 @@ export default class Main {
 		DAO.create('ws://localhost:1880/ws/api')
 			.on('open', this._onOpen.bind(this))
 			.on('close', this._onClose.bind(this));
+		ModelFactory.self.regist('post', Post);
+		ModelFactory.self.regist('retention', Retention);
 		this._scroll = new Scroll(256);
 		this.wsObserver = new WSObserver();
 		this.webObserver = new WebObserver();

@@ -1,6 +1,7 @@
 import * as ko from 'knockout';
 import Sign from '../lib/Sign';
-import {Model, ModelEntity} from './Model';
+import {default as Model, ModelEntity} from './Model';
+import ModelFactory from './ModelFactory';
 import {default as Retention, RetentionEntity} from './Retention';
 import File from './File';
 
@@ -8,25 +9,23 @@ export interface EntryEntity extends ModelEntity {
 	signature: string
 	type: string
 	uri: string
-	retention: RetentionEntity
+	attrs: ModelEntity[]
 }
 
 export abstract class Entry extends Model {
 	public readonly signature: string
-	public readonly type: string
 	public readonly uri: string
-	public readonly retention: Retention
 	public readonly css: any // XXX
+	public attrs: KnockoutObservableArray<Model>
 	public constructor(type: string, uri: string) {
-		super();
+		super(type);
 		this.signature = Entry.sign(uri);
-		this.type = type;
 		this.uri = uri;
-		this.retention = new Retention();
 		this.css = {
 			close: ko.observable(false),
 			selected: ko.observable(false)
 		};
+		this.attrs = ko.observableArray([new Retention()]);
 		this.get(); // XXX
 	}
 	public static sign(uri: string): string {
@@ -45,16 +44,36 @@ export abstract class Entry extends Model {
 	public get resource(): string {
 		return 'entries';
 	}
+	public get retention(): Retention {
+		return <Retention>this.attrs()[0];
+	}
 	public import(entity: EntryEntity): void {
 		super.import(entity);
-		this.retention.import(entity.retention);
+		const types = entity.attrs.map((attr: ModelEntity) => attr.type);
+		this.attrs().forEach((attr) => {
+			if (types.indexOf(attr.type) === -1) {
+				this.attrs.remove(attr);
+			}
+		});
+		entity.attrs.forEach((attr) => {
+			for (const model of this.attrs()) {
+				if (model.type === attr.type) {
+					model.import(attr);
+					return;
+				}
+			}
+			this.attrs.push(ModelFactory.self.create(attr));
+		});
 	}
 	public export(): EntryEntity {
 		const entity = <any>super.export(); // FIXME down cast...
 		entity.signature = this.signature;
 		entity.type = this.type;
 		entity.uri = this.uri;
-		entity.retention = this.retention.export();
+		entity.attrs = [];
+		this.attrs().forEach((attr) => {
+			entity.attrs.push(attr.export());
+		});
 		return entity;
 	}
 	public get selected(): boolean {
