@@ -14,7 +14,7 @@ export default class ModelFactory {
 		return ModelFactory._self || (ModelFactory._self = new ModelFactory());
 	}
 	public regist(construct: any): void {
-		this._map[StringUtil.snakalize(construct.name)] = construct;
+		this._map[StringUtil.snakelize(construct.name)] = construct;
 	}
 	public create(entity: ModelEntity): any {
 		if (entity.type in this._map) {

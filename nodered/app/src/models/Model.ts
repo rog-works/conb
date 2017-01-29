@@ -20,7 +20,7 @@ export abstract class Model extends EventEmitter implements Serializer {
 		return (<any>this)[this.uniqueKey]; // XXX any...
 	}
 	public get type(): string {
-		return StringUtil.snakalize((<any>this).constructor.name); // XXX any???
+		return StringUtil.snakelize((<any>this).constructor.name); // XXX any???
 	}
 	public get resource(): string { 
 		return this.type;
