@@ -2,7 +2,8 @@ import * as ko from 'knockout';
 import EventEmitter from '../lib/EventEmitter';
 import DAO from '../lib/DAO';
 import ModelFactory from './ModelFactory';
-import {Entry, Post, PostEntity} from './Entry';
+import Entry from './Entry';
+import Post from './Post';
 import File from './File';
 
 export default class Entries extends EventEmitter {
@@ -71,9 +72,12 @@ export default class Entries extends EventEmitter {
 			console.log('download cancel');
 			return;
 		}
-		for(const entry of entries) {
-			if (entry instanceof Post) {
-				const post = <Post>entry;
+		for (const entry of entries) {
+			for (const model of entry.attrs()) {
+				if (!(model instanceof Post)) {
+					continue;
+				}
+				const post = <Post>model;
 				const matches = post.href.match(/^[^:]+:\/\/([^\/]+)/) || [];
 				if (matches.length > 0) {
 					const host = matches[1];
