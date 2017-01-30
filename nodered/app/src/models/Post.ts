@@ -59,10 +59,6 @@ export default class Post extends Model {
 		entity.favorite = this.favorite();
 		return entity;
 	}
-	// @override
-	public get description(): string {
-		return `${this.text} ${this.date}`;
-	}
 	public opened() {
 		window.open(this.href); // XXX not pure js
 		if (!this.visit()) {
