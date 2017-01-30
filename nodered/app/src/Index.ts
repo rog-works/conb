@@ -77,8 +77,7 @@ export default class Main {
 		this.webObserver.update(`begin none`);
 		return true;
 	}
-	private _onEntryUpdate(sender: Entries, message: MessageEvent): boolean { // FIXME has many called
-		console.log('message', message);
+	private _onEntryUpdate(sender: Entries): boolean {
 		this.searcher.page.curr.number = this.searcher.page.next.number;
 		this.webObserver.update(`end none`);
 		return true;

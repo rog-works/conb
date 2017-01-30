@@ -31,10 +31,10 @@ export default class Post extends Model {
 		this.text = entity.text;
 		this.date = entity.date;
 		this.thumb = entity.thumb || ''; // FIXME
-		this.visit = ko.observable(false);
-		this.store = ko.observable(false);
-		this.bookmark = ko.observable(false);
-		this.favorite = ko.observable(false);
+		this.visit = ko.observable(entity.visit || false);
+		this.store = ko.observable(entity.store || false);
+		this.bookmark = ko.observable(entity.bookmark || false);
+		this.favorite = ko.observable(entity.favorite || false);
 	}
 	// @override
 	public get uniqueKey(): string { return ''; } // XXX

@@ -3,10 +3,6 @@ import WS from '../lib/WS';
 import {EventHandler} from './EventEmitter';
 import Sign from './Sign';
 
-interface Resolver {
-	then(resolve: Function, reject?: Function): void
-}
-
 interface RequestEntity {
 	route: string
 	data: any
@@ -54,16 +50,6 @@ export default class DAO {
 			this._ws.send(request);
 			console.log('once request', request);
 		});
-	}
-	public many(route: string, data: any): Resolver { // FIXME returned mock
-		return {
-			then: (resolve: EventHandler, reject?: Function) => {
-				const request = this._sign(route, data);
-				this._ws.on('message', resolve);
-				this._ws.send(request);
-				console.log('many request', request);
-			}
-		};
 	}
 	public send(route: string, data: any): void {
 		const request = this._sign(route, data);

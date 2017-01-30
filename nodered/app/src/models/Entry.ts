@@ -12,6 +12,7 @@ export interface EntryEntity extends ModelEntity {
 }
 
 export default class Entry extends Model {
+	public static RESOURCE_NAME: string = 'entries';
 	public _id: string
 	public readonly signature: string
 	public readonly uri: string
@@ -28,6 +29,10 @@ export default class Entry extends Model {
 			selected: ko.observable(false)
 		};
 	}
+	// @override
+	public static find(where: any = {}): Promise.IThenable<Entry[]> {
+		return Model.find(Entry.RESOURCE_NAME, where);
+	}
 	public static sign(uri: string): string {
 		return Sign.digest(uri);
 	}
@@ -40,7 +45,7 @@ export default class Entry extends Model {
 	}
 	// @override
 	public get resource(): string {
-		return 'entries';
+		return Entry.RESOURCE_NAME;
 	}
 	// @override
 	public get exists(): boolean {

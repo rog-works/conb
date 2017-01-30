@@ -1,0 +1,35 @@
+<script type="text/javascript">
+	RED.nodes.registerType('combine', {
+		category: 'function',
+		color: '#a6bbcf',
+		defaults: {
+			from: { value: 'payload' },
+			count: { value: 2 }
+		},
+		inputs: 1,
+		outputs: 1,
+		icon: 'join.png',
+		label: function() {
+			return this.name || 'combine';
+		}
+	});
+</script>
+
+<script type="text/x-red" data-template-name="combine">
+	<div class="form-row">
+		<label for="node-input-from"><i class="icon-tag"></i> From</label>
+		<input type="text" id="node-input-from" placeholder="From">
+	</div>
+	<div class="form-row">
+		<label for="node-input-count"><i class="icon-tag"></i> Count</label>
+		<input type="text" id="node-input-count" placeholder="Count">
+	</div>
+	<div class="form-row">
+		<label for="node-input-name"><i class="icon-tag"></i> Name</label>
+		<input type="text" id="node-input-name" placeholder="Name">
+	</div>
+</script>
+
+<script type="text/x-red" data-help-name="combine">
+	<p>node combine</p>
+</script>

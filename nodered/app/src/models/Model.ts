@@ -1,6 +1,7 @@
 import DAO from '../lib/DAO';
 import EventEmitter from '../lib/EventEmitter';
 import StringUtil from '../utils/StringUtil';
+import ModelFactory from './ModelFactory';
 
 export interface Serializer {
 	import(entity: any): void
@@ -32,6 +33,19 @@ export abstract class Model extends EventEmitter implements Serializer {
 	public export(): ModelEntity {
 		return { type: this.type };
 	}
+	public static find(resource: string, where: any = {}): Promise.IThenable<Model[]> {
+		return DAO.self.once(
+				`${resource}/index`, // XXX static this???
+				where
+			)
+			.then((entities: ModelEntity[]) => {
+				const models: Model[] = [];
+				for(const entity of entities) {
+					models.push(<Model>ModelFactory.self.create(entity));
+				}
+				return models;
+			});
+	}
 	public get(): Promise.IThenable<void> {
 		return DAO.self.once(
 				`${this.resource}/show`,
@@ -42,12 +56,6 @@ export abstract class Model extends EventEmitter implements Serializer {
 					this.import(entities[0]);
 				}
 			});
-	}
-	public find(where: any): Promise.IThenable<ModelEntity[]> {
-		return DAO.self.once(
-				`${this.resource}/index`,
-				where
-			);
 	}
 	public insert(): Promise.IThenable<void> {
 		return DAO.self.once(

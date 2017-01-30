@@ -12,15 +12,6 @@ export default class Entries extends EventEmitter {
 	public constructor() {
 		super('beforeUpdate', 'update');
 		this.list = ko.observableArray([]);
-		// FIXME
-		this._resolve = (self: any, message: MessageEvent) => {
-			const response = JSON.parse(message.data);
-			console.log('many respond', response);
-			const entry = <Entry>ModelFactory.self.create(response.data);
-			entry.get();
-			this.list.push(entry);
-			this.emit('update', this);
-		};
 	}
 	public load(url: string, path: string, query: string, page: number): void {
 		this.emit('beforeUpdate', this, page); // XXX page?
@@ -28,30 +19,39 @@ export default class Entries extends EventEmitter {
 			this._loadUrl(url, page);
 		} else if (/^db:/.test(url)) {
 			this._loadDB(url, page);
+		} else {
+			throw Error(`Unknown protocol. ${url}`);
 		}
 	}
 	private _loadDB(url: string, page: number): void {
 		const where = this._toWhere(url.substr('db://'.length));
-		DAO.self.once('entries/index', {
+		Entry.find({
 				where: where,
-				skip: page * 50,
+				skip: Math.max(page - 1, 0) * 50,
 				limit: 50
 			})
-			.then((entities: EntryEntity[]) => {
-				for(const entity of entities) {
-					this.list.push(<Entry>ModelFactory.self.create(entity));
+			.then((entries: Entry[]) => {
+				for (const entry of entries) {
+					this.list.push(entry);
 				}
+				this.emit('update', this);
 			});
 	}
 	private _toWhere(query: string): any {
 		return {}; // XXX impl
 	}
 	private _loadUrl(url: string, page: number): void {
-		DAO.self.many('posts', {
-				url: url.replace(/{page}/, `${page}`),
-				page: page
+		DAO.self.once('posts', {
+				url: url.replace(/{page}/, `${page}`)
 			})
-			.then(this._resolve); // FIXME mock
+			.then((entities: EntryEntity[]) => {
+				for (const entity of entities) {
+					const entry = <Entry>ModelFactory.self.create(entity);
+					entry.get();
+					this.list.push(entry);
+				}
+				this.emit('update', this);
+			});
 	}
 	public remove(entry: Entry): void {
 		this.list.remove(entry);

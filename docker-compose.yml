@@ -9,6 +9,7 @@ services:
       - ./nodered/data/flows.json:/data/flows.json
       - ./nodered/app:/data/app
       - ./nodered/nodes/node-red-node-loop:/data/node_modules/node-red-node-loop
+      - ./nodered/nodes/node-red-node-combine:/data/node_modules/node-red-node-combine
       - ./nodered/nodes/node-red-node-pluck:/data/node_modules/node-red-node-pluck
     ports:
       - 1880:1880
