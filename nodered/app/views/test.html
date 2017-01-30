@@ -37,10 +37,10 @@
 					</div>
 					<!-- entry -->
 					<div class="fill-x h-1 grow-1 scroll" data-bind="foreach: entries.list, css: entries.css, event: events">
-						<div class="post w-12 h-8 m-q2 left" data-bind="css: css">
+						<div class="post w-12 h-10 m-q2 left" data-bind="css: css">
 							<!-- ko foreach: $data.attrs -->
 								<!-- ko if: type === 'post' -->
-									<div class="w-8 h-8 table left">
+									<div class="w-8 h-10 table left">
 										<span class="bc-3 cell center">
 											<img class="wh-max-8 shadow-1" data-bind="attr: { src: thumb ? thumb : src || 'image/404.gif' }" src="image/404.gif">
 											<div class="bc-4 fc-b table w-4 h-1 relative py--1">
@@ -48,19 +48,27 @@
 											</div>
 										</span>
 									</div>
-									<div class="bc-1 w-4 h-8 left">
+									<div class="bc-1 w-4 h-10 left">
 										<div class="table w-4 h-1">
 											<div class="fc-g wh-1 cell center"><i class="font-3 fa fa-check" data-bind="visible: visit"></i></div>
 											<div class="w-2 h-1 cell center"></div>
 											<div class="wh-1 cell center hover" data-bind="click: $root.entries.remove.bind($root.entries, $parent)"><i class="font-3 fa fa-remove"></i></div>
 										</div>
-										<div class="bc-b fc-w trans w-4 h-6 text-wrap">
-											<a data-bind="text: text, attr: { href: href, title: text }, click: opened"></a>
+										<div class="bc-b fc-w trans w-4 h-4 text-wrap">
+											<a data-bind="text: text, attr: { href: href, title: text }, click: opened">
+												あいうえおかきくけこさしすせそたちつてとなにぬねの
+											</a>
+										</div>
+										<div class="wh-4">
+											<div class="bc-r pr-q1 w-3 h-1 shadow-br-1">
+												<div class="fill">hoge</div>
+											</div>
 										</div>
 										<div class="bc-b fc-w trans table w-4 h-1">
-											<div class="bc-3 w-2 h-1"></div>
+											<div class="bc-3 w-1 h-1"></div>
 											<div class="bc-4 wh-1 cell center hover" data-bind="click: downloaded"><i class="font-3 fa fa-cloud-download" data-bind="css: { 'fc-g': store() }"></i></div>
 											<div class="bc-5 wh-1 cell center hover" data-bind="click: bookmarked"><i class="font-3 fa fa-bookmark" data-bind="css: { 'fc-r': bookmark() }"></i></div>
+											<div class="bc-5 wh-1 cell center hover" data-bind="click: favorited"><i class="font-3 fa fa-thumbs-up" data-bind="css: { 'fc-r': favorite() }"></i></div>
 										</div>
 									</div>
 								<!-- /ko -->

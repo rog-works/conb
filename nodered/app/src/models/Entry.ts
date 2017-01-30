@@ -27,7 +27,6 @@ export default class Entry extends Model {
 			close: ko.observable(false),
 			selected: ko.observable(false)
 		};
-		this.get(); // XXX
 	}
 	public static sign(uri: string): string {
 		return Sign.digest(uri);

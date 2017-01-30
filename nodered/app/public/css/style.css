@@ -100,6 +100,7 @@ a { text-decoration: none; }
 .h-6  { height: 192px; }
 .h-7  { height: 224px; }
 .h-8  { height: 256px; }
+.h-10 { height: 320px; }
 
 .wh-q {  width:   8px; height:   8px; }
 .wh-h {  width:  16px; height:  16px; }
@@ -117,6 +118,7 @@ a { text-decoration: none; }
 /* marging */
 
 .m-q2 { margin: 4px; }
+.pr-q1 { padding-right: 8px; }
 
 /* flex */
 
@@ -163,6 +165,7 @@ a { text-decoration: none; }
 .line-l.bc-1 {   border-left: 2px solid #eee; }
 
 .shadow-1 { box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.25); }
+.shadow-br-1 { box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.25); }
 
 /* state */
 

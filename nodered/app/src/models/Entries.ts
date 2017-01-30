@@ -2,7 +2,7 @@ import * as ko from 'knockout';
 import EventEmitter from '../lib/EventEmitter';
 import DAO from '../lib/DAO';
 import ModelFactory from './ModelFactory';
-import Entry from './Entry';
+import {default as Entry, EntryEntity} from './Entry';
 import Post from './Post';
 import File from './File';
 
@@ -16,16 +16,39 @@ export default class Entries extends EventEmitter {
 		this._resolve = (self: any, message: MessageEvent) => {
 			const response = JSON.parse(message.data);
 			console.log('many respond', response);
-			this.list.push(<Entry>ModelFactory.self.create(response.data));
+			const entry = <Entry>ModelFactory.self.create(response.data);
+			entry.get();
+			this.list.push(entry);
 			this.emit('update', this);
 		};
 	}
 	public load(url: string, path: string, query: string, page: number): void {
 		this.emit('beforeUpdate', this, page); // XXX page?
+		if (/^https?:/.test(url)) {
+			this._loadUrl(url, page);
+		} else if (/^db:/.test(url)) {
+			this._loadDB(url, page);
+		}
+	}
+	private _loadDB(url: string, page: number): void {
+		const where = this._toWhere(url.substr('db://'.length));
+		DAO.self.once('entries/index', {
+				where: where,
+				skip: page * 50,
+				limit: 50
+			})
+			.then((entities: EntryEntity[]) => {
+				for(const entity of entities) {
+					this.list.push(<Entry>ModelFactory.self.create(entity));
+				}
+			});
+	}
+	private _toWhere(query: string): any {
+		return {}; // XXX impl
+	}
+	private _loadUrl(url: string, page: number): void {
 		DAO.self.many('posts', {
 				url: url.replace(/{page}/, `${page}`),
-				path: path,
-				query: query,
 				page: page
 			})
 			.then(this._resolve); // FIXME mock
