@@ -74,4 +74,11 @@ export abstract class Model extends EventEmitter implements Serializer {
 	public upsert(): Promise.IThenable<void> {
 		return this.exists ? this.update() : this.insert();
 	}
+	public delete(): Promise.IThenable<void> {
+		return DAO.self.once(
+				`${this.resource}/destroy`,
+				{ [this.uniqueKey]: this.unique }
+			)
+			.then((result: any): void => {});
+	}
 }

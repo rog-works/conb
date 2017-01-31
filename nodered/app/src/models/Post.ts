@@ -87,4 +87,14 @@ export default class Post extends Model {
 		this.favorite(!this.favorite());
 		this.emit('update', this);
 	}
+	public stored() {
+		if (!this.store()) {
+			this.store(true);
+			this.emit('update', this);
+		}
+	}
+	public unretentioned() {
+		this.delete();
+		this.emit('update', this);
+	}
 }

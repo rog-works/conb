@@ -111,7 +111,7 @@ export default class Entries extends EventEmitter {
 		}
 	}
 	public test(): void {
-		for (let i = 0; i < 1; i += 1) {
+		for (let i = 0; i < 5; i += 1) {
 			const entity = {
 				type: 'entry',
 				uri: 'https://google.co.jp/' + i,
@@ -125,7 +125,9 @@ export default class Entries extends EventEmitter {
 					}
 				]
 			};
-			this.list.push(<Entry>ModelFactory.self.create(entity));
+			const entry = <Entry>ModelFactory.self.create(entity);
+			entry.get();
+			this.list.push(entry);
 		}
 	}
 }

@@ -36,7 +36,7 @@
 						</div>
 					</div>
 					<!-- entry -->
-					<div class="fill-x h-1 grow-1 scroll" data-bind="foreach: entries.list, css: entries.css, event: events">
+					<div class="fill-x h-1 grow-1 scroll no-selection" data-bind="foreach: entries.list, css: entries.css, event: events">
 						<div class="post w-8 h-10 m-q2 left" data-bind="css: css">
 							<!-- ko foreach: $data.attrs -->
 								<!-- ko if: type === 'post' -->
@@ -44,12 +44,24 @@
 										<span class="cell center"><img class="w-max-8 h-max-10 shadow-1" data-bind="attr: { src: thumb ? thumb : src || 'image/404.gif' }"></span>
 									</div>
 									<div class="w-8 h-10 relative py--10">
-										<div class="table w-8 h-1">
-											<div class="fc-g wh-1 cell center"><i class="font-3 fa fa-check" data-bind="visible: visit"></i></div>
-											<div class="w-6 h-1 cell center"></div>
-											<div class="wh-1 cell center hover" data-bind="click: $root.entries.remove.bind($root.entries, $parent)"><i class="font-3 fa fa-remove"></i></div>
+										<div class="table w-8 h-3">
+											<div class="row">
+												<div class="fc-g wh-1 cell center"><i class="font-3 fa fa-check" data-bind="visible: visit"></i></div>
+												<div class="w-6 h-1 cell center"></div>
+												<div class="wh-1 cell center hover" data-bind="click: $root.entries.remove.bind($root.entries, $parent)"><i class="font-3 fa fa-remove"></i></div>
+											</div>
+											<div class="row">
+												<div class="wh-1 cell center"></div>
+												<div class="w-6 h-1 cell center"></div>
+												<div class="wh-1 cell center hover" data-bind="click: unretentioned"><i class="font-3 fa fa-thumbs-down"></i></div>
+											</div>
+											<div class="row">
+												<div class="wh-1 cell center"></div>
+												<div class="w-6 h-1 cell center"></div>
+												<div class="wh-1 cell center hover" data-bind="click: stored"><i class="font-3 fa fa-save"></i></div>
+											</div>
 										</div>
-										<div class="w-8 h-7"></div>
+										<div class="w-8 h-5"></div>
 										<div class="bc-b fc-w trans w-8 h-1 text-wrap">
 											<a data-bind="text: text, attr: { href: href, title: text }, click: opened"></a>
 										</div>
