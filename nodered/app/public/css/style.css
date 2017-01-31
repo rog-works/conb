@@ -95,11 +95,18 @@ a { text-decoration: none; }
 
 .pxy-0 { left: 0; top: 0; }
 
-.py--q { top:   -8px; }
-.py--h { top:  -16px; }
-.py--1 { top:  -32px; }
-.py--2 { top:  -64px; }
-.py--8 { top: -256px; }
+.py--q  { top:   -8px; }
+.py--h  { top:  -16px; }
+.py--1  { top:  -32px; }
+.py--2  { top:  -64px; }
+.py--3  { top: - 96px; }
+.py--4  { top: -128px; }
+.py--5  { top: -160px; }
+.py--6  { top: -192px; }
+.py--7  { top: -224px; }
+.py--8  { top: -256px; }
+.py--9  { top: -288px; }
+.py--10 { top: -320px; }
 
 /* sizing */
 
@@ -117,6 +124,8 @@ a { text-decoration: none; }
 .w-6  {  width: 192px; }
 .w-7  {  width: 224px; }
 .w-8  {  width: 256px; }
+.w-9  {  width: 288px; }
+.w-10 {  width: 320px; }
 .w-12 {  width: 384px; }
 
 .h-q  { height:   8px; }
@@ -129,20 +138,31 @@ a { text-decoration: none; }
 .h-6  { height: 192px; }
 .h-7  { height: 224px; }
 .h-8  { height: 256px; }
+.h-9  { height: 288px; }
 .h-10 { height: 320px; }
 
-.wh-q {  width:   8px; height:   8px; }
-.wh-h {  width:  16px; height:  16px; }
-.wh-1 {  width:  32px; height:  32px; }
-.wh-2 {  width:  64px; height:  64px; }
-.wh-3 {  width:  96px; height:  96px; }
-.wh-4 {  width: 128px; height: 128px; }
-.wh-5 {  width: 160px; height: 160px; }
-.wh-6 {  width: 192px; height: 192px; }
-.wh-7 {  width: 224px; height: 224px; }
-.wh-8 {  width: 256px; height: 256px; }
+.wh-q  {  width:   8px; height:   8px; }
+.wh-h  {  width:  16px; height:  16px; }
+.wh-1  {  width:  32px; height:  32px; }
+.wh-2  {  width:  64px; height:  64px; }
+.wh-3  {  width:  96px; height:  96px; }
+.wh-4  {  width: 128px; height: 128px; }
+.wh-5  {  width: 160px; height: 160px; }
+.wh-6  {  width: 192px; height: 192px; }
+.wh-7  {  width: 224px; height: 224px; }
+.wh-8  {  width: 256px; height: 256px; }
+.wh-9  {  width: 288px; height: 288px; }
+.wh-10 {  width: 320px; height: 320px; }
 
-.wh-max-8 { max-width: 256px; max-height: 256px; }
+.wh-max-8  {  max-width: 256px; max-height: 256px; }
+.wh-max-9  {  max-width: 288px; max-height: 288px; }
+.wh-max-10 {  max-width: 320px; max-height: 320px; }
+.w-max-8   {  max-width: 256px; }
+.w-max-9   {  max-width: 288px; }
+.w-max-10  {  max-width: 320px; }
+.h-max-8   { max-height: 256px; }
+.h-max-9   { max-height: 288px; }
+.h-max-10  { max-height: 320px; }
 
 /* marging */
 

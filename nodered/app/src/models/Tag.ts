@@ -37,7 +37,11 @@ export class Tags extends Model {
 	}
 	public tagged(tagName: string): void {
 		if (this.containts(tagName)) {
-			this.tags.push(new Tag({name: tagName}));
+			const entity = {
+				type: 'tag', // XXX
+				name: tagName
+			};
+			this.tags.push(new Tag(entity));
 			this.emit('update', this); // XXX undefined event
 		}
 	}
