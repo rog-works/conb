@@ -37,11 +37,11 @@
 					</div>
 					<!-- entry -->
 					<div class="fill-x h-1 grow-1 scroll" data-bind="foreach: entries.list, css: entries.css, event: events">
-						<div class="post bc-1 w-8 h-10 m-q2 left shadow-1" data-bind="css: css">
+						<div class="post w-8 h-10 m-q2 left" data-bind="css: css">
 							<!-- ko foreach: $data.attrs -->
 								<!-- ko if: type === 'post' -->
 									<div class="w-8 h-10 table">
-										<span class="cell center"><img class="w-max-8 h-max-10" data-bind="attr: { src: thumb ? thumb : src || 'image/404.gif' }"></span>
+										<span class="cell center"><img class="w-max-8 h-max-10 shadow-1" data-bind="attr: { src: thumb ? thumb : src || 'image/404.gif' }"></span>
 									</div>
 									<div class="w-8 h-10 relative py--10">
 										<div class="table w-8 h-1">
