@@ -1,6 +1,7 @@
 import * as ko from 'knockout';
 import {Model, ModelEntity} from './Model';
 import File from './File';
+import Image from './Image';
 
 export interface PostEntity extends ModelEntity {
 	href: string
@@ -24,6 +25,7 @@ export default class Post extends Model {
 	public store: KnockoutObservable<boolean>
 	public bookmark: KnockoutObservable<boolean>
 	public favorite: KnockoutObservable<boolean>
+	public readonly image: Image
 	public constructor(entity: PostEntity) {
 		super(['update', 'delete']);
 		this.href = entity.href;
@@ -35,6 +37,7 @@ export default class Post extends Model {
 		this.store = ko.observable(entity.store || false);
 		this.bookmark = ko.observable(entity.bookmark || false);
 		this.favorite = ko.observable(entity.favorite || false);
+		this.image = new Image({ type: 'image', url: this.src });
 	}
 	// @override
 	public get uniqueKey(): string { return ''; } // XXX

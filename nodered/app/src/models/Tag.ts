@@ -1,6 +1,5 @@
 import * as ko from 'knockout';
 import {Model, ModelEntity} from './Model';
-import ModelFactory from './ModelFactory';
 
 export interface TagsEntity extends ModelEntity {
 	tags: TagEntity[]
@@ -22,7 +21,7 @@ export class Tags extends Model {
 	public import(entity: TagsEntity): void {
 		super.import(entity);
 		for (const tagEntity of entity.tags) {
-			this.tags.push(<Tag>ModelFactory.self.create(tagEntity));
+			this.tags.push(new Tag(tagEntity));
 		}
 		this.emit('update', this);
 	}

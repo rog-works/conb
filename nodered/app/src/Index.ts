@@ -11,6 +11,7 @@ import Entries from './models/Entries';
 import Entry from './models/Entry';
 import Post from './models/Post';
 import {default as Tag, Tags} from './models/Tag';
+import Image from './models/Image';
 import Searcher from './models/Searcher';
 import {default as Selector, Range} from './models/Selector';
 import File from './models/File';
@@ -37,7 +38,8 @@ export default class Main {
 		ModelFactory.self.regist(Entry);
 		ModelFactory.self.regist(Post);
 		ModelFactory.self.regist(Tags);
-		ModelFactory.self.regist(Tag);
+		ModelFactory.self.regist(Tag);;
+		ModelFactory.self.regist(Image);
 		this._scroll = new Scroll(256);
 		this.wsObserver = new WSObserver();
 		this.webObserver = new WebObserver();
