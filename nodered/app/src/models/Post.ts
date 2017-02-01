@@ -25,7 +25,7 @@ export default class Post extends Model {
 	public bookmark: KnockoutObservable<boolean>
 	public favorite: KnockoutObservable<boolean>
 	public constructor(entity: PostEntity) {
-		super(['update']);
+		super(['update', 'delete']);
 		this.href = entity.href;
 		this.src = entity.src;
 		this.text = entity.text;
@@ -93,8 +93,7 @@ export default class Post extends Model {
 			this.emit('update', this);
 		}
 	}
-	public unretentioned() {
-		this.delete();
-		this.emit('update', this);
+	public unretentioned() { // FIXME
+		this.emit('delete', this);
 	}
 }

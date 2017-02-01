@@ -96,11 +96,17 @@ export default class Entry extends Model {
 	}
 	private _createAttr(entity: ModelEntity): Model {
 		return ModelFactory.self.create(entity)
-			.on('update', this._onUpdate.bind(this));
+			.on('update', this._onUpdate.bind(this))
+			.on('delete', this._onDelete.bind(this));
 	}
 	private _onUpdate(sender: Model): boolean {
 		console.log('tracking update', sender);
 		this.upsert();
+		return true;
+	}
+	private _onDelete(sender: Model): boolean {
+		console.log('tracking delete', sender);
+		this.delete();
 		return true;
 	}
 }

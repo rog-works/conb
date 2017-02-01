@@ -32,11 +32,11 @@ export class Tags extends Model {
 		entity.tags = this.tags().map((tag) => tag.export());
 		return entity;
 	}
-	public containts(tagName: string): boolean {
+	public contains(tagName: string): boolean {
 		return this.tags().filter((tag) => tag.name === tagName).length > 0;
 	}
 	public tagged(tagName: string): void {
-		if (this.containts(tagName)) {
+		if (this.contains(tagName)) {
 			const entity = {
 				type: 'tag', // XXX
 				name: tagName
