@@ -18,7 +18,7 @@
 					<div class="bc-1 fill-x h-1 grow-0 flex">
 						<div class="w-1 fill-y grow-1">
 							<div class="fill">
-								<input type="text" class="fill-x h-1 less" placeholder="Search" list="list" data-bind="value: searcher.url.value, event: searcher.events">
+								<input type="text" class="fill-x h-1 less" placeholder="Search" list="list" data-bind="value: searcher.url.value, event: searcher.events, hasFocus: searcher.url.focus">
 							</div>
 							<datalist id="list" data-bind="foreach: searcher.urls">
 								<option data-bind="text: text, value: value"></option>

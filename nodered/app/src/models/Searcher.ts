@@ -56,10 +56,23 @@ export default class Searcher extends EventEmitter {
 		return true;
 	}
 	private _onKeyup(self: Searcher, event: KeyboardEvent): boolean {
+		if (event.shiftKey && event.ctrlKey) {
+			return this._shiftCtrlKeyup(event); // FIXME
+		} else {
+			return this._keyup(event);
+		}
+	}
+	private _keyup(event: KeyboardEvent): boolean {
 		if (event.keyCode === KeyCodes.Up) {
 			this.page.curr.number = Math.max(this.page.curr.number - 1, 1);
 		} else if (event.keyCode === KeyCodes.Down) {
 			this.page.curr.number = this.page.curr.number + 1;
+		}
+		return true;
+	}
+	private _shiftCtrlKeyup(event: KeyboardEvent): boolean {
+		if (event.keyCode === KeyCodes.F) {
+			this.url.focus(true);
 		}
 		return true;
 	}

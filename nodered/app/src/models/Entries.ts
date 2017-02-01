@@ -15,32 +15,15 @@ export default class Entries extends EventEmitter {
 	}
 	public load(url: string, path: string, query: string, page: number): void {
 		this.emit('beforeUpdate', this, page); // XXX page?
-		if (/^https?:/.test(url)) {
-			this._loadUrl(url, page);
-		} else if (/^db:/.test(url)) {
-			this._loadDB(url, page);
+		if (/^https?:\/\//.test(url)) {
+			this._loadPosts(url, page);
+		} else if (/^entries:\/\//.test(url)) {
+			this._loadEntries(url, page);
 		} else {
 			throw Error(`Unknown protocol. ${url}`);
 		}
 	}
-	private _loadDB(url: string, page: number): void {
-		const where = this._toWhere(url.substr('db://'.length));
-		Entry.find({
-				where: where,
-				skip: Math.max(page - 1, 0) * 50,
-				limit: 50
-			})
-			.then((entries: Entry[]) => {
-				for (const entry of entries) {
-					this.list.push(entry);
-				}
-				this.emit('update', this);
-			});
-	}
-	private _toWhere(query: string): any {
-		return {}; // XXX impl
-	}
-	private _loadUrl(url: string, page: number): void {
+	private _loadPosts(url: string, page: number): void {
 		DAO.self.once('posts', {
 				url: url.replace(/{page}/, `${page}`)
 			})
@@ -50,8 +33,25 @@ export default class Entries extends EventEmitter {
 					entry.get();
 					this.list.push(entry);
 				}
-				this.emit('update', this);
+				this.emit('update', this, entities);
 			});
+	}
+	private _loadEntries(url: string, page: number): void {
+		const where = this._toWhere(url.substr('entries://'.length));
+		Entry.find({
+				where: where,
+				skip: Math.max(page - 1, 0) * 50,
+				limit: 50
+			})
+			.then((entries: Entry[]) => {
+				for (const entry of entries) {
+					this.list.push(entry);
+				}
+				this.emit('update', this, entries);
+			});
+	}
+	private _toWhere(query: string): any {
+		return {}; // XXX impl
 	}
 	public remove(entry: Entry): void {
 		this.list.remove(entry);

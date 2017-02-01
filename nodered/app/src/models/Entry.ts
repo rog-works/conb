@@ -33,11 +33,7 @@ export default class Entry extends Model {
 	public static find(where: any = {}): Promise.IThenable<Entry[]> {
 		return Model.find(Entry.RESOURCE_NAME, where)
 			.then((entities: EntryEntity[]) => {
-				const models: Model[] = [];
-				for(const entity of entities) {
-					models.push(<Model>ModelFactory.self.create(entity));
-				}
-				return models;
+				return entities.map((entity) => <Entry>ModelFactory.self.create(entity));
 			});
 	}
 	public static sign(uri: string): string {

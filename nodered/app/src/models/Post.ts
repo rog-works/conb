@@ -92,6 +92,10 @@ export default class Post extends Model {
 		}
 	}
 	public unretentioned() { // FIXME
+		this.visit(false);
+		this.store(false);
+		this.bookmark(false);
+		this.favorite(false);
 		this.emit('delete', this);
 	}
 }

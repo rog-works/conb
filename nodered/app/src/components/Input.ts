@@ -7,14 +7,17 @@ export enum KeyCodes {
 	Left = 37,
 	Up = 38,
 	Right = 39,
-	Down = 40
+	Down = 40,
+	F = 70
 }
 
 export default class Input extends EventEmitter {
 	public value: KnockoutObservable<string>
+	public focus: KnockoutObservable<boolean>
 	public constructor(value: string) {
 		super('focus', 'accept', 'cancel', 'keyup');
 		this.value = ko.observable(value);
+		this.focus = ko.observable(false);
 	}
 	public get number(): number {
 		return parseInt(this.value());
