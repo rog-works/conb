@@ -31,13 +31,17 @@ export default class Entry extends Model {
 	}
 	// @override
 	public static find(where: any = {}): Promise.IThenable<Entry[]> {
-		return Model.find(Entry.RESOURCE_NAME, where);
+		return Model.find(Entry.RESOURCE_NAME, where)
+			.then((entities: EntryEntity[]) => {
+				const models: Model[] = [];
+				for(const entity of entities) {
+					models.push(<Model>ModelFactory.self.create(entity));
+				}
+				return models;
+			});
 	}
 	public static sign(uri: string): string {
 		return Sign.digest(uri);
-	}
-	public get description(): string {
-		return JSON.stringify(this.export()); // XXX
 	}
 	// @override
 	public get uniqueKey(): string {
@@ -81,6 +85,9 @@ export default class Entry extends Model {
 			entity.attrs.push(attr.export());
 		});
 		return entity;
+	}
+	public get description(): string {
+		return JSON.stringify(this.export()); // XXX
 	}
 	public get selected(): boolean {
 		return this.css.selected();

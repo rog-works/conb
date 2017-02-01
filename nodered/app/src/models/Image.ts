@@ -1,30 +1,38 @@
 import * as ko from 'knockout';
+import DAO from '../lib/DAO';
 import {Model, ModelEntity} from './Model';
 
 export interface ImageEntity extends ModelEntity {
-	url: string
-	src?: string
+	uri: string
 }
 
 export default class Image extends Model {
-	public readonly url: string
-	private _src: KnockoutObservable<string>
+	public readonly uri: string
+	public src: KnockoutObservable<string>
 	public constructor(entity: ImageEntity) {
 		super();
-		this.url = entity.url;
-		this._src = ko.observable(entity.src || '');
-		if (/^images:/.test(this.url) && !this._src()) {
-			this._load(this._loadUrl());
+		this.uri = entity.uri;
+		this.src = ko.observable('');
+		if (this._canLoad(this.uri)) {
+			this._load(this._parseUri(this.uri));
+		} else {
+			this.src(this.uri);
 		}
 	}
-	private _loadUrl(url) {
-		return url.substr('images://'.length);
+	private _canLoad(uri: string): boolean {
+		return /^images\/[^?]+[?].+$/.test(uri);
 	}
-	private _load() {
-		// todo
+	private _parseUri(uri: string): [string, string] {
+		const parts = uri.split('?');
+		const route = parts.shift() || '';
+		const url = decodeURIComponent(parts.shift() || '');
+		return [route, url];
 	}
-	public get src(): string {
-		return this._src;
+	private _load([route, url]: [string, string]): Promise.IThenable<void> {
+		return DAO.self.once(route, { url: url })
+			.then((data: { src: string }) => {
+				this.src(data.src);
+			});
 	}
 	// @override
 	public get uniqueKey(): string { return ''; } // XXX
@@ -35,7 +43,7 @@ export default class Image extends Model {
 	// @override
 	public export(): ImageEntity {
 		const entity = <any>super.export(); // FIXME down cast...
-		entity.src = this.src;
+		entity.uri = this.uri;
 		return entity;
 	}
 }

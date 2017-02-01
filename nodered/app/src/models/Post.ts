@@ -8,7 +8,6 @@ export interface PostEntity extends ModelEntity {
 	src: string
 	text: string
 	date: string
-	thumb?: string
 	visit?: boolean
 	store?: boolean
 	bookmark?: boolean
@@ -17,10 +16,8 @@ export interface PostEntity extends ModelEntity {
 
 export default class Post extends Model {
 	public readonly href: string
-	public readonly src: string
 	public readonly text: string
 	public readonly date: string
-	public thumb: string
 	public visit: KnockoutObservable<boolean>
 	public store: KnockoutObservable<boolean>
 	public bookmark: KnockoutObservable<boolean>
@@ -29,15 +26,13 @@ export default class Post extends Model {
 	public constructor(entity: PostEntity) {
 		super(['update', 'delete']);
 		this.href = entity.href;
-		this.src = entity.src;
 		this.text = entity.text;
 		this.date = entity.date;
-		this.thumb = entity.thumb || ''; // FIXME
 		this.visit = ko.observable(entity.visit || false);
 		this.store = ko.observable(entity.store || false);
 		this.bookmark = ko.observable(entity.bookmark || false);
 		this.favorite = ko.observable(entity.favorite || false);
-		this.image = new Image({ type: 'image', url: this.src });
+		this.image = new Image({ type: 'image', uri: entity.src }); // XXX
 	}
 	// @override
 	public get uniqueKey(): string { return ''; } // XXX
@@ -53,7 +48,7 @@ export default class Post extends Model {
 	public export(): PostEntity {
 		const entity = <any>super.export(); // FIXME down cast...
 		entity.href = this.href;
-		entity.src = this.src;
+		entity.src = this.image.uri;
 		entity.text = this.text;
 		entity.date = this.date;
 		entity.visit = this.visit();
