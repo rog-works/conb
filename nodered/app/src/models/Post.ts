@@ -57,6 +57,11 @@ export default class Post extends Model {
 		entity.favorite = this.favorite();
 		return entity;
 	}
+	public get favicon(): string {
+		const matches = this.href.match(/^[\w]+:\/\/([^\/]+)/);
+		const domain = matches ? matches[1] : 'localhost';
+		return `http://www.google.com/s2/favicons?domain=${domain}`
+	}
 	public opened() {
 		window.open(this.href); // XXX not pure js
 		if (!this.visit()) {
