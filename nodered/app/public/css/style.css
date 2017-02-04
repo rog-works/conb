@@ -225,12 +225,8 @@ a:link,
 a:visited {
 	color: inherit;
 }
-a.visit:link:before {
-	font-family: FontAwesome;
-	content: "\f00c";
-	color: #eee;
-}
-a.visit:visited:before {
+
+.visit:before {
 	font-family: FontAwesome;
 	content: "\f00c";
 	color: #4c4;
