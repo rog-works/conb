@@ -27,12 +27,13 @@ a { text-decoration: none; }
 .tag:after {
 	content: " ";
 	width: 128px;
-	height: 16px;
+	height: 8px;
 	box-shadow: 0 0 2px 5px rgba(0, 0, 0, 0.25);
 	/*background-color: #ccc;*/
-	transform: rotate(2deg);
+	transform: rotate(1deg);
 	position: absolute;
-	top: 12px;
+	/*background-color: transparent;*/
+	top: 8px;
 	z-index: -1;
 }
 .date:after {
@@ -44,6 +45,7 @@ a { text-decoration: none; }
 
 /* font */
 
+.font-0 { font-size:  9px; }
 .font-1 { font-size: 14px; }
 .font-2 { font-size: 19px; }
 .font-3 { font-size: 24px; }
@@ -72,9 +74,12 @@ a { text-decoration: none; }
 .bc-1.primary { background-color: #4c4; }
 .bc-1.selected { background-color: #48f; }
 .bc-b.trans { background-color: rgba(0, 0, 0, 0.5); }
+.bc-g.trans { background-color: rgba(64, 192, 64, 0.5); }
 .bc-1.selected.trans { background-color: rgba(64, 128, 255, 0.5); }
 
 .bc-t { background-color: rgba(0, 0, 0, 0.0); }
+
+.fc-date { color: #c80; text-shadow: 0 0 2px #000; }
 
 /* align */
 
@@ -92,6 +97,9 @@ a { text-decoration: none; }
 .cell.middle { vertical-align: middle; }
 
 /* position */
+
+.absolute.top { top: 0 }
+.absolute.bottom { bottom: 0 }
 
 .pxy-0 { left: 0; top: 0; }
 

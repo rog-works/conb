@@ -9,15 +9,6 @@
 		<link rel="stylesheet" href="css/style.css">
 	</head>
 	<body>
-		<div class="bc-2 w-4 h-1"></div>
-		<div class="tag bc-r w-4 h-1 pr-q1">
-			<div class="bc-1 fill table">
-				<div class="wh-1 cell center"><i class="fc-gray font-3 fa fa-plus"></i></div>
-				<div class="w-3 h-1"></div>
-			</div>
-		</div>
-		<div class="bc-3 w-4 h-1" style="margin-top: 8px;"></div>
-		<!--<div class="bc-3 w-4 h-1 shadow-1 rot-1 relative" style="z-index: -1; left: -2px; top: -34px;"></div>-->
 	<div id="main" class="bc-2 flex fill wrap">
 		<!-- content -->
 		<div class="w-1 fill-y grow-1">
@@ -27,7 +18,7 @@
 					<div class="bc-1 fill-x h-1 grow-0 flex">
 						<div class="w-1 fill-y grow-1">
 							<div class="fill">
-								<input type="text" class="fill-x h-1 less" placeholder="Search" list="list" data-bind="value: searcher.url.value, event: searcher.events">
+								<input type="text" class="fill-x h-1 less" placeholder="Search" list="list" data-bind="value: searcher.url.value, event: searcher.events, hasFocus: searcher.url.focus">
 							</div>
 							<datalist id="list" data-bind="foreach: searcher.urls">
 								<option data-bind="text: text, value: value"></option>
@@ -45,41 +36,63 @@
 						</div>
 					</div>
 					<!-- entry -->
-					<div class="fill-x h-1 grow-1 scroll" data-bind="foreach: entries.list, css: entries.css, event: events">
-						<div class="post w-12 h-10 m-q2 left" data-bind="css: css">
+					<div class="fill-x h-1 grow-1 scroll no-selection" data-bind="foreach: entries.list, css: entries.css, event: events">
+						<div class="post w-8 h-10 m-q2 left relative" data-bind="css: css">
 							<!-- ko foreach: $data.attrs -->
-								<!-- ko if: type === 'post' -->
-									<div class="w-8 h-10 table left">
-										<span class="bc-3 cell center">
-											<img class="date wh-max-8 shadow-1" data-bind="attr: { src: thumb ? thumb : src || 'image/404.gif' }" src="image/404.gif">
-											
-										</span>
+								<!-- ko if: active && type === 'image' -->
+									<div class="w-8 h-10 table absolute top">
+										<span class="cell center"><img class="w-max-8 h-max-10 shadow-1" data-bind="attr: { src: image.src() || 'image/404.gif' }" src="http://livedoor.blogimg.jp/amnoh0129/imgs/4/4/448e2ae5.jpg"></span>
 									</div>
-									<div class="bc-1 w-4 h-10 left">
-										<div class="table w-4 h-1">
-											<div class="fc-g wh-1 cell center"><i class="font-3 fa fa-check" data-bind="visible: visit"></i></div>
-											<div class="w-2 h-1 cell center"></div>
-											<div class="wh-1 cell center hover" data-bind="click: $root.entries.remove.bind($root.entries, $parent)"><i class="font-3 fa fa-remove"></i></div>
+								<!-- /ko -->
+								<!-- ko if: active && type === 'post'-->
+									<div class="w-8 h-1 absolute top">
+										<div class="bc-b trans table w-8 h-1">
+											<div class="wh-1 cell center"><img data-bind="attr: { src: favicon }" src="http://www.google.com/s2/favicons?domain=www.google.co.jp"></div>
+											<div class="w-6 h-1"></div>
+											<div class="fc-w wh-1 cell center hover" data-bind="click: $root.entries.remove.bind($root.entries, $data)"><i class="fa fa-remove"></i></div>
 										</div>
-										<div class="bc-b fc-w trans w-4 h-4 text-wrap">
-											<a data-bind="text: text, attr: { href: href, title: text }, click: opened">
-												あいうえおかきくけこさしすせそたちつてとなにぬねの
-											</a>
+									</div>
+									<div class="w-8 h-1 absolute top flex just-center">
+										<div class="table w-5 h-1">
+											<div class="wh-1 cell center hover"><div style="width: 24px; height: 24px; border-radius: 12px; border: solid 1px gray; background-color: rgba(192, 192, 192, 0.5);"><div class="table" style="width: 24px; height: 24px;"><div class="cell center"><i class="fc-w fa fa-cloud-download"></i></div></div></div></div>
+											<div class="wh-1 cell center hover"><div style="width: 24px; height: 24px; border-radius: 12px; border: solid 1px gray; background-color: rgba(192, 192, 192, 0.5);"><div class="table" style="width: 24px; height: 24px;"><div class="cell center"><i class="fc-w fa fa-bookmark"></i></div></div></div></div>
+											<div class="wh-1 cell center hover"><div style="width: 24px; height: 24px; border-radius: 12px; border: solid 1px gray; background-color: rgba(192, 192, 192, 0.5);"><div class="table" style="width: 24px; height: 24px;"><div class="cell center"><i class="fc-w fa fa-thumbs-up"></i></div></div></div></div>
+											<div class="wh-1 cell center hover"><div style="width: 24px; height: 24px; border-radius: 12px; border: solid 1px gray; background-color: rgba(192, 192, 192, 0.5);"><div class="table" style="width: 24px; height: 24px;"><div class="cell center"><i class="fc-w fa fa-thumbs-down"></i></div></div></div></div>
+											<div class="wh-1 cell center hover"><div style="width: 24px; height: 24px; border-radius: 12px; border: solid 1px gray; background-color: rgba(192, 192, 192, 0.5);"><div class="table" style="width: 24px; height: 24px;"><div class="cell center"><i class="fc-w fa fa-save"></i></div></div></div></div>
 										</div>
-										<div class="wh-4">
-											<div class="bc-r pr-q1 w-3 h-1 shadow-br-1">
-												<div class="fill">hoge</div>
-											</div>
+									</div>
+									<div class="w-8 h-3 absolute bottom">
+										<div class="h-h"></div>
+										<div class="h-h fc-date right" data-bind="text: date">2017/02/04 18:23</div>
+										<div class="bc-b fc-w trans w-8 h-2 text-wrap">
+											<a data-bind="text: text, css: { visit: visit }, attr: { href: href, title: text }, click: opened"></a>
 										</div>
-										<div class="bc-b fc-w trans table w-4 h-1">
-											<div class="bc-3 w-1 h-1"></div>
-											<div class="bc-4 wh-1 cell center hover" style="border-radius: 16px / 16px;" data-bind="click: downloaded"><i class="font-2 fa fa-cloud-download" data-bind="css: { 'fc-g': store() }"></i></div>
-											<div class="bc-5 wh-1 cell center hover" data-bind="click: bookmarked"><i class="font-2 fa fa-bookmark" data-bind="css: { 'fc-r': bookmark() }"></i></div>
-											<div class="bc-5 wh-1 cell center hover" data-bind="click: favorited"><i class="font-2 fa fa-thumbs-up" data-bind="css: { 'fc-r': favorite() }"></i></div>
+									</div>
+								<!-- /ko -->
+								<!-- ko if: active && type === 'tags'-->
+									<div class="w-8 h-10 absolute top">
+										<div class="w-8 h-1 table">
+											<i class="wh-1 cell center fa fa-tag hover" data-bind="click: tagged"></i>
+											<input type="text" class="w-7 h-1 less" style="background-color: transparent" placeholder="Input tag name" data-bind="value: input.value">
+										</div>
+										<div data-bind="foreach: tags">
+											<div class="h-h table left pr-q1"><i class="cell center fa fa-remove hover"></i><div class="cell center" data-bind="text: name">あいうえお</div></div>
+											<div class="h-h table left pr-q1"><i class="cell center fa fa-remove hover"></i><div class="cell center" data-bind="text: name">かきくけこ</div></div>
+											<div class="h-h table left pr-q1"><i class="cell center fa fa-remove hover"></i><div class="cell center" data-bind="text: name">さし</div></div>
+											<div class="h-h table left pr-q1"><i class="cell center fa fa-remove hover"></i><div class="cell center" data-bind="text: name">すせそ</div></div>
+											<div class="h-h table left pr-q1"><i class="cell center fa fa-remove hover"></i><div class="cell center" data-bind="text: name">すせそ</div></div>
 										</div>
 									</div>
 								<!-- /ko -->
 							<!-- /ko -->
+							<!-- attr pager -->
+							<div class="w-8 h-1 absolute bottom flex just-center">
+								<div class="fc-w table h-1" data-bind="foreach: attrs">
+									<div class="wh-1 cell center hover" data-bind="click: selected"><i class="fa fa-dot-circle-o" data-bind="css: { 'fa-dot-circle-o': active(), 'fa-circle-o': active() === false }"></i></div>
+									<div class="wh-1 cell center hover" data-bind="click: selected"><i class="fa fa-circle-o" data-bind="css: { 'fa-dot-circle-o': active(), 'fa-circle-o': active() === false }"></i></div>
+									<div class="wh-1 cell center hover" data-bind="click: selected"><i class="fa fa-circle-o" data-bind="css: { 'fa-dot-circle-o': active(), 'fa-circle-o': active() === false }"></i></div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

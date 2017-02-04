@@ -1,0 +1,103 @@
+<DOCTYPE html>
+<html lang="ja">
+	<head>
+		<title>Conb</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+		<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+		<link rel="stylesheet" href="css/vendors/normalize-5.0.0.min.css">
+		<link rel="stylesheet" href="css/style.css">
+	</head>
+	<body>
+		<div class="bc-2 w-4 h-1"></div>
+		<div class="tag bc-r w-4 h-h pr-q1 text-wrap">
+			<div class="bc-5 fill table">
+				<!--<div class="w-1 h-h cell center"><i class="fc-gray fa remove"></i></div>-->
+				<div class="row">
+					<div class="w-4 h-h font-0 cell middle">あいうえおかきくけこさしすせそたちつてと</div>
+				</div>
+			</div>
+		</div>
+		<div class="bc-3 w-4 h-1" style="margin-top: 8px;"></div>
+		<!--<div class="bc-3 w-4 h-1 shadow-1 rot-1 relative" style="z-index: -1; left: -2px; top: -34px;"></div>-->
+	<div id="main" class="bc-2 flex fill wrap">
+		<!-- content -->
+		<div class="w-1 fill-y grow-1">
+			<div class="fill">
+				<div class="fill flex column" data-bind="visible: focus() === 'entry'">
+					<!-- search -->
+					<div class="bc-1 fill-x h-1 grow-0 flex">
+						<div class="w-1 fill-y grow-1">
+							<div class="fill">
+								<input type="text" class="fill-x h-1 less" placeholder="Search" list="list" data-bind="value: searcher.url.value, event: searcher.events">
+							</div>
+							<datalist id="list" data-bind="foreach: searcher.urls">
+								<option data-bind="text: text, value: value"></option>
+							</datalist>
+						</div>
+						<div class="w-4 fill-y grow-0">
+							<div class="fill table">
+								<div class="row">
+									<i class="wh-1 cell center font-3 fa fa-search hover" data-bind="click: searched"></i>
+									<div class="wh-1 cell center less" data-bind="text: searcher.page.curr.value"></div>
+									<i class="wh-1 cell center font-3 fa fa-cloud-download hover" data-bind="click: entries.downloaded.bind($data.entries)"></i>
+									<i class="wh-1 cell center font-3 fa fa-trash hover" data-bind="click: entries.cleared.bind($data.entries)"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- entry -->
+					<div class="fill-x h-1 grow-1 scroll" data-bind="foreach: entries.list, css: entries.css, event: events">
+						<div class="post w-12 h-10 m-q2 left" data-bind="css: css">
+							<!-- ko foreach: $data.attrs -->
+								<!-- ko if: type === 'post' -->
+									<div class="w-8 h-10 table left">
+										<span class="bc-3 cell center">
+											<img class="date wh-max-8 shadow-1" data-bind="attr: { src: thumb ? thumb : src || 'image/404.gif' }" src="image/404.gif">
+											
+										</span>
+									</div>
+									<div class="bc-1 w-4 h-10 left">
+										<div class="table w-4 h-1">
+											<div class="fc-g wh-1 cell center"><i class="font-3 fa fa-check" data-bind="visible: visit"></i></div>
+											<div class="w-2 h-1 cell center"></div>
+											<div class="wh-1 cell center hover" data-bind="click: $root.entries.remove.bind($root.entries, $parent)"><i class="font-3 fa fa-remove"></i></div>
+										</div>
+										<div class="bc-b fc-w trans w-4 h-4 text-wrap">
+											<a data-bind="text: text, attr: { href: href, title: text }, click: opened">
+												あいうえおかきくけこさしすせそたちつてとなにぬねの
+											</a>
+										</div>
+										<div class="wh-4">
+											<div class="bc-r pr-q1 w-3 h-1 shadow-br-1">
+												<div class="fill">hoge</div>
+											</div>
+										</div>
+										<div class="bc-b fc-w trans table w-4 h-1">
+											<div class="bc-3 w-1 h-1"></div>
+											<div class="bc-4 wh-1 cell center hover" style="border-radius: 16px / 16px;" data-bind="click: downloaded"><i class="font-2 fa fa-cloud-download" data-bind="css: { 'fc-g': store() }"></i></div>
+											<div class="bc-5 wh-1 cell center hover" data-bind="click: bookmarked"><i class="font-2 fa fa-bookmark" data-bind="css: { 'fc-r': bookmark() }"></i></div>
+											<div class="bc-5 wh-1 cell center hover" data-bind="click: favorited"><i class="font-2 fa fa-thumbs-up" data-bind="css: { 'fc-r': favorite() }"></i></div>
+										</div>
+									</div>
+								<!-- /ko -->
+							<!-- /ko -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- toolbar -->
+		<div class="bc-1 w-1 fill-y grow-0">
+			<div class="fill">
+				<div class="w-1 table">
+					<div class="row"><i class="bc-1 fc-1 wh-1 cell center font-3 fa fa-globe hover" data-bind="css: { primary: focus() === 'entry' }, click: focused.bind($data, 'entry')"></i></div>
+					<div class="row"><i class="bc-1 fc-1 wh-1 cell center font-3 fa fa-commenting hover" data-bind="css: { primary: focus() === 'log' }, click: focused.bind($data, 'log')"></i></div>
+					<div class="row"><i class="wh-1 cell center font-3 fa fa-wifi" data-bind="style: wsObserver.style"></i></div>
+					<div class="row"><i class="wh-1 cell center font-3 fa fc-1" data-bind="css: webObserver.css"></i></div>
+					<div class="row"><i class="wh-1 cell center font-3 fa fa-question hover" data-bind="click: entries.test.bind($data.entries)"></i></div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
