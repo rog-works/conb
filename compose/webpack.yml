@@ -6,10 +6,5 @@ services:
     build: ../webpack/docker
     volumes:
       - ../nodered/app:/opt
-    # logging:
-    #   driver: fluentd
-    #   options:
-    #     fluentd-address: localhost:24224
-    #     tag: editor.webpack-log
       
     command: 'npm run build'

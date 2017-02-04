@@ -8,10 +8,12 @@ services:
       - nodered-db
     links:
       - nodered-db:database
+
   nodered-db:
    extends:
       file: ./compose/db.yml
       service: db
+
   nodered-webpack:
     extends:
       file: ./compose/webpack.yml
