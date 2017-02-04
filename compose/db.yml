@@ -1,0 +1,10 @@
+version: '2'
+services:
+  db:
+    container_name: nodered-db
+    image: nodered-db:latest
+    build: ../db/docker
+    volumes:
+      - /data:/data/db
+    ports:
+      - 27017:27017

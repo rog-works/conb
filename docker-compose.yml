@@ -1,40 +1,18 @@
 version: '2'
 services:
-  app:
-    container_name: nodered-app
-    image: nodered-app:latest
-    build: ./nodered/docker
-    volumes:
-      - ./nodered/data/settings.js:/data/settings.js
-      - ./nodered/data/flows.json:/data/flows.json
-      - ./nodered/app:/data/app
-      - ./nodered/nodes/node-red-node-loop:/data/node_modules/node-red-node-loop
-      - ./nodered/nodes/node-red-node-combine:/data/node_modules/node-red-node-combine
-      - ./nodered/nodes/node-red-node-pluck:/data/node_modules/node-red-node-pluck
-    ports:
-      - 1880:1880
+  nodered-app:
+    extends:
+      file: ./compose/app.yml
+      service: app
     depends_on:
-      - db
+      - nodered-db
     links:
-      - db:database
-  db:
-    container_name: nodered-db
-    image: nodered-db:latest
-    build: ./db/docker
-    volumes:
-      - /data:/data/db
-    ports:
-      - 27017:27017
-  webpack:
-    container_name: nodered-webpack
-    image: nodered-webpack:latest
-    build: ./webpack/docker
-    volumes:
-      - ./nodered/app:/opt
-    logging:
-      driver: fluentd
-      options:
-        fluentd-address: localhost:24224
-        tag: editor.webpack-log
-      
-    command: 'npm run build'
+      - nodered-db:database
+  nodered-db:
+   extends:
+      file: ./compose/db.yml
+      service: db
+  nodered-webpack:
+    extends:
+      file: ./compose/webpack.yml
+      service: webpack
