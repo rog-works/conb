@@ -18,7 +18,7 @@
 					<div class="bc-g fill-x h-1 grow-0 flex shadow-1">
 						<div class="w-1 fill-y grow-1">
 							<div class="fill flex arounding">
-								<i class="fc-w bc-g wh-1 flex centering fa fa-github"></i>
+								<i class="fc-w wh-1 flex centering fa fa-github"></i>
 								<i class="fc-g bc-w w-1 h-hq flex centering fa fa-search hover" data-bind="click: searched"></i>
 								<input type="text" class="fill-x h-hq less" placeholder="Search" list="list" data-bind="value: searcher.url.value, event: searcher.events, hasFocus: searcher.url.focus">
 							</div>
@@ -26,22 +26,16 @@
 								<option data-bind="text: text, value: value"></option>
 							</datalist>
 						</div>
-						<!--<div class="w-1 fill-y grow-0 flex arounding">-->
-							<!--<i class="fc-g bc-w w-1 h-hq flex centering fa fa-search hover" data-bind="click: searched"></i>-->
-							<!--<div class="wh-1 flex centering less" data-bind="text: searcher.page.curr.value"></div>-->
-							<!--<i class="fc-w wh-hq round-hq border flex centering fa fa-cloud-download hover" data-bind="click: entries.downloaded.bind($data.entries)"></i>-->
-							<!--<i class="fc-w wh-hq round-hq border flex centering fa fa-trash hover" data-bind="click: entries.cleared.bind($data.entries)"></i>-->
-						<!--</div>-->
 					</div>
 					<!-- entry -->
 					<div class="fill-x h-1 grow-1 scroll no-selection" data-bind="foreach: entries.list, css: entries.css, event: events">
-						<div class="post w-8 h-11 m-q2 left relative" data-bind="css: css">
+						<div class="post w-8 h-11 m-q1 left relative" data-bind="css: css">
 							<!-- ko foreach: $data.attrs -->
 								<!-- ko if: active && type === 'post'-->
 									<div class="w-8 h-10 absolute abs-bottom flex centering">
 										<img class="w-max-8 h-max-10 shadow-1" data-bind="attr: { src: image.src() || 'image/404.gif' }" src="http://design.trident.ac.jp/works/uploads/eikan_Chiba2-01.jpg">
 									</div>
-									<div class="bc-gray w-8 h-1 absolute abs-top shadow-1">
+									<div class="bc-g w-8 h-1 absolute abs-top shadow-1">
 										<div class="wh-1 flex centering"><img data-bind="attr: { src: favicon }" src="http://www.google.com/s2/favicons?domain=www.google.co.jp"></div>
 									</div>
 									<div class="w-8 h-1 absolute abs-top flex just-center">
@@ -97,12 +91,16 @@
 			</div>
 		</div>
 		<!-- toolbar -->
-		<div class="bc-1 w-1 fill-y grow-0">
-			<i class="bc-1 fc-1 wh-1 flex centering font-3 fa fa-globe hover" data-bind="css: { primary: focus() === 'entry' }, click: focused.bind($data, 'entry')"></i>
-			<i class="bc-1 fc-1 wh-1 flex centering font-3 fa fa-commenting hover" data-bind="css: { primary: focus() === 'log' }, click: focused.bind($data, 'log')"></i>
-			<i class="wh-1 flex centering font-3 fa fa-wifi" data-bind="style: wsObserver.style"></i>
-			<i class="wh-1 flex centering font-3 fa fc-1" data-bind="css: webObserver.css"></i>
-			<i class="wh-1 flex centering font-3 fa fa-question hover" data-bind="click: entries.test.bind($data.entries)"></i>
+		<div class="bc-g w-1 fill-y grow-0">
+			<i class="fc-w wh-1 flex centering font-3 fa fa-globe hover" data-bind="css: { primary: focus() === 'entry' }, click: focused.bind($data, 'entry')"></i>
+			<i class="fc-w wh-1 flex centering font-3 fa fa-commenting hover" data-bind="css: { primary: focus() === 'log' }, click: focused.bind($data, 'log')"></i>
+			<i class="fc-w wh-1 flex centering font-3 fa fa-wifi" data-bind="style: wsObserver.style"></i>
+			<i class="fc-w wh-1 flex centering font-3 fa" data-bind="css: webObserver.css"></i>
+			<i class="fc-w wh-1 flex centering font-3 fa fa-question hover" data-bind="click: entries.test.bind($data.entries)"></i>
+			<!-- ko if: focus() === 'entry' -->
+				<i class="fc-w wh-1 flex centering font-3 fa fa-cloud-download hover" data-bind="click: entries.downloaded.bind($data.entries)"></i>
+				<i class="fc-w wh-1 flex centering font-3 fa fa-trash hover" data-bind="click: entries.cleared.bind($data.entries)"></i>
+			<!-- /ko -->
 		</div>
 	</body>
 </html>

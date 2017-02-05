@@ -41,7 +41,7 @@ export default class Main {
 		ModelFactory.self.regist(Tags);
 		ModelFactory.self.regist(Tag);;
 		ModelFactory.self.regist(Image);
-		this._scroll = new Scroll(256);
+		this._scroll = new Scroll(32 * 11 * 2);
 		this.wsObserver = new WSObserver();
 		this.webObserver = new WebObserver();
 		this.logger = new Logger();

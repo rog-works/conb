@@ -15,29 +15,22 @@
 			<div class="fill">
 				<div class="fill flex column" data-bind="visible: focus() === 'entry'">
 					<!-- search -->
-					<div class="bc-1 fill-x h-1 grow-0 flex">
+					<div class="bc-g fill-x h-1 grow-0 flex shadow-1">
 						<div class="w-1 fill-y grow-1">
-							<div class="fill">
-								<input type="text" class="fill-x h-1 less" placeholder="Search" list="list" data-bind="value: searcher.url.value, event: searcher.events, hasFocus: searcher.url.focus">
+							<div class="fill flex arounding">
+								<i class="wh-1 flex centering"><img src="image/favicon-w16.png"></i>
+								<i class="fc-g bc-w w-1 h-hq flex centering fa fa-search hover" data-bind="click: searched"></i>
+								<input type="text" class="fill-x h-hq less" placeholder="Search" list="list" data-bind="value: searcher.url.value, event: searcher.events, hasFocus: searcher.url.focus">
+								<div class="bc-w w-1 h-hq flex centering" data-bind="text: searcher.page.curr.number"></div>
 							</div>
 							<datalist id="list" data-bind="foreach: searcher.urls">
 								<option data-bind="text: text, value: value"></option>
 							</datalist>
 						</div>
-						<div class="w-4 fill-y grow-0">
-							<div class="fill table">
-								<div class="row">
-									<i class="wh-1 cell center font-3 fa fa-search hover" data-bind="click: searched"></i>
-									<div class="wh-1 cell center less" data-bind="text: searcher.page.curr.value"></div>
-									<i class="wh-1 cell center font-3 fa fa-cloud-download hover" data-bind="click: entries.downloaded.bind($data.entries)"></i>
-									<i class="wh-1 cell center font-3 fa fa-trash hover" data-bind="click: entries.cleared.bind($data.entries)"></i>
-								</div>
-							</div>
-						</div>
 					</div>
 					<!-- entry -->
 					<div class="fill-x h-1 grow-1 scroll no-selection" data-bind="foreach: entries.list, css: entries.css, event: events">
-						<div class="post w-8 h-11 m-q2 left relative" data-bind="css: css">
+						<div class="post w-8 h-11 m-q1 left relative" data-bind="css: css">
 							<!-- ko foreach: $data.attrs -->
 								<!-- ko if: type === 'post' -->
 									<div class="w-8 h-10 absolute abs-bottom flex centering">
@@ -48,7 +41,7 @@
 									</div>
 									<div class="w-8 h-1 absolute abs-top flex just-center" data-bind="visible: $parent.focus() === type">
 										<div class="fc-w w-5 h-1 flex arounding">
-											<i class="wh-hq round-hq border flex centering hover fa fa-cloud-download" data-bind="click: downloaded, css: { 'fc-g': store() === true }"></i>
+											<i class="wh-hq round-hq border flex centering hover fa fa-cloud-download" data-bind="click: downloaded, css: { 'fc-b': store() === true }"></i>
 											<i class="wh-hq round-hq border flex centering hover fa fa-bookmark" data-bind="click: bookmarked, css: { 'fc-r': bookmark() === true }"></i>
 											<i class="wh-hq round-hq border flex centering hover fa fa-thumbs-up" data-bind="click: favorited, css: { 'fc-y': favorite() === true }"></i>
 											<i class="wh-hq round-hq border flex centering hover fa fa-check" data-bind="click: stored"></i>
@@ -92,15 +85,11 @@
 				</div>
 				<!-- log -->
 				<div class="fill flex column" data-bind="visible: focus() === 'log'">
-					<div class="bc-1 fill-x h-1 grow-0 flex">
-						<div class="wh-1 grow-1">
-							<div class="fill-x h-1 table">
-								<div class="cell middle">Log</div>
-							</div>
-						</div>
-						<div class="wh-1 grow-0">
-							<div class="wh-1 table">
-								<div class="row"><i class="wh-1 cell center font-3 fa fa-trash hover" data-bind="click: logger.clear.bind($data.logger)"></i></div>
+					<div class="bc-g fill-x h-1 grow-0 flex shadow-1">
+						<div class="w-1 fill-y grow-1">
+							<div class="w-2 h-1 grow-0 flex arounding">
+								<i class="wh-1 flex centering"><img src="image/favicon-w16.png"></i>
+								<i class="fc-w wh-1 flex centering font-3 fa fa-trash hover" data-bind="click: logger.clear.bind($data.logger)"></i>
 							</div>
 						</div>
 					</div>
@@ -111,16 +100,16 @@
 			</div>
 		</div>
 		<!-- toolbar -->
-		<div class="bc-1 w-1 fill-y grow-0">
-			<div class="fill">
-				<div class="w-1 table">
-					<div class="row"><i class="bc-1 fc-1 wh-1 cell center font-3 fa fa-globe hover" data-bind="css: { primary: focus() === 'entry' }, click: focused.bind($data, 'entry')"></i></div>
-					<div class="row"><i class="bc-1 fc-1 wh-1 cell center font-3 fa fa-commenting hover" data-bind="css: { primary: focus() === 'log' }, click: focused.bind($data, 'log')"></i></div>
-					<div class="row"><i class="wh-1 cell center font-3 fa fa-wifi" data-bind="style: wsObserver.style"></i></div>
-					<div class="row"><i class="wh-1 cell center font-3 fa fc-1" data-bind="css: webObserver.css"></i></div>
-					<div class="row"><i class="wh-1 cell center font-3 fa fa-question hover" data-bind="click: entries.test.bind($data.entries)"></i></div>
-				</div>
-			</div>
+		<div class="bc-g w-1 fill-y grow-0">
+			<i class="fc-w wh-1 flex centering font-3 fa fa-globe hover" data-bind="css: { primary: focus() === 'entry' }, click: focused.bind($data, 'entry')"></i>
+			<i class="fc-w wh-1 flex centering font-3 fa fa-commenting hover" data-bind="css: { primary: focus() === 'log' }, click: focused.bind($data, 'log')"></i>
+			<i class="fc-w wh-1 flex centering font-3 fa" data-bind="css: { 'fa-wifi': wsObserver.connected() === true, 'fa-warning': wsObserver.connected() === false }"></i>
+			<i class="fc-w wh-1 flex centering font-3 fa" data-bind="css: webObserver.css"></i>
+			<i class="fc-w wh-1 flex centering font-3 fa fa-question hover" data-bind="click: entries.test.bind($data.entries)"></i>
+			<!-- ko if: focus() === 'entry' -->
+				<i class="fc-w wh-1 flex centering font-3 fa fa-cloud-download hover" data-bind="click: entries.downloaded.bind($data.entries)"></i>
+				<i class="fc-w wh-1 flex centering font-3 fa fa-trash hover" data-bind="click: entries.cleared.bind($data.entries)"></i>
+			<!-- /ko -->
 		</div>
 		<script type="text/javascript" src="js/bundle.js"></script>
 	</body>
