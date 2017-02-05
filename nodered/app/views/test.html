@@ -15,25 +15,23 @@
 			<div class="fill">
 				<div class="fill flex column" data-bind="visible: focus() === 'entry'">
 					<!-- search -->
-					<div class="bc-1 fill-x h-1 grow-0 flex">
+					<div class="bc-g fill-x h-1 grow-0 flex shadow-1">
 						<div class="w-1 fill-y grow-1">
-							<div class="fill">
-								<input type="text" class="fill-x h-1 less" placeholder="Search" list="list" data-bind="value: searcher.url.value, event: searcher.events, hasFocus: searcher.url.focus">
+							<div class="fill flex arounding">
+								<i class="fc-w bc-g wh-1 flex centering fa fa-github"></i>
+								<i class="fc-g bc-w w-1 h-hq flex centering fa fa-search hover" data-bind="click: searched"></i>
+								<input type="text" class="fill-x h-hq less" placeholder="Search" list="list" data-bind="value: searcher.url.value, event: searcher.events, hasFocus: searcher.url.focus">
 							</div>
 							<datalist id="list" data-bind="foreach: searcher.urls">
 								<option data-bind="text: text, value: value"></option>
 							</datalist>
 						</div>
-						<div class="w-4 fill-y grow-0">
-							<div class="fill table">
-								<div class="row">
-									<i class="wh-1 cell center font-3 fa fa-search hover" data-bind="click: searched"></i>
-									<div class="wh-1 cell center less" data-bind="text: searcher.page.curr.value"></div>
-									<i class="wh-1 cell center font-3 fa fa-cloud-download hover" data-bind="click: entries.downloaded.bind($data.entries)"></i>
-									<i class="wh-1 cell center font-3 fa fa-trash hover" data-bind="click: entries.cleared.bind($data.entries)"></i>
-								</div>
-							</div>
-						</div>
+						<!--<div class="w-1 fill-y grow-0 flex arounding">-->
+							<!--<i class="fc-g bc-w w-1 h-hq flex centering fa fa-search hover" data-bind="click: searched"></i>-->
+							<!--<div class="wh-1 flex centering less" data-bind="text: searcher.page.curr.value"></div>-->
+							<!--<i class="fc-w wh-hq round-hq border flex centering fa fa-cloud-download hover" data-bind="click: entries.downloaded.bind($data.entries)"></i>-->
+							<!--<i class="fc-w wh-hq round-hq border flex centering fa fa-trash hover" data-bind="click: entries.cleared.bind($data.entries)"></i>-->
+						<!--</div>-->
 					</div>
 					<!-- entry -->
 					<div class="fill-x h-1 grow-1 scroll no-selection" data-bind="foreach: entries.list, css: entries.css, event: events">
@@ -43,7 +41,7 @@
 									<div class="w-8 h-10 absolute abs-bottom flex centering">
 										<img class="w-max-8 h-max-10 shadow-1" data-bind="attr: { src: image.src() || 'image/404.gif' }" src="http://design.trident.ac.jp/works/uploads/eikan_Chiba2-01.jpg">
 									</div>
-									<div class="bc-g w-8 h-1 absolute abs-top shadow-1">
+									<div class="bc-gray w-8 h-1 absolute abs-top shadow-1">
 										<div class="wh-1 flex centering"><img data-bind="attr: { src: favicon }" src="http://www.google.com/s2/favicons?domain=www.google.co.jp"></div>
 									</div>
 									<div class="w-8 h-1 absolute abs-top flex just-center">
@@ -88,9 +86,9 @@
 							<!-- attr pager -->
 							<div class="w-8 h-1 absolute abs-bottom flex just-center">
 								<div class="fc-w w-3 h-1 flex arounding" data-bind="foreach: attrs">
-									<i class="wh-1 flex centering hover fa fa-dot-circle-o" data-bind="click: selected, css: { 'fa-dot-circle-o': active(), 'fa-circle-o': active() === false }"></i></div>
-									<i class="wh-1 flex centering hover fa fa-circle-o" data-bind="click: selected, css: { 'fa-dot-circle-o': active(), 'fa-circle-o': active() === false }"></i></div>
-									<i class="wh-1 flex centering hover fa fa-circle-o" data-bind="click: selected, css: { 'fa-dot-circle-o': active(), 'fa-circle-o': active() === false }"></i></div>
+									<i class="wh-1 flex centering hover fa fa-dot-circle-o" data-bind="click: selected, css: { 'fa-dot-circle-o': active(), 'fa-circle-o': active() === false }"></i>
+									<i class="wh-1 flex centering hover fa fa-circle-o" data-bind="click: selected, css: { 'fa-dot-circle-o': active(), 'fa-circle-o': active() === false }"></i>
+									<i class="wh-1 flex centering hover fa fa-circle-o" data-bind="click: selected, css: { 'fa-dot-circle-o': active(), 'fa-circle-o': active() === false }"></i>
 								</div>
 							</div>
 						</div>
@@ -100,15 +98,11 @@
 		</div>
 		<!-- toolbar -->
 		<div class="bc-1 w-1 fill-y grow-0">
-			<div class="fill">
-				<div class="w-1 table">
-					<div class="row"><i class="bc-1 fc-1 wh-1 cell center font-3 fa fa-globe hover" data-bind="css: { primary: focus() === 'entry' }, click: focused.bind($data, 'entry')"></i></div>
-					<div class="row"><i class="bc-1 fc-1 wh-1 cell center font-3 fa fa-commenting hover" data-bind="css: { primary: focus() === 'log' }, click: focused.bind($data, 'log')"></i></div>
-					<div class="row"><i class="wh-1 cell center font-3 fa fa-wifi" data-bind="style: wsObserver.style"></i></div>
-					<div class="row"><i class="wh-1 cell center font-3 fa fc-1" data-bind="css: webObserver.css"></i></div>
-					<div class="row"><i class="wh-1 cell center font-3 fa fa-question hover" data-bind="click: entries.test.bind($data.entries)"></i></div>
-				</div>
-			</div>
+			<i class="bc-1 fc-1 wh-1 flex centering font-3 fa fa-globe hover" data-bind="css: { primary: focus() === 'entry' }, click: focused.bind($data, 'entry')"></i>
+			<i class="bc-1 fc-1 wh-1 flex centering font-3 fa fa-commenting hover" data-bind="css: { primary: focus() === 'log' }, click: focused.bind($data, 'log')"></i>
+			<i class="wh-1 flex centering font-3 fa fa-wifi" data-bind="style: wsObserver.style"></i>
+			<i class="wh-1 flex centering font-3 fa fc-1" data-bind="css: webObserver.css"></i>
+			<i class="wh-1 flex centering font-3 fa fa-question hover" data-bind="click: entries.test.bind($data.entries)"></i>
 		</div>
 	</body>
 </html>
