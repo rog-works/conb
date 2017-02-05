@@ -18,12 +18,14 @@ export default class Entry extends Model {
 	public readonly uri: string
 	public readonly attrs: KnockoutObservableArray<Model>
 	public readonly css: any // XXX
+	public readonly focus: KnockoutObservable<string>
 	public constructor(entity: EntryEntity) {
 		super();
 		this._id = entity._id || '';
 		this.signature = Entry.sign(entity.uri);
 		this.uri = entity.uri;
 		this.attrs = ko.observableArray(entity.attrs.map((attrEntity) => this._createAttr(attrEntity)));
+		this.focus = ko.observable(this.attrs().length > 0 ? this.attrs()[0].type : ''); // FIXME
 		this.css = {
 			close: ko.observable(false),
 			selected: ko.observable(false)
@@ -96,6 +98,9 @@ export default class Entry extends Model {
 	}
 	public set closed(enabled: boolean) {
 		this.css.close(enabled);
+	}
+	public focused(attr: Model) {
+		this.focus(attr.type);
 	}
 	private _createAttr(entity: ModelEntity): Model {
 		return ModelFactory.self.create(entity)

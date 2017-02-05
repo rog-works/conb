@@ -122,6 +122,14 @@ export default class Entries extends EventEmitter {
 						src: '',
 						text: 'hogehoge, ' + i,
 						date: 'none'
+					},
+					{
+						type: 'tags',
+						tags: [
+							{ type: 'tag', name: 'hoge0' },
+							{ type: 'tag', name: 'hoge1' },
+							{ type: 'tag', name: 'hoge3' },
+						]
 					}
 				]
 			};
