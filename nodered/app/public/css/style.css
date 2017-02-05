@@ -219,6 +219,15 @@ a { text-decoration: none; }
 .flex .shrink-0 { flex-shrink: 0 }
 .flex .shrink-1 { flex-shrink: 1 }
 
+.flex.arounding {
+	justify-content: space-around;
+	align-items: center;
+}
+.flex.centering {
+	justify-content: center;
+	align-items: center;
+}
+
 /* decoration */
 
 .less {

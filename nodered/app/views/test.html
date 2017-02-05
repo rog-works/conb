@@ -44,24 +44,22 @@
 										<span class="cell center"><img class="w-max-8 h-max-10 shadow-1" data-bind="attr: { src: image.src() || 'image/404.gif' }" src="http://design.trident.ac.jp/works/uploads/eikan_Chiba2-01.jpg"></span>
 									</div>
 								<!-- /ko -->
-								<!---->
 								<!-- ko if: type === 'common' -->
 									<div class="w-8 h-1 absolute top">
-										<div class="bc-g shadow-1 table w-8 h-1">
-											<div class="wh-1 cell center"><img data-bind="attr: { src: favicon }" src="http://www.google.com/s2/favicons?domain=www.google.co.jp"></div>
-											<div class="w-6 h-1"></div>
-											<div class="fc-w wh-1 cell center hover" data-bind="click: $root.entries.remove.bind($root.entries, $data)"><i class="fa fa-remove"></i></div>
+										<div class="bc-g shadow-1 w-8 h-1 flex just-between">
+											<div class="wh-1 flex arounding"><img data-bind="attr: { src: favicon }" src="http://www.google.com/s2/favicons?domain=www.google.co.jp"></div>
+											<div class="wh-1 flex arounding" data-bind="click: $root.entries.remove.bind($root.entries, $data)"><i class="fa fa-remove"></i></div>
 										</div>
 									</div>
 								<!-- /ko -->
 								<!-- ko if: active && type === 'post'-->
 									<div class="w-8 h-1 absolute top flex just-center">
-										<div class="table w-5 h-1">
-											<div class="wh-1 cell center hover"><div class="wh-hq round-hq border"><div class="wh-hq table"><div class="cell center"><i class="fc-w fa fa-cloud-download"></i></div></div></div></div>
-											<div class="wh-1 cell center hover"><div class="wh-hq round-hq border"><div class="wh-hq table"><div class="cell center"><i class="fc-w fa fa-bookmark"></i></div></div></div></div>
-											<div class="wh-1 cell center hover"><div class="wh-hq round-hq border"><div class="wh-hq table"><div class="cell center"><i class="fc-w fa fa-thumbs-up"></i></div></div></div></div>
-											<div class="wh-1 cell center hover"><div class="wh-hq round-hq border"><div class="wh-hq table"><div class="cell center"><i class="fc-w fa fa-check"></i></div></div></div></div>
-											<div class="wh-1 cell center hover"><div class="wh-hq round-hq border"><div class="wh-hq table"><div class="cell center"><i class="fc-w fa fa-trash"></i></div></div></div></div>
+										<div class="w-5 h-1 flex arounding">
+											<div class="wh-hq round-hq border flex centering"><i class="fc-w fa fa-cloud-download"></i></div>
+											<div class="wh-hq round-hq border flex centering"><i class="fc-w fa fa-bookmark"></i></div>
+											<div class="wh-hq round-hq border flex centering"><i class="fc-w fa fa-thumbs-up"></i></div>
+											<div class="wh-hq round-hq border flex centering"><i class="fc-w fa fa-check"></i></div>
+											<div class="wh-hq round-hq border flex centering"><i class="fc-w fa fa-trash"></i></div>
 										</div>
 									</div>
 									<div class="w-8 h-3 absolute bottom">
@@ -73,7 +71,7 @@
 									</div>
 								<!-- /ko -->
 								<!-- ko if: active && type === 'tags'-->
-									<div class="fc-w w-8 h-1 absolute top">
+									<div class="fc-w w-8 h-1 absolute top close">
 										<div class="w-8 h-1 table">
 											<div class="wh-1 cell center"></div>
 											<i class="wh-1 cell center fa fa-tag hover" data-bind="click: tagged"></i>
@@ -82,13 +80,13 @@
 										</div>
 									</div>
 									<div class="fc-w w-8 h-9 absolute bottom">
-										<div data-bind="foreach: tags">
-											<div class="h-h table left pr-q1"><i class="cell center fa fa-remove hover"></i><div class="cell center" data-bind="text: name">あいうえお</div></div>
-											<div class="h-h table left pr-q1"><i class="cell center fa fa-remove hover"></i><div class="cell center" data-bind="text: name">かきくけこ</div></div>
-											<div class="h-h table left pr-q1"><i class="cell center fa fa-remove hover"></i><div class="cell center" data-bind="text: name">さし</div></div>
-											<div class="h-h table left pr-q1"><i class="cell center fa fa-remove hover"></i><div class="cell center" data-bind="text: name">すせそ</div></div>
-											<div class="h-h table left pr-q1"><i class="cell center fa fa-remove hover"></i><div class="cell center" data-bind="text: name">すせそ</div></div>
-										</div>
+										<!-- ko foreach: tags -->
+											<div class="h-h flex row-center left"><i class="fa fa-remove hover"></i><div data-bind="text: name">あいうえお</div></div>
+											<div class="h-h flex row-center left"><i class="fa fa-remove hover"></i><div data-bind="text: name">かきくけこ</div></div>
+											<div class="h-h flex row-center left"><i class="fa fa-remove hover"></i><div data-bind="text: name">さし</div></div>
+											<div class="h-h flex row-center left"><i class="fa fa-remove hover"></i><div data-bind="text: name">すせそ</div></div>
+											<div class="h-h flex row-center left"><i class="fa fa-remove hover"></i><div data-bind="text: name">すせそ</div></div>
+										<!-- /ko -->
 									</div>
 								<!-- /ko -->
 							<!-- /ko -->
