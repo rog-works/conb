@@ -60,5 +60,6 @@ export default class Tags extends Model {
 	}
 	private _onAccept(sender: Input) {
 		this.tagged(this.input.value());
+		this.input.value('');
 	}
 }
