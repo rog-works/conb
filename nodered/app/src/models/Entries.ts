@@ -115,15 +115,15 @@ export default class Entries extends EventEmitter {
 			const entity = {
 				type: 'entry',
 				uri: 'https://google.co.jp/' + i,
-				attrs: [
-					{
+				attrs: {
+					post: {
 						type: 'post',
 						href: 'https://google.co.jp/' + i,
 						src: '',
 						text: 'hogehoge, ' + i,
 						date: 'none'
 					},
-					{
+					tags: {
 						type: 'tags',
 						tags: [
 							{ type: 'tag', name: 'hoge0' },
@@ -131,7 +131,7 @@ export default class Entries extends EventEmitter {
 							{ type: 'tag', name: 'hoge3' },
 						]
 					}
-				]
+				}
 			};
 			const entry = <Entry>ModelFactory.self.create(entity);
 			entry.get();
