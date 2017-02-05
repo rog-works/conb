@@ -37,32 +37,25 @@
 					</div>
 					<!-- entry -->
 					<div class="fill-x h-1 grow-1 scroll no-selection" data-bind="foreach: entries.list, css: entries.css, event: events">
-						<div class="post w-8 h-10 m-q2 left relative" data-bind="css: css">
+						<div class="post w-8 h-11 m-q2 left relative" data-bind="css: css">
 							<!-- ko foreach: $data.attrs -->
-								<!-- ko if: type === 'image' -->
-									<div class="w-8 h-10 table absolute top">
-										<span class="cell center"><img class="w-max-8 h-max-10 shadow-1" data-bind="attr: { src: image.src() || 'image/404.gif' }" src="http://design.trident.ac.jp/works/uploads/eikan_Chiba2-01.jpg"></span>
-									</div>
-								<!-- /ko -->
-								<!-- ko if: type === 'common' -->
-									<div class="w-8 h-1 absolute top">
-										<div class="bc-g shadow-1 w-8 h-1 flex just-between">
-											<div class="wh-1 flex arounding"><img data-bind="attr: { src: favicon }" src="http://www.google.com/s2/favicons?domain=www.google.co.jp"></div>
-											<div class="wh-1 flex arounding" data-bind="click: $root.entries.remove.bind($root.entries, $data)"><i class="fa fa-remove"></i></div>
-										</div>
-									</div>
-								<!-- /ko -->
 								<!-- ko if: active && type === 'post'-->
-									<div class="w-8 h-1 absolute top flex just-center">
-										<div class="w-5 h-1 flex arounding">
-											<div class="wh-hq round-hq border flex centering"><i class="fc-w fa fa-cloud-download"></i></div>
-											<div class="wh-hq round-hq border flex centering"><i class="fc-w fa fa-bookmark"></i></div>
-											<div class="wh-hq round-hq border flex centering"><i class="fc-w fa fa-thumbs-up"></i></div>
-											<div class="wh-hq round-hq border flex centering"><i class="fc-w fa fa-check"></i></div>
-											<div class="wh-hq round-hq border flex centering"><i class="fc-w fa fa-trash"></i></div>
+									<div class="w-8 h-10 absolute abs-bottom flex centering">
+										<img class="w-max-8 h-max-10 shadow-1" data-bind="attr: { src: image.src() || 'image/404.gif' }" src="http://design.trident.ac.jp/works/uploads/eikan_Chiba2-01.jpg">
+									</div>
+									<div class="bc-g w-8 h-1 absolute abs-top shadow-1">
+										<div class="wh-1 flex centering"><img data-bind="attr: { src: favicon }" src="http://www.google.com/s2/favicons?domain=www.google.co.jp"></div>
+									</div>
+									<div class="w-8 h-1 absolute abs-top flex just-center">
+										<div class="fc-w w-5 h-1 flex arounding">
+											<i class="wh-hq round-hq border flex centering hover fa fa-cloud-download"></i>
+											<i class="wh-hq round-hq border flex centering hover fa fa-bookmark"></i>
+											<i class="wh-hq round-hq border flex centering hover fa fa-thumbs-up"></i>
+											<i class="wh-hq round-hq border flex centering hover fa fa-check"></i>
+											<i class="wh-hq round-hq border flex centering hover fa fa-trash"></i>
 										</div>
 									</div>
-									<div class="w-8 h-3 absolute bottom">
+									<div class="w-8 h-3 absolute abs-bottom">
 										<div class="h-h"></div>
 										<div class="h-h fc-date right" data-bind="text: date">2017/02/04 18:23</div>
 										<div class="bc-b fc-w trans w-8 h-2 text-wrap">
@@ -71,15 +64,13 @@
 									</div>
 								<!-- /ko -->
 								<!-- ko if: active && type === 'tags'-->
-									<div class="fc-w w-8 h-1 absolute top close">
-										<div class="w-8 h-1 table">
-											<div class="wh-1 cell center"></div>
-											<i class="wh-1 cell center fa fa-tag hover" data-bind="click: tagged"></i>
-											<input class="w-5 h-1 cell center less" type="text" placeholder="Input tag name" data-bind="value: input.value">
-											<div class="wh-1 cell center"></div>
+									<div class="fc-w w-8 h-1 absolute abs-top flex just-center close">
+										<div class="w-6 h-1 flex arounding">
+											<i class="flex centering wh-1 fa fa-tag hover" data-bind="click: tagged"></i>
+											<input class="w-5 h-1 less" type="text" placeholder="Input tag name" data-bind="value: input.value">
 										</div>
 									</div>
-									<div class="fc-w w-8 h-9 absolute bottom">
+									<div class="fc-w w-8 h-10 absolute abs-bottom">
 										<!-- ko foreach: tags -->
 											<div class="h-h flex row-center left"><i class="fa fa-remove hover"></i><div data-bind="text: name">あいうえお</div></div>
 											<div class="h-h flex row-center left"><i class="fa fa-remove hover"></i><div data-bind="text: name">かきくけこ</div></div>
@@ -90,12 +81,16 @@
 									</div>
 								<!-- /ko -->
 							<!-- /ko -->
+							<!-- remove entry -->
+							<div class="w-1 h-1 absolute abs-top abs-right">
+								<i class="fc-w wh-1 flex centering fa fa-remove hover" data-bind="click: $root.entries.remove.bind($root.entries, $data)"></i>
+							</div>
 							<!-- attr pager -->
-							<div class="w-8 h-1 absolute bottom flex just-center">
-								<div class="fc-w table h-1" data-bind="foreach: attrs">
-									<div class="wh-1 cell center hover" data-bind="click: selected"><i class="fa fa-dot-circle-o" data-bind="css: { 'fa-dot-circle-o': active(), 'fa-circle-o': active() === false }"></i></div>
-									<div class="wh-1 cell center hover" data-bind="click: selected"><i class="fa fa-circle-o" data-bind="css: { 'fa-dot-circle-o': active(), 'fa-circle-o': active() === false }"></i></div>
-									<div class="wh-1 cell center hover" data-bind="click: selected"><i class="fa fa-circle-o" data-bind="css: { 'fa-dot-circle-o': active(), 'fa-circle-o': active() === false }"></i></div>
+							<div class="w-8 h-1 absolute abs-bottom flex just-center">
+								<div class="fc-w w-3 h-1 flex arounding" data-bind="foreach: attrs">
+									<i class="wh-1 flex centering hover fa fa-dot-circle-o" data-bind="click: selected, css: { 'fa-dot-circle-o': active(), 'fa-circle-o': active() === false }"></i>
+									<i class="wh-1 flex centering hover fa fa-circle-o" data-bind="click: selected, css: { 'fa-dot-circle-o': active(), 'fa-circle-o': active() === false }"></i>
+									<i class="wh-1 flex centering hover fa fa-circle-o" data-bind="click: selected, css: { 'fa-dot-circle-o': active(), 'fa-circle-o': active() === false }"></i>
 								</div>
 							</div>
 						</div>
