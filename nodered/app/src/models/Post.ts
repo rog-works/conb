@@ -91,10 +91,8 @@ export default class Post extends Model {
 		this.emit('update', this);
 	}
 	public stored() {
-		if (!this.store()) {
-			this.store(true);
-			this.emit('update', this);
-		}
+		this.store(!this.store());
+		this.emit('update', this);
 	}
 	public unretentioned() { // FIXME
 		this.visit(false);
