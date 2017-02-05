@@ -1,6 +1,7 @@
 .vagrant
 .bundle
 .vscode
+.backup
 downloads
 node_modules
 bundle.js

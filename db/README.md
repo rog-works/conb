@@ -3,7 +3,7 @@ Cheet sheet
 
 ## Export
 ```
-$ docker exec nodered-db mongoexport -d  nodered -c entry
+d exec nodered-db mongoexport -d nodered -c entry | gzip > nodered.entry-20170204.json.gz
 ```
 
 ## Find

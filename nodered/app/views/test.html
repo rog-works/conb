@@ -75,13 +75,13 @@
 								<!-- ko if: active && type === 'tags'-->
 									<div class="fc-w w-8 h-1 absolute top">
 										<div class="w-8 h-1 table">
-											<div class="wh-1"></div>
+											<div class="wh-1 cell center"></div>
 											<i class="wh-1 cell center fa fa-tag hover" data-bind="click: tagged"></i>
-											<input type="text" class="w-5 h-1 less" style="background-color: transparent" placeholder="Input tag name" data-bind="value: input.value">
-											<div class="wh-1"></div>
+											<input class="w-5 h-1 cell center less" type="text" placeholder="Input tag name" data-bind="value: input.value">
+											<div class="wh-1 cell center"></div>
 										</div>
 									</div>
-									<div class="fc-w w-8 h-7 absolute bottom">
+									<div class="fc-w w-8 h-9 absolute bottom">
 										<div data-bind="foreach: tags">
 											<div class="h-h table left pr-q1"><i class="cell center fa fa-remove hover"></i><div class="cell center" data-bind="text: name">あいうえお</div></div>
 											<div class="h-h table left pr-q1"><i class="cell center fa fa-remove hover"></i><div class="cell center" data-bind="text: name">かきくけこ</div></div>
