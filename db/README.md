@@ -3,7 +3,7 @@ Cheet sheet
 
 ## Export
 ```
-d exec nodered-db mongoexport -d nodered -c entry | gzip > nodered.entry-20170204.json.gz
+$ d exec nodered-db mongoexport -d nodered -c entry | gzip > .backup/nodered.entry-`date +%y%m%d`.json.gz
 ```
 
 ## Find
@@ -69,3 +69,36 @@ d exec nodered-db mongoexport -d nodered -c entry | gzip > nodered.entry-2017020
     ]
   }
   ```
+
+### Migrate field
+
+* update
+```
+> db.entry.find().forEach((d) => { const obj = {}; for (let attr of d.attrs) { print(attr.type); obj[attr.type] = attr; } print(obj); db.entry.update({_id: d._id}, {$set: {attr: obj}}); });
+> db.entry.find().forEach((d) => { db.entry.update({_id: d._id}, {$unset: {attrs: ''}}); });
+> db.entry.find().forEach((d) => { db.entry.update({_id: d._id}, {$rename: {attr: 'attrs'}}); });
+```
+
+* after
+```
+> db.entry.findOne();
+{
+        "_id" : ObjectId("588d9f4e4c71c80010c1fa09"),
+        "type" : "entry",
+        "signature" : "22b65a646f337c6effbedb9a6d6d64d6e644281e",
+        "uri" : "https://google.co.jp/0",
+        "attrs" : {
+                "post" : {
+                        "type" : "post",
+                        "href" : "https://google.co.jp/0",
+                        "src" : "",
+                        "text" : "hogehoge, 0",
+                        "date" : "none",
+                        "visit" : true,
+                        "store" : false,
+                        "bookmark" : true,
+                        "favorite" : true
+                }
+        }
+}
+```
