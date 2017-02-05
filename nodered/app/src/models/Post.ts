@@ -18,10 +18,10 @@ export default class Post extends Model {
 	public readonly href: string
 	public readonly text: string
 	public readonly date: string
-	public visit: KnockoutObservable<boolean>
-	public store: KnockoutObservable<boolean>
-	public bookmark: KnockoutObservable<boolean>
-	public favorite: KnockoutObservable<boolean>
+	public readonly visit: KnockoutObservable<boolean>
+	public readonly store: KnockoutObservable<boolean>
+	public readonly bookmark: KnockoutObservable<boolean>
+	public readonly favorite: KnockoutObservable<boolean>
 	public readonly image: Image
 	public constructor(entity: PostEntity) {
 		super(['update', 'delete']);
@@ -57,10 +57,9 @@ export default class Post extends Model {
 		entity.favorite = this.favorite();
 		return entity;
 	}
-	public get favicon(): string {
+	public get domain(): string {
 		const matches = this.href.match(/^[\w]+:\/\/([^\/]+)/);
-		const domain = matches ? matches[1] : 'localhost';
-		return `http://www.google.com/s2/favicons?domain=${domain}`
+		return matches ? matches[1] : 'localhost';
 	}
 	public opened() {
 		window.open(this.href); // XXX not pure js
