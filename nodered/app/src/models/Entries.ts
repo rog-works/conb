@@ -8,7 +8,6 @@ import File from './File';
 
 export default class Entries extends EventEmitter {
 	public list: KnockoutObservableArray<Entry>
-	private _resolve: Function
 	public constructor() {
 		super('beforeUpdate', 'update');
 		this.list = ko.observableArray([]);
@@ -17,7 +16,7 @@ export default class Entries extends EventEmitter {
 		this.emit('beforeUpdate', this, page); // XXX page?
 		if (/^https?:\/\//.test(url)) {
 			this._loadPosts(url, page);
-		} else if (/^entries:\/\//.test(url)) {
+		} else if (/^\/entries\//.test(url)) {
 			this._loadEntries(url, page);
 		} else {
 			throw Error(`Unknown protocol. ${url}`);
@@ -37,7 +36,7 @@ export default class Entries extends EventEmitter {
 			});
 	}
 	private _loadEntries(url: string, page: number): void {
-		const where = this._toWhere(url.substr('entries://'.length));
+		const where = this._toWhere(url.substr('/entries/'.length));
 		Entry.find({
 				where: where,
 				skip: Math.max(page - 1, 0) * 50,

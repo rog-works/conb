@@ -58,8 +58,9 @@ export default class Tags extends Model {
 			this.emit('update', this);
 		}
 	}
-	private _onAccept(sender: Input) {
+	private _onAccept(sender: Input): boolean {
 		this.tagged(this.input.value());
 		this.input.value('');
+		return true;
 	}
 }

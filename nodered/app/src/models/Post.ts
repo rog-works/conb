@@ -37,7 +37,7 @@ export default class Post extends Model {
 	// @override
 	public get uniqueKey(): string { return ''; } // XXX
 	// @override
-	public import(entity: PostEntity) {
+	public import(entity: PostEntity): void {
 		super.import(entity);
 		this.visit(entity.visit || this.visit());
 		this.store(entity.store || this.store());
