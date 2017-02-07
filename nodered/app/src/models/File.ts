@@ -1,6 +1,17 @@
+import * as ko from 'knockout';
 import DAO from '../lib/DAO';
+import {Model, ModelEntity} from './Model';
 
-export default class File {
+export interface FileEntity extends ModelEntity {
+	name: string
+}
+
+export default class File extends Model {
+	public readonly name: string
+	public constructor(entity: FileEntity) {
+		super();
+		this.name = entity.name;
+	}
 	public static real(path: string): string {
 		return `images/${path}`;
 	}
@@ -19,5 +30,20 @@ export default class File {
 			url: url,
 			dir: File.normalize(dir)
 		});
+	}
+	// @override
+	public get uniqueKey(): string { return ''; } // XXX
+	// @override
+	public import(entity: FileEntity): void {
+		super.import(entity);
+	}
+	// @override
+	public export(): FileEntity {
+		const entity = <any>super.export(); // FIXME down cast...
+		entity.name = this.name;
+		return entity;
+	}
+	public downloaded() {
+		// File.save(this.name, this.dir);
 	}
 }

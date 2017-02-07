@@ -12,10 +12,11 @@ import Entries from './models/Entries';
 import Post from './models/Post';
 import Tag from './models/Tag';
 import Tags from './models/Tags';
+import File from './models/File';
+import Files from './models/Files';
 import Image from './models/Image';
 import Searcher from './models/Searcher';
 import {default as Selector, Range} from './models/Selector';
-import File from './models/File';
 
 export default class Main {
 	private static _self: Main
