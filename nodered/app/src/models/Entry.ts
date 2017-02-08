@@ -76,7 +76,7 @@ export default class Entry extends Model {
 		this._id = entity._id || '';
 		for(const key of Object.keys(entity.attrs)) {
 			const attrEntity = entity.attrs[key];
-			if (this._hasAttr(key)) {
+			if (this.hasAttr(key)) {
 				this._attrs[key].import(attrEntity);
 			} else {
 				this._addAttr(this._createAttr(attrEntity));
@@ -116,11 +116,14 @@ export default class Entry extends Model {
 	private _computeAttrs(): Model[] {
 		return this._attrKeys().map((key) => this._attrs[key]);
 	}
-	private _hasAttr(type: string): boolean {
+	public hasAttr(type: string): boolean {
 		return type in this._attrs;
 	}
+	public getAttr(type: string): Model {
+		return this._attrs[type]; // XXX returned nullable
+	}
 	private _addAttr(attr: Model): void {
-		if (!this._hasAttr(attr.type)) {
+		if (!this.hasAttr(attr.type)) {
 			this._attrs[attr.type] = attr;
 			this._attrKeys.push(attr.type);
 		} else {

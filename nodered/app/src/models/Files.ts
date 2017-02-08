@@ -1,19 +1,21 @@
 import * as ko from 'knockout';
 import DAO from '../lib/DAO';
 import {Model, ModelEntity} from './Model';
+import ModelFactory from './ModelFactory';
+import {default as Entry, EntryEntity} from './Entry';
 import {default as File, FileEntity} from './File';
 
 export interface FilesEntity extends ModelEntity {
-	files: FileEntity[]
+	entries: EntryEntity[]
 }
 
 export default class Files extends Model {
-	public readonly files: KnockoutObservableArray<File>
+	public readonly entries: KnockoutObservableArray<Entry>
 	public constructor(entity: FilesEntity) {
 		super(['update', 'delete']);
-		this.files = ko.observableArray([]);
-		for (const fileEntity of entity.files) {
-			this.add(new File(fileEntity));
+		this.entries = ko.observableArray([]);
+		for (const entryEntity of entity.entries) {
+			this.add(<Entry>ModelFactory.self.create(entryEntity));
 		}
 	}
 	// @override
@@ -21,36 +23,30 @@ export default class Files extends Model {
 	// @override
 	public import(entity: FilesEntity): void {
 		super.import(entity);
-		for (const fileEntity of entity.files) {
-			this.add(new File(fileEntity));
+		for (const entryEntity of entity.entries) {
+			this.add(<Entry>ModelFactory.self.create(entryEntity));
 		}
 		this.emit('update', this);
 	}
 	// @override
 	public export(): FilesEntity {
 		const entity = <any>super.export(); // FIXME down cast...
-		entity.files = this.files().map((file) => file.export());
+		entity.entries = this.entries().map((entry) => entry.export());
 		return entity;
 	}
-	public loaded(uri: string): void {
-		DAO.self.once('files/index', {})
-			.then((entity: FilesEntity) => {
-				this.import(entity);
-			});
+	public /*async*/ loaded(uri: string): void {
+		// FIXME this.import(<FileEntity>await DAO.self.once('post-files', { uri: uri }));
 	}
 	public downloaded(): void {
-		for (const file of this.files()) {
-			file.downloaded();
+		for (const entry of this.entries()) {
+			(<File>entry.getAttr('file')).downloaded(entry.uri);
 		}
 	}
-	public add(file: File): boolean {
-		if (!this.contains(file.name)) {
-			this.files.push(file);
+	public add(entry: Entry): boolean {
+		if (entry.hasAttr('file')) {
+			this.entries.push(entry);
 			return true;
 		}
 		return false;
-	}
-	public contains(fileName: string): boolean {
-		return this.files().filter((file) => file.name === fileName).length > 0;
 	}
 }

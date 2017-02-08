@@ -61,13 +61,11 @@ export default class File extends Model {
 		route.pop();
 		return route.join('/');
 	}
-	public downloaded(uri: string) {
-		DAO.self.once('download', {
+	public async downloaded(uri: string) {
+		const result = <boolean>await DAO.self.once('download', {
 			url: uri,
 			path: File.normalize(this.path)
-		})
-		.then((result: boolean) => {
-			this.store(result);
 		});
+		this.store(result);
 	}
 }
