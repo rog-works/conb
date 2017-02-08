@@ -46,10 +46,10 @@ export default class Entry extends Model {
 		for(const key of Object.keys(entity.attrs)) {
 			this._addAttr(this._createAttr(entity.attrs[key]));
 		}
-		this.focus(this._attrKeys().length > 0 ? this._attrKeys()[0] : ''); // FIXME
+		this.focus(this._attrKeys().length > 0 ? this._attrKeys()[0] : ''); // XXX
 	}
 	// @override
-	public static find(where: any = {}): Promise.IThenable<Entry[]> {
+	public static find(where: any = {}): Promise<Entry[]> {
 		return Model.find(Entry.RESOURCE_NAME, where)
 			.then((entities: EntryEntity[]) => {
 				return entities.map((entity) => <Entry>ModelFactory.self.create(entity));
@@ -85,7 +85,7 @@ export default class Entry extends Model {
 	}
 	// @override
 	public export(): EntryEntity {
-		const entity = <any>super.export(); // FIXME down cast...
+		const entity = <any>super.export(); // XXX down cast...
 		entity.signature = this.signature;
 		entity.type = this.type;
 		entity.uri = this.uri;

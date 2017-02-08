@@ -30,11 +30,11 @@
 					</div>
 					<!-- entry -->
 					<div class="fill-x h-1 grow-1 scroll no-selection" data-bind="foreach: entries.list, css: entries.css, event: events">
-						<div class="post w-8 h-11 m-q1 left relative" data-bind="css: css">
+						<div class="post bc-1 w-8 h-11 m-q1 left relative shadow-1" data-bind="css: css">
 							<!-- ko foreach: $data.attrs -->
 								<!-- ko if: type === 'post' -->
 									<div class="w-8 h-10 absolute abs-bottom flex centering">
-										<img class="w-max-8 h-max-10 shadow-1" data-bind="attr: { src: image.src() || 'image/404.gif' }">
+										<img class="w-max-8 h-max-10" data-bind="attr: { src: image.src() || 'image/404.gif' }">
 									</div>
 									<div class="bc-g w-8 h-1 absolute abs-top shadow-1">
 										<div class="wh-1 flex centering"><img data-bind="attr: { src: `http://www.google.com/s2/favicons?domain=${domain}` }"></div>

@@ -32,13 +32,13 @@ export abstract class Model extends EventEmitter implements Serializer {
 	public export(): ModelEntity {
 		return { type: this.type };
 	}
-	public static find(resource: string, where: any = {}): Promise.IThenable<ModelEntity[]> {
+	public static find(resource: string, where: any = {}): Promise<ModelEntity[]> {
 		return DAO.self.once(
 				`${resource}/index`,
 				where
 			);
 	}
-	public get(): Promise.IThenable<void> {
+	public get(): Promise<void> {
 		return DAO.self.once(
 				`${this.resource}/show`,
 				{ [this.uniqueKey]: this.unique }
@@ -49,24 +49,24 @@ export abstract class Model extends EventEmitter implements Serializer {
 				}
 			});
 	}
-	public insert(): Promise.IThenable<void> {
+	public insert(): Promise<void> {
 		return DAO.self.once(
 				`${this.resource}/create`,
 				this.export()
 			)
-			.then((result: any) => this.get());
+			.then((result: any) => { this.get(); });
 	}
-	public update(): Promise.IThenable<void> {
+	public update(): Promise<void> {
 		return DAO.self.once(
 				`${this.resource}/edit`,
 				this.export()
 			)
 			.then((result: any) => {});
 	}
-	public upsert(): Promise.IThenable<void> {
+	public upsert(): Promise<void> {
 		return this.exists ? this.update() : this.insert();
 	}
-	public delete(): Promise.IThenable<void> {
+	public delete(): Promise<void> {
 		return DAO.self.once(
 				`${this.resource}/destroy`,
 				{ [this.uniqueKey]: this.unique }

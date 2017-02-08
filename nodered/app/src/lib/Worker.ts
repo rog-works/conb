@@ -1,4 +1,3 @@
-import * as Promise from 'promise';
 import Sign from './Sign';
 import EventEmitter from './EventEmitter';
 

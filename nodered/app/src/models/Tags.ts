@@ -30,7 +30,7 @@ export default class Tags extends Model {
 	}
 	// @override
 	public export(): TagsEntity {
-		const entity = <any>super.export(); // FIXME down cast...
+		const entity = <any>super.export(); // XXX down cast...
 		entity.tags = this.tags().map((tag) => tag.export());
 		return entity;
 	}

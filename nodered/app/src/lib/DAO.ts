@@ -1,4 +1,3 @@
-import * as Promise from 'promise';
 import WS from '../lib/WS';
 import {EventHandler} from './EventEmitter';
 import Sign from './Sign';
@@ -34,7 +33,7 @@ export default class DAO {
 		request.digest = Sign.digest(data);
 		return request;
 	}
-	public once(route: string, data: any): Promise.IThenable<{}> {
+	public once(route: string, data: any): Promise<any> {
 		return new Promise((resolve: Function, reject: Function) => {
 			const request = this._sign(route, data);
 			const callback = (self: any, message: MessageEvent): boolean => {
@@ -55,5 +54,8 @@ export default class DAO {
 		const request = this._sign(route, data);
 		this._ws.send(request);
 		console.log('send', request);
+	}
+	public async get<T>(route: string, data: any): Promise<T> {
+		return <T>await this.once(route, data);
 	}
 }

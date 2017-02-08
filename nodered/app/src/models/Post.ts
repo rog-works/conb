@@ -46,7 +46,7 @@ export default class Post extends Model {
 	}
 	// @override
 	public export(): PostEntity {
-		const entity = <any>super.export(); // FIXME down cast...
+		const entity = <any>super.export(); // XXX down cast...
 		entity.href = this.href;
 		entity.src = this.image.uri;
 		entity.text = this.text;
@@ -93,7 +93,7 @@ export default class Post extends Model {
 		this.store(!this.store());
 		this.emit('update', this);
 	}
-	public unretentioned() { // FIXME
+	public unretentioned() { // XXX
 		this.visit(false);
 		this.store(false);
 		this.bookmark(false);

@@ -49,7 +49,7 @@ export default class File extends Model {
 	}
 	// @override
 	public export(): FileEntity {
-		const entity = <any>super.export(); // FIXME down cast...
+		const entity = <any>super.export(); // XXX down cast...
 		entity.name = this.name;
 		return entity;
 	}

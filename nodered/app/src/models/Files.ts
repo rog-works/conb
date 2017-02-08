@@ -30,12 +30,12 @@ export default class Files extends Model {
 	}
 	// @override
 	public export(): FilesEntity {
-		const entity = <any>super.export(); // FIXME down cast...
+		const entity = <any>super.export(); // XXX down cast...
 		entity.entries = this.entries().map((entry) => entry.export());
 		return entity;
 	}
-	public /*async*/ loaded(uri: string): void {
-		// FIXME this.import(<FileEntity>await DAO.self.once('post-files', { uri: uri }));
+	public async loaded(uri: string): Promise<void> {
+		const ret = await DAO.self.once('posts/show', { uri: uri });
 	}
 	public downloaded(): void {
 		for (const entry of this.entries()) {

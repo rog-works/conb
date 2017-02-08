@@ -28,11 +28,11 @@ export default class Image extends Model {
 		const url = decodeURIComponent(parts.shift() || '');
 		return [route, url];
 	}
-	private _load([route, url]: [string, string]): Promise.IThenable<void> {
-		return DAO.self.once(route, { url: url })
-			.then((data: { src: string }) => {
-				this.src(data.src);
-			});
+	private static async _download(route: string, url: string): Promise<{ src: string }> { // XXX
+		return await DAO.self.once(route, { url: url });
+	}
+	private async _load([route, url]: [string, string]): Promise<void> {
+		this.src((await Image._download(route, url)).src);
 	}
 	// @override
 	public get uniqueKey(): string { return ''; } // XXX
@@ -42,7 +42,7 @@ export default class Image extends Model {
 	}
 	// @override
 	public export(): ImageEntity {
-		const entity = <any>super.export(); // FIXME down cast...
+		const entity = <any>super.export(); // XXX down cast...
 		entity.uri = this.uri;
 		return entity;
 	}

@@ -19,7 +19,7 @@ export default class Tag extends Model {
 	}
 	// @override
 	public export(): TagEntity {
-		const entity = <any>super.export(); // FIXME down cast...
+		const entity = <any>super.export(); // XXX down cast...
 		entity.name = this.name;
 		return entity;
 	}
