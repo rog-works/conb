@@ -3,17 +3,26 @@ import DAO from '../lib/DAO';
 import {Model, ModelEntity} from './Model';
 
 export interface FileEntity extends ModelEntity {
-	name: string
+	path: string
+	store: boolean
+	size?: number
+	date?: string
 }
 
 export default class File extends Model {
-	public readonly name: string
+	public readonly path: string
+	public readonly store: KnockoutObservable<boolean>
+	public readonly size: number
+	public readonly date: string
 	public constructor(entity: FileEntity) {
 		super();
-		this.name = entity.name;
+		this.path = entity.path;
+		this.store = ko.observable(entity.store);
+		this.size = entity.size || 0;
+		this.date = entity.date || 'none';''
 	}
 	public static real(path: string): string {
-		return `images/${path}`;
+		return `images/${path}`; // XXX
 	}
 	public static confirm(dir: string): string {
 		dir = prompt('input save dir', dir) || '';
@@ -23,12 +32,12 @@ export default class File extends Model {
 		return !/[\\:*?"<>|]+/.test(path);
 	}
 	public static normalize(dir: string): string {
-		return `${dir.split('/').join('/')}/`;
+		return `${dir.split('/').join('/')}`;
 	}
 	public static save(url: string, dir: string): void {
 		DAO.self.send('download', {
 			url: url,
-			dir: File.normalize(dir)
+			path: `${File.normalize(dir)}/`
 		});
 	}
 	// @override
@@ -36,6 +45,7 @@ export default class File extends Model {
 	// @override
 	public import(entity: FileEntity): void {
 		super.import(entity);
+		this.store(entity.store);
 	}
 	// @override
 	public export(): FileEntity {
@@ -43,7 +53,21 @@ export default class File extends Model {
 		entity.name = this.name;
 		return entity;
 	}
-	public downloaded() {
-		// File.save(this.name, this.dir);
+	public get name() {
+		return this.path.split('/').pop() || ''; // XXX empty?
+	}
+	public get dir() {
+		const route = this.path.split('/');
+		route.pop();
+		return route.join('/');
+	}
+	public downloaded(uri: string) {
+		DAO.self.once('download', {
+			url: uri,
+			path: File.normalize(this.path)
+		})
+		.then((result: boolean) => {
+			this.store(result);
+		});
 	}
 }
