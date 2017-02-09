@@ -52,7 +52,7 @@ export default class Entry extends Model {
 	public static find(where: any = {}): Promise<Entry[]> {
 		return Model.find(Entry.RESOURCE_NAME, where)
 			.then((entities: EntryEntity[]) => {
-				return entities.map((entity) => <Entry>ModelFactory.self.create(entity));
+				return entities.map((entity) => ModelFactory.self.create<Entry>(entity));
 			});
 	}
 	public static sign(uri: string): string {
@@ -119,8 +119,8 @@ export default class Entry extends Model {
 	public hasAttr(type: string): boolean {
 		return type in this._attrs;
 	}
-	public getAttr(type: string): Model {
-		return this._attrs[type]; // XXX returned nullable
+	public getAttr<T>(type: string): T {
+		return <T>(<any>this._attrs[type]); // XXX returned nullable
 	}
 	private _addAttr(attr: Model): void {
 		if (!this.hasAttr(attr.type)) {
@@ -131,7 +131,7 @@ export default class Entry extends Model {
 		}
 	}
 	private _createAttr(entity: ModelEntity): Model {
-		return ModelFactory.self.create(entity)
+		return ModelFactory.self.create<Model>(entity)
 			.on('update', this._onUpdate.bind(this))
 			.on('delete', this._onDelete.bind(this));
 	}

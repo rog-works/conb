@@ -28,7 +28,7 @@ export default class Entries extends EventEmitter {
 			})
 			.then((entities: EntryEntity[]) => {
 				for (const entity of entities) {
-					const entry = <Entry>ModelFactory.self.create(entity);
+					const entry = ModelFactory.self.create<Entry>(entity);
 					entry.get();
 					this.list.push(entry);
 				}
@@ -69,7 +69,7 @@ export default class Entries extends EventEmitter {
 		return JSON.stringify(this.list().map((entry: Entry) => entry.export()));
 	}
 	public import(entities: any[]): void {
-		entities.forEach((entity: any) => this.list.push(<Entry>ModelFactory.self.create(entity)));
+		entities.forEach((entity: any) => this.list.push(ModelFactory.self.create<Entry>(entity)));
 		this.emit('update', this);
 	}
 	public selectedEntries(): Entry[] {
@@ -132,7 +132,7 @@ export default class Entries extends EventEmitter {
 					}
 				}
 			};
-			const entry = <Entry>ModelFactory.self.create(entity);
+			const entry = ModelFactory.self.create<Entry>(entity);
 			entry.get();
 			this.list.push(entry);
 		}

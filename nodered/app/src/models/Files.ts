@@ -15,7 +15,7 @@ export default class Files extends Model {
 		super(['update', 'delete']);
 		this.entries = ko.observableArray([]);
 		for (const entryEntity of entity.entries) {
-			this.add(<Entry>ModelFactory.self.create(entryEntity));
+			this.add(ModelFactory.self.create<Entry>(entryEntity));
 		}
 	}
 	// @override
@@ -24,7 +24,7 @@ export default class Files extends Model {
 	public import(entity: FilesEntity): void {
 		super.import(entity);
 		for (const entryEntity of entity.entries) {
-			this.add(<Entry>ModelFactory.self.create(entryEntity));
+			this.add(ModelFactory.self.create<Entry>(entryEntity));
 		}
 		this.emit('update', this);
 	}
@@ -39,7 +39,7 @@ export default class Files extends Model {
 	}
 	public downloaded(): void {
 		for (const entry of this.entries()) {
-			(<File>entry.getAttr('file')).downloaded(entry.uri);
+			entry.getAttr<File>('file').downloaded(entry.uri);
 		}
 	}
 	public add(entry: Entry): boolean {

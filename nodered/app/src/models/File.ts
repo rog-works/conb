@@ -4,7 +4,7 @@ import {Model, ModelEntity} from './Model';
 
 export interface FileEntity extends ModelEntity {
 	path: string
-	store: boolean
+	store?: boolean
 	size?: number
 	date?: string
 }
@@ -17,9 +17,9 @@ export default class File extends Model {
 	public constructor(entity: FileEntity) {
 		super();
 		this.path = entity.path;
-		this.store = ko.observable(entity.store);
+		this.store = ko.observable(entity.store || false);
 		this.size = entity.size || 0;
-		this.date = entity.date || 'none';''
+		this.date = entity.date || 'none'
 	}
 	public static real(path: string): string {
 		return `images/${path}`; // XXX
@@ -45,7 +45,7 @@ export default class File extends Model {
 	// @override
 	public import(entity: FileEntity): void {
 		super.import(entity);
-		this.store(entity.store);
+		this.store(entity.store || this.store());
 	}
 	// @override
 	public export(): FileEntity {
@@ -61,11 +61,13 @@ export default class File extends Model {
 		route.pop();
 		return route.join('/');
 	}
-	public async downloaded(uri: string) {
-		const result = <boolean>await DAO.self.once('download', {
+	private static async _download(uri: string, path: string): Promise<boolean> {
+		return await DAO.self.once('download', {
 			url: uri,
-			path: File.normalize(this.path)
+			path: File.normalize(path)
 		});
-		this.store(result);
+	}
+	public async downloaded(uri: string): Promise<void> {
+		this.store(await File._download(uri, this.path));
 	}
 }
