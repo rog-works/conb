@@ -1,6 +1,7 @@
 import * as ko from 'knockout';
 import EventEmitter from '../lib/EventEmitter';
 import DAO from '../lib/DAO';
+import Path from '../lib/Path';
 import ModelFactory from './ModelFactory';
 import {default as Entry, EntryEntity} from './Entry';
 import Post from './Post';
@@ -22,32 +23,29 @@ export default class Entries extends EventEmitter {
 			throw Error(`Unknown protocol. ${url}`);
 		}
 	}
-	private _loadPosts(url: string, page: number): void {
-		DAO.self.once('posts', {
-				url: url.replace(/{page}/, `${page}`)
-			})
-			.then((entities: EntryEntity[]) => {
-				for (const entity of entities) {
-					const entry = ModelFactory.self.create<Entry>(entity);
-					entry.get();
-					this.list.push(entry);
-				}
-				this.emit('update', this, entities);
-			});
+	private async _loadPosts(url: string, page: number): Promise<void> {
+		const entities = await DAO.self.get<EntryEntity[]>(
+			'posts',
+			{ url: url.replace(/{page}/, `${page}`) }
+		);
+		for (const entity of entities) {
+			const entry = ModelFactory.self.create<Entry>(entity);
+			entry.get();
+			this.list.push(entry);
+		}
+		this.emit('update', this, entities);
 	}
-	private _loadEntries(url: string, page: number): void {
+	private async _loadEntries(url: string, page: number): Promise<void> {
 		const where = this._toWhere(url.substr('/entries/'.length));
-		Entry.find({
-				where: where,
-				skip: Math.max(page - 1, 0) * 50,
-				limit: 50
-			})
-			.then((entries: Entry[]) => {
-				for (const entry of entries) {
-					this.list.push(entry);
-				}
-				this.emit('update', this, entries);
-			});
+		const entries = await Entry.find({
+			where: where,
+			skip: Math.max(page - 1, 0) * 50,
+			limit: 50
+		});
+		for (const entry of entries) {
+			this.list.push(entry);
+		}
+		this.emit('update', this, entries);
 	}
 	private _toWhere(query: string): any {
 		return {}; // XXX impl
@@ -89,7 +87,7 @@ export default class Entries extends EventEmitter {
 			console.log('selected empty');
 			return;
 		}
-		const baseDir = File.confirm(File.real(''));
+		const baseDir = Path.confirm(Path.real(''));
 		if (!baseDir) {
 			console.log('download cancel');
 			return;

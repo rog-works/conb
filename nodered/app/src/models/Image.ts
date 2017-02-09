@@ -28,11 +28,8 @@ export default class Image extends Model {
 		const url = decodeURIComponent(parts.shift() || '');
 		return [route, url];
 	}
-	private static async _download(route: string, url: string): Promise<{ src: string }> { // XXX
-		return await DAO.self.once(route, { url: url });
-	}
 	private async _load([route, url]: [string, string]): Promise<void> {
-		this.src((await Image._download(route, url)).src);
+		this.src((await DAO.self.get<{ src: string }>(route, { url: url })).src);
 	}
 	// @override
 	public get uniqueKey(): string { return ''; } // XXX

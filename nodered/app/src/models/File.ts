@@ -1,5 +1,6 @@
 import * as ko from 'knockout';
 import DAO from '../lib/DAO';
+import Path from '../lib/Path';
 import {Model, ModelEntity} from './Model';
 
 export interface FileEntity extends ModelEntity {
@@ -19,25 +20,12 @@ export default class File extends Model {
 		this.path = entity.path;
 		this.store = ko.observable(entity.store || false);
 		this.size = entity.size || 0;
-		this.date = entity.date || 'none'
-	}
-	public static real(path: string): string {
-		return `images/${path}`; // XXX
-	}
-	public static confirm(dir: string): string {
-		dir = prompt('input save dir', dir) || '';
-		return File.valid(dir) ? dir : '';
-	}
-	public static valid(path: string): boolean {
-		return !/[\\:*?"<>|]+/.test(path);
-	}
-	public static normalize(dir: string): string {
-		return `${dir.split('/').join('/')}`;
+		this.date = entity.date || 'none';
 	}
 	public static save(url: string, dir: string): void {
 		DAO.self.send('download', {
 			url: url,
-			path: `${File.normalize(dir)}/`
+			path: `${Path.normalize(dir)}/`
 		});
 	}
 	// @override
@@ -54,20 +42,16 @@ export default class File extends Model {
 		return entity;
 	}
 	public get name() {
-		return this.path.split('/').pop() || ''; // XXX empty?
+		return Path.filename(this.path);
 	}
 	public get dir() {
-		const route = this.path.split('/');
-		route.pop();
-		return route.join('/');
-	}
-	private static async _download(uri: string, path: string): Promise<boolean> {
-		return await DAO.self.once('download', {
-			url: uri,
-			path: File.normalize(path)
-		});
+		return Path.dirname(this.path);
 	}
 	public async downloaded(uri: string): Promise<void> {
-		this.store(await File._download(uri, this.path));
+		const result = await DAO.self.get<boolean>(
+			'download',
+			{ uri: uri, path: this.path }
+		);
+		this.store(result);
 	}
 }

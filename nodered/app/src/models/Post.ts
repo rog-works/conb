@@ -1,4 +1,5 @@
 import * as ko from 'knockout';
+import Path from '../lib/Path';
 import {Model, ModelEntity} from './Model';
 import File from './File';
 import Image from './Image';
@@ -69,9 +70,9 @@ export default class Post extends Model {
 		}
 	}
 	public downloaded() {
-		let dir = File.real(this.text);
-		if (!File.valid(dir)) {
-			dir = File.confirm(dir);
+		let dir = Path.real(this.text);
+		if (!Path.valid(dir)) {
+			dir = Path.confirm(dir);
 			if (!dir) {
 				console.error(`invalid path characters. ${dir}`);
 				return;

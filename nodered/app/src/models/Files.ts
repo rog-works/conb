@@ -9,7 +9,7 @@ export interface FilesEntity extends ModelEntity {
 	entries: EntryEntity[]
 }
 
-export default class Files extends Model {
+export default class Files extends Model { // XXX Posts???
 	public readonly entries: KnockoutObservableArray<Entry>
 	public constructor(entity: FilesEntity) {
 		super(['update', 'delete']);
@@ -35,7 +35,7 @@ export default class Files extends Model {
 		return entity;
 	}
 	public async loaded(uri: string): Promise<void> {
-		const ret = await DAO.self.once('posts/show', { uri: uri });
+		this.import(await DAO.self.get<FilesEntity>('posts/show', { uri: uri })); // XXX unmatch resource name
 	}
 	public downloaded(): void {
 		for (const entry of this.entries()) {

@@ -16,7 +16,7 @@ export default class ModelFactory {
 	public regist(construct: any): void {
 		this._map[StringUtil.snakelize(construct.name)] = construct;
 	}
-	public create<T>(entity: ModelEntity): T {
+	public create<T extends Model>(entity: ModelEntity): T {
 		if (entity.type in this._map) {
 			return <T>(<any>new this._map[entity.type](entity));
 		}

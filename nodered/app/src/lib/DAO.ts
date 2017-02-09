@@ -1,4 +1,4 @@
-import WS from '../lib/WS';
+import WS from './WS';
 import {EventHandler} from './EventEmitter';
 import Sign from './Sign';
 
@@ -24,7 +24,7 @@ export default class DAO {
 		return this;
 	}
 	private _sign(route: string, data: any): RequestEntity {
-		const request: RequestEntity = {
+		const request = {
 			route: route,
 			data: data,
 			nance: new Date().getTime(),
@@ -56,6 +56,6 @@ export default class DAO {
 		console.log('send', request);
 	}
 	public async get<T>(route: string, data: any): Promise<T> {
-		return <T>await this.once(route, data);
+		return await this.once(route, data);
 	}
 }

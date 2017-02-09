@@ -33,13 +33,11 @@ export default class Searcher extends EventEmitter {
 		this.url.on('cancel', this._onCancel.bind(this));
 		this.url.on('keyup', this._onKeyup.bind(this));
 	}
-	private _loadUrls(): void {
-		DAO.self.once('urls', {})
-			.then((entities: string[][]) => {
-				entities.forEach(([value, text]) => {
-					this.urls.push(new Option(value, text));
-				});
-			});
+	private async _loadUrls(): Promise<void> {
+		const entities = await DAO.self.get<string[][]>('urls', {})
+		for (const [value, text] of entities) {
+			this.urls.push(new Option(value, text));
+		}
 	}
 	private _onFocus(sender: any): boolean {
 		if (this.urls().length === 0) {

@@ -49,11 +49,9 @@ export default class Entry extends Model {
 		this.focus(this._attrKeys().length > 0 ? this._attrKeys()[0] : ''); // XXX
 	}
 	// @override
-	public static find(where: any = {}): Promise<Entry[]> {
-		return Model.find(Entry.RESOURCE_NAME, where)
-			.then((entities: EntryEntity[]) => {
-				return entities.map((entity) => ModelFactory.self.create<Entry>(entity));
-			});
+	public static async find(where: any = {}): Promise<Entry[]> {
+		const entities = await Model.find(Entry.RESOURCE_NAME, where)
+		return entities.map(entity => ModelFactory.self.create<Entry>(entity));
 	}
 	public static sign(uri: string): string {
 		return Sign.digest(uri);
@@ -90,9 +88,9 @@ export default class Entry extends Model {
 		entity.type = this.type;
 		entity.uri = this.uri;
 		entity.attrs = {};
-		this.attrs().forEach((attr) => {
+		for (const attr of this.attrs()) {
 			entity.attrs[attr.type] = attr.export();
-		});
+		}
 		return entity;
 	}
 	public get description(): string {
@@ -119,8 +117,8 @@ export default class Entry extends Model {
 	public hasAttr(type: string): boolean {
 		return type in this._attrs;
 	}
-	public getAttr<T>(type: string): T {
-		return <T>(<any>this._attrs[type]); // XXX returned nullable
+	public getAttr<T extends Model>(type: string): T {
+		return <any>this._attrs[type]; // XXX returned nullable
 	}
 	private _addAttr(attr: Model): void {
 		if (!this.hasAttr(attr.type)) {
