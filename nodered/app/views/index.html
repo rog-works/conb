@@ -67,6 +67,20 @@
 										<div class="flex row-center left pr-q1"><i class="fa fa-remove hover" data-bind="click: $parent.untagged.bind($parent, $data)"></i><div data-bind="text: name"></div></div>
 									</div>
 								<!-- /ko -->
+								<!-- ko if: type === 'files' -->
+									<div class="fc-w w-8 h-1 absolute abs-top flex just-center" data-bind="visible: $parent.focus() === type">
+										<div class="w-2 h-1 flex arounding">
+											<i class="wh-hq round-hq border flex centering hover fa" data-bind="click: loaded, css: { 'fa-folder': state() === 'closed', 'fa-folder-open': state() === 'opened', 'fa-spin': state() === 'loading', 'fa-refresh': state() === 'loading' }"></i>
+											<i class="wh-hq round-hq border flex centering hover fa fa-cloud-download" data-bind="click: downloaded, css: { 'fc-b': store() === true }"></i>
+										</div>
+									</div>
+									<div class="fc-w bc-b trans w-8 h-10 absolute abs-bottom wrap scroll-y" data-bind="visible: $parent.focus() === type, foreach: entries">
+										<div class="flex row-center pr-q1">
+											<i class="fc-g fa fa-dot-circle-o hover" data-bind="css: { 'fc-g': state() === 'stored', 'fa-dot-circle-o': state() === 'stored', 'fa-circle-o': state() === 'reserved', 'fa-spin': state() === 'downloading', 'fa-refresh': state() === 'downloading', 'fc-r': state() === 'failed', 'fa-remove': state() === 'failed' }"></i>
+											<div data-bind="text: name"></div>
+										</div>
+									</div>
+								<!-- /ko -->
 							<!-- /ko -->
 							<!-- remove entry -->
 							<div class="w-1 h-1 absolute abs-top abs-right">

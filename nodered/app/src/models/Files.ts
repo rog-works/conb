@@ -18,10 +18,14 @@ class States {
 export default class Files extends Model { // XXX Posts???
 	public readonly entries: KnockoutObservableArray<Entry>
 	public readonly state: KnockoutObservable<string>
+	public readonly stores: KnockoutObservable<number>
+	public readonly store: KnockoutComputed<boolean>
 	public constructor(entity: FilesEntity) {
 		super(['update', 'delete']);
 		this.entries = ko.observableArray([]);
 		this.state = ko.observable(States.Closed);
+		this.stores = ko.observable(0);
+		this.store = ko.computed({ owner: this, read: this._computedStore });
 		for (const entryEntity of entity.entries) {
 			this.add(ModelFactory.self.create<Entry>(entryEntity));
 		}
@@ -57,9 +61,19 @@ export default class Files extends Model { // XXX Posts???
 	}
 	public add(entry: Entry): boolean {
 		if (entry.hasAttr('file')) {
+			entry.on('update', this._onUpdate.bind(this));
 			this.entries.push(entry);
 			return true;
 		}
 		return false;
+	}
+	private _onUpdate(sender: File): boolean {
+		this.stores(this.entries().filter(entry => {
+			return entry.getAttr<File>('file').store();
+		}).length);
+		return true;
+	}
+	private _computedStore(): boolean {
+		return this.stores() === this.entries().length;
 	}
 }

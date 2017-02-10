@@ -24,7 +24,7 @@ export default class File extends Model {
 	public readonly date: string
 	public readonly state: KnockoutObservable<string>
 	public constructor(entity: FileEntity) {
-		super();
+		super(['update']);
 		this.path = entity.path;
 		this.store = ko.observable(entity.store || false);
 		this.size = entity.size || 0;
@@ -64,5 +64,6 @@ export default class File extends Model {
 		);
 		this.store(result);
 		this.state(this.store() ? States.Stored : States.Failed);
+		this.emit('update', this);
 	}
 }
