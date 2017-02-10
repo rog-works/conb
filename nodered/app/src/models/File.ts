@@ -10,17 +10,26 @@ export interface FileEntity extends ModelEntity {
 	date?: string
 }
 
+class States {
+	public static Reserved: string = 'reserved'
+	public static Stored: string = 'stored'
+	public static Failed: string = 'failed'
+	public static Downloading: string = 'downloading'
+}
+
 export default class File extends Model {
 	public readonly path: string
 	public readonly store: KnockoutObservable<boolean>
 	public readonly size: number
 	public readonly date: string
+	public readonly state: KnockoutObservable<string>
 	public constructor(entity: FileEntity) {
 		super();
 		this.path = entity.path;
 		this.store = ko.observable(entity.store || false);
 		this.size = entity.size || 0;
 		this.date = entity.date || 'none';
+		this.state = ko.observable(this.store() ? States.Stored : States.Reserved);
 	}
 	public static save(url: string, dir: string): void {
 		DAO.self.send('download', {
@@ -48,10 +57,12 @@ export default class File extends Model {
 		return Path.dirname(this.path);
 	}
 	public async downloaded(uri: string): Promise<void> {
+		this.state(States.Downloading);
 		const result = await DAO.self.get<boolean>(
 			'download',
 			{ uri: uri, path: this.path }
 		);
 		this.store(result);
+		this.state(this.store() ? States.Stored : States.Failed);
 	}
 }

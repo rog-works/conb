@@ -18,9 +18,10 @@
 					<div class="bc-g fill-x h-1 grow-0 flex shadow-1">
 						<div class="w-1 fill-y grow-1">
 							<div class="fill flex arounding">
-								<i class="fc-w wh-1 flex centering fa fa-github"></i>
+								<i class="wh-1 flex centering"><img src="image/favicon-w16.png"></i>
 								<i class="fc-g bc-w w-1 h-hq flex centering fa fa-search hover" data-bind="click: searched"></i>
 								<input type="text" class="fill-x h-hq less" placeholder="Search" list="list" data-bind="value: searcher.url.value, event: searcher.events, hasFocus: searcher.url.focus">
+								<div class="bc-w w-1 h-hq flex centering" data-bind="text: searcher.page.curr.number"></div>
 							</div>
 							<datalist id="list" data-bind="foreach: searcher.urls">
 								<option data-bind="text: text, value: value"></option>
@@ -29,47 +30,55 @@
 					</div>
 					<!-- entry -->
 					<div class="fill-x h-1 grow-1 scroll no-selection" data-bind="foreach: entries.list, css: entries.css, event: events">
-						<div class="post w-8 h-11 m-q1 left relative" data-bind="css: css">
+						<div class="post bc-1 w-8 h-11 m-q1 left relative shadow-1" data-bind="css: css">
 							<!-- ko foreach: $data.attrs -->
-								<!-- ko if: active && type === 'post'-->
+								<!-- ko if: type === 'post' -->
 									<div class="w-8 h-10 absolute abs-bottom flex centering">
-										<img class="w-max-8 h-max-10 shadow-1" data-bind="attr: { src: image.src() || 'image/404.gif' }" src="http://design.trident.ac.jp/works/uploads/eikan_Chiba2-01.jpg">
+										<img class="w-max-8 h-max-10" data-bind="attr: { src: image.src() || 'image/404.gif' }">
 									</div>
 									<div class="bc-g w-8 h-1 absolute abs-top shadow-1">
-										<div class="wh-1 flex centering"><img data-bind="attr: { src: favicon }" src="http://www.google.com/s2/favicons?domain=www.google.co.jp"></div>
+										<div class="wh-1 flex centering"><img data-bind="attr: { src: `http://www.google.com/s2/favicons?domain=${domain}` }"></div>
 									</div>
-									<div class="w-8 h-1 absolute abs-top flex just-center">
+									<div class="close w-8 h-1 absolute abs-top flex just-center" data-bind="visible: $parent.focus() === type">
 										<div class="fc-w w-5 h-1 flex arounding">
-											<i class="wh-hq round-hq border flex centering hover fa fa-cloud-download"></i>
-											<i class="wh-hq round-hq border flex centering hover fa fa-bookmark"></i>
-											<i class="wh-hq round-hq border flex centering hover fa fa-thumbs-up"></i>
-											<i class="wh-hq round-hq border flex centering hover fa fa-check"></i>
-											<i class="wh-hq round-hq border flex centering hover fa fa-trash"></i>
+											<i class="wh-hq round-hq border flex centering hover fa fa-cloud-download" data-bind="click: downloaded, css: { 'fc-b': store() === true }"></i>
+											<i class="wh-hq round-hq border flex centering hover fa fa-bookmark" data-bind="click: bookmarked, css: { 'fc-r': bookmark() === true }"></i>
+											<i class="wh-hq round-hq border flex centering hover fa fa-thumbs-up" data-bind="click: favorited, css: { 'fc-y': favorite() === true }"></i>
+											<i class="wh-hq round-hq border flex centering hover fa fa-check" data-bind="click: stored"></i>
+											<i class="wh-hq round-hq border flex centering hover fa fa-trash" data-bind="click: unretentioned"></i>
 										</div>
 									</div>
-									<div class="w-8 h-3 absolute abs-bottom">
+									<div class="close w-8 h-3 absolute abs-bottom" data-bind="visible: $parent.focus() === type">
 										<div class="h-h"></div>
-										<div class="h-h fc-date right" data-bind="text: date">2017/02/04 18:23</div>
+										<div class="fc-orange text-shadow h-h right" data-bind="text: date">2017/02/10</div>
 										<div class="bc-b fc-w trans w-8 h-2 text-wrap">
 											<a data-bind="text: text, css: { visit: visit }, attr: { href: href, title: text }, click: opened"></a>
 										</div>
 									</div>
 								<!-- /ko -->
-								<!-- ko if: active && type === 'tags'-->
-									<div class="fc-w w-8 h-1 absolute abs-top flex just-center close">
+								<!-- ko if: type === 'tags' -->
+									<div class="close fc-w w-8 h-1 absolute abs-top flex just-center" data-bind="visible: $parent.focus() === type">
 										<div class="w-6 h-1 flex arounding">
-											<i class="flex centering wh-1 fa fa-tag hover" data-bind="click: tagged"></i>
-											<input class="w-5 h-1 less" type="text" placeholder="Input tag name" data-bind="value: input.value">
+											<i class="bc-w fc-g flex centering w-1 h-hq fa fa-tag hover" data-bind="click: tagged.bind($data, $data.input.value())"></i>
+											<input class="w-5 h-hq less" type="text" placeholder="Input tag name" data-bind="value: input.value, event: { keyup: input.onKeyup.bind($data.input) }">
 										</div>
 									</div>
-									<div class="fc-w w-8 h-10 absolute abs-bottom">
-										<!-- ko foreach: tags -->
-											<div class="h-h flex row-center left"><i class="fa fa-remove hover"></i><div data-bind="text: name">あいうえお</div></div>
-											<div class="h-h flex row-center left"><i class="fa fa-remove hover"></i><div data-bind="text: name">かきくけこ</div></div>
-											<div class="h-h flex row-center left"><i class="fa fa-remove hover"></i><div data-bind="text: name">さし</div></div>
-											<div class="h-h flex row-center left"><i class="fa fa-remove hover"></i><div data-bind="text: name">すせそ</div></div>
-											<div class="h-h flex row-center left"><i class="fa fa-remove hover"></i><div data-bind="text: name">すせそ</div></div>
-										<!-- /ko -->
+									<div class="close fc-w bc-b trans w-8 h-10 absolute abs-bottom" data-bind="visible: $parent.focus() === type, foreach: tags">
+										<div class="flex row-center left pr-q1"><i class="fa fa-remove hover" data-bind="click: $parent.untagged.bind($parent, $data)"></i><div data-bind="text: name"></div></div>
+									</div>
+								<!-- /ko -->
+								<!-- ko if: type === 'files' -->
+									<div class="fc-w w-8 h-1 absolute abs-top flex just-center" data-bind="visible: $parent.focus() === type">
+										<div class="w-2 h-1 flex arounding">
+											<i class="wh-hq round-hq border flex centering hover fa fa-folder-close" data-bind="click: loaded, css { 'fa-folder-open': state === 'opened', 'fa-spin': state === 'loading', 'fa-refresh': state === 'loading' }"></i>
+											<i class="wh-hq round-hq border flex centering hover fa fa-cloud-download" data-bind="click: downloaded, css: { 'fc-b': store() === true }"></i>
+										</div>
+									</div>
+									<div class="fc-w bc-b trans w-8 h-10 absolute abs-bottom wrap scroll-y" data-bind="visible: $parent.focus() === type, foreach: entries">
+										<div class="flex row-center pr-q1"><i class="fc-g fa fa-dot-circle-o hover" data-bind="css: { 'fc-g': state() === 'stored', 'fa-dot-circle-o': state() === 'stored', 'fa-circle-o': state() === 'reserved', 'fa-spin': state() === 'downloading', 'fa-refresh': state() === 'downloading', 'fc-r': state() === 'failed', fa-remove': state() === 'failed' }"></i><div data-bind="text: name">012345678901234567890123456789.png</div></div>
+										<div class="flex row-center pr-q1"><i class="fc-g fa fa-dot-circle-o hover" data-bind="css: { 'fc-g': store(), 'fa-dot-circle-o': store(), 'fa-circle-o': store() === false }"></i><div data-bind="text: name">02.png</div></div>
+										<div class="flex row-center pr-q1"><i class="fc-g fa fa-dot-circle-o hover" data-bind="css: { 'fc-g': store(), 'fa-dot-circle-o': store(), 'fa-circle-o': store() === false }"></i><div data-bind="text: name">03.png</div></div>
+										<div class="flex row-center pr-q1"><i class="fc-w fa     fa-circle-o hover" data-bind="css: { 'fc-g': store(), 'fa-dot-circle-o': store(), 'fa-circle-o': store() === false }"></i><div data-bind="text: name">04.png</div></div>
 									</div>
 								<!-- /ko -->
 							<!-- /ko -->
@@ -80,9 +89,7 @@
 							<!-- attr pager -->
 							<div class="w-8 h-1 absolute abs-bottom flex just-center">
 								<div class="fc-w w-3 h-1 flex arounding" data-bind="foreach: attrs">
-									<i class="wh-1 flex centering hover fa fa-dot-circle-o" data-bind="click: selected, css: { 'fa-dot-circle-o': active(), 'fa-circle-o': active() === false }"></i>
-									<i class="wh-1 flex centering hover fa fa-circle-o" data-bind="click: selected, css: { 'fa-dot-circle-o': active(), 'fa-circle-o': active() === false }"></i>
-									<i class="wh-1 flex centering hover fa fa-circle-o" data-bind="click: selected, css: { 'fa-dot-circle-o': active(), 'fa-circle-o': active() === false }"></i>
+									<i class="fa-dot-circle-o wh-1 flex centering hover fa" data-bind="click: $parent.focused.bind($parent, $data), css: { 'fa-dot-circle-o': $parent.focus() === type, 'fa-circle-o': $parent.focus() !== type }"></i>
 								</div>
 							</div>
 						</div>
@@ -94,7 +101,7 @@
 		<div class="bc-g w-1 fill-y grow-0">
 			<i class="fc-w wh-1 flex centering font-3 fa fa-globe hover" data-bind="css: { primary: focus() === 'entry' }, click: focused.bind($data, 'entry')"></i>
 			<i class="fc-w wh-1 flex centering font-3 fa fa-commenting hover" data-bind="css: { primary: focus() === 'log' }, click: focused.bind($data, 'log')"></i>
-			<i class="fc-w wh-1 flex centering font-3 fa fa-wifi" data-bind="style: wsObserver.style"></i>
+			<i class="fc-w wh-1 flex centering font-3 fa" data-bind="css: { 'fa-wifi': wsObserver.connected() === true, 'fa-warning': wsObserver.connected() === false }"></i>
 			<i class="fc-w wh-1 flex centering font-3 fa" data-bind="css: webObserver.css"></i>
 			<i class="fc-w wh-1 flex centering font-3 fa fa-question hover" data-bind="click: entries.test.bind($data.entries)"></i>
 			<!-- ko if: focus() === 'entry' -->
