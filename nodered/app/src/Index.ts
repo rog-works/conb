@@ -15,6 +15,7 @@ import Tags from './models/Tags';
 import File from './models/File';
 import Files from './models/Files';
 import Image from './models/Image';
+import Site from './models/Site';
 import Searcher from './models/Searcher';
 import {default as Selector, Range} from './models/Selector';
 
@@ -43,7 +44,8 @@ export default class Main {
 		ModelFactory.self.regist(Tag);;
 		ModelFactory.self.regist(Image);
 		ModelFactory.self.regist(Files);
-		ModelFactory.self.regist(File);;
+		ModelFactory.self.regist(File);
+		ModelFactory.self.regist(Site);
 		this._scroll = new Scroll(32 * 11 * 2);
 		this.wsObserver = new WSObserver();
 		this.webObserver = new WebObserver();

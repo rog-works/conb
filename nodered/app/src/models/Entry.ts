@@ -24,7 +24,7 @@ export default class Entry extends Model {
 	public _id: string
 	public readonly signature: string
 	public readonly uri: string
-	private readonly _attrs: Models // XXX
+	private readonly _attr: Models // XXX
 	private readonly _attrKeys: KnockoutObservableArray<string> // XXX
 	public readonly attrs: KnockoutComputed<Model[]>
 	public readonly css: any // XXX
@@ -34,7 +34,7 @@ export default class Entry extends Model {
 		this._id = entity._id || '';
 		this.signature = Entry.sign(entity.uri);
 		this.uri = entity.uri;
-		this._attrs = {};
+		this._attr = {};
 		this._attrKeys = ko.observableArray([]);
 		this.attrs = ko.computed({ owner: this, read: this._computeAttrs }); // XXX
 		this.focus = ko.observable('');
@@ -75,7 +75,7 @@ export default class Entry extends Model {
 		for(const key of Object.keys(entity.attrs)) {
 			const attrEntity = entity.attrs[key];
 			if (this.hasAttr(key)) {
-				this._attrs[key].import(attrEntity);
+				this._attr[key].import(attrEntity);
 			} else {
 				this._addAttr(this._createAttr(attrEntity));
 			}
@@ -112,17 +112,20 @@ export default class Entry extends Model {
 		this.focus(attr.type);
 	}
 	private _computeAttrs(): Model[] {
-		return this._attrKeys().map((key) => this._attrs[key]);
+		return this._attrKeys().map((key) => this._attr[key]);
 	}
 	public hasAttr(type: string): boolean {
-		return type in this._attrs;
+		return type in this._attr;
+	}
+	public get attr(): Models { // XXX deprecated
+		return this._attr;
 	}
 	public getAttr<T extends Model>(type: string): T {
-		return <any>this._attrs[type]; // XXX returned nullable
+		return <any>this._attr[type]; // XXX returned nullable
 	}
 	private _addAttr(attr: Model): void {
 		if (!this.hasAttr(attr.type)) {
-			this._attrs[attr.type] = attr;
+			this._attr[attr.type] = attr;
 			this._attrKeys.push(attr.type);
 		} else {
 			throw new Error(`Aready exists attribute. ${JSON.stringify(attr)}`);

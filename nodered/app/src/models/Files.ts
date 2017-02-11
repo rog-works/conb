@@ -5,7 +5,7 @@ import {Model, ModelEntity} from './Model';
 import ModelFactory from './ModelFactory';
 import {default as Entry, EntryEntity} from './Entry';
 import {default as File, FileEntity} from './File';
-import {default as Post, PostEntity} from './Post';
+import {default as Post, PostEntity} from './Post'; // XXX bad dependency
 
 export interface FilesEntity extends ModelEntity {
 	entries: EntryEntity[]
@@ -58,7 +58,7 @@ export default class Files extends Model { // XXX Posts???
 			const file = entry.getAttr<File>('file');
 			const post = entry.getAttr<Post>('post');
 			if (!file.store()) {
-				file.downloaded(post.href, Path.dirname(post.text)); // XXX uri is not endpoint
+				file.downloaded(post.href, Path.dirname(post.text)); // XXX href is not endpoint
 			}
 		}
 	}

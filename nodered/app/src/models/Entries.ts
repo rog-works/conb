@@ -125,7 +125,32 @@ export default class Entries extends EventEmitter {
 						tags: [
 							{ type: 'tag', name: 'hoge0' },
 							{ type: 'tag', name: 'hoge1' },
-							{ type: 'tag', name: 'hoge3' },
+							{ type: 'tag', name: 'hoge2' },
+						]
+					},
+					files: {
+						type: 'files',
+						entries: [
+							{
+								type: 'entry',
+								uri: `https://google.co.jp/${i}/1.jpg`,
+								attrs: {
+									post: {
+										type: 'post',
+										href: `https://google.co.jp/${i}/1.jpg`,
+										src: `https://google.co.jp/${i}/1.jpg`,
+										text: `${i}/1.jpg`,
+										date: 'none'
+									},
+									file: {
+										type: 'file',
+										path: `${i}.jpg`,
+										size: 0,
+										date: 'none',
+										store: false
+									}
+								}
+							}
 						]
 					}
 				}
