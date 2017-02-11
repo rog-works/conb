@@ -23,10 +23,13 @@ export default class Tags extends Model {
 	// @override
 	public import(entity: TagsEntity): void {
 		super.import(entity);
+		const before = this.tags().length;
 		for (const tagEntity of entity.tags) {
 			this.add(new Tag(tagEntity));
 		}
-		this.emit('update', this);
+		if (before < this.tags().length) {
+			this.emit('update', this);
+		}
 	}
 	// @override
 	public export(): TagsEntity {

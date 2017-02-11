@@ -6,6 +6,7 @@ import ModelFactory from './ModelFactory';
 import {default as Entry, EntryEntity} from './Entry';
 import Post from './Post';
 import File from './File';
+import Site from './Site'; // FIXME
 
 export default class Entries extends EventEmitter {
 	public list: KnockoutObservableArray<Entry>
@@ -108,7 +109,7 @@ export default class Entries extends EventEmitter {
 		}
 	}
 	public test(): void {
-		for (let i = 0; i < 5; i += 1) {
+	/*	for (let i = 0; i < 5; i += 1) {
 			const entity = {
 				type: 'entry',
 				uri: 'https://google.co.jp/' + i,
@@ -158,6 +159,6 @@ export default class Entries extends EventEmitter {
 			const entry = ModelFactory.self.create<Entry>(entity);
 			entry.get();
 			this.list.push(entry);
-		}
+		}*/
 	}
 }

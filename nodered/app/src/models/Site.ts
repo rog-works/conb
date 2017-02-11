@@ -1,5 +1,5 @@
 import * as ko from 'knockout';
-import * as $ from 'jquery';
+
 import DAO from '../lib/DAO';
 import {Model, ModelEntity} from './Model';
 
@@ -34,20 +34,20 @@ export default class Site extends Model {
 		return entity;
 	}
 	public get select(): string[] {
-		const matches = this.query.match(/^select\s+(.+)\s+from\s+[^\s]+/);
+		const matches = this.query.match(/^select\s+(.+)\s+from/);
 		const queries = matches ? matches[1] : '';
 		return queries.split(',');
 	}
 	public get from(): string {
-		const matches = this.query.match(/^select\s+.+\s+from\s+([^\s]+)/);
+		const matches = this.query.match(/^select\s+.+\s+from\s+([^\s]+)\s+where/);
 		return matches ? matches[1] : '';
 	}
 	public get where(): string {
 		const matches = this.query.match(/^select\s+.+\s+from\s+[^\s]+where\s+(.+)/);
 		return matches ? matches[1] : '';
 	}
-	public async loaded(): Promise<void> {
-		(await Query.from(this.from))
+	public async loaded(page: number): Promise<any[]> {
+		return (await Query.from(this.from.replace('{page}', `${page}`))) // XXX to query page arg
 			.where(this.where)
 			.select(this.select);
 	}
@@ -55,25 +55,25 @@ export default class Site extends Model {
 
 export class Query {
 	public constructor(public e: JQuery) {}
-	public static async from(from: string): Promise<Query> {
+	public static async from(from: string): Promise<Query> {console.log(0);
 		const html = await DAO.self.get<string>(
 			'html',
 			{ url: from }
-		);
+		);console.log(1, $);
 		return new Query($(html));
 	}
-	public where(query: string): Query {
+	public where(query: string): Query {console.log(2);
 		return new Query(this.e.find(query));
 	}
-	public select(fieldOfQueries: string[]): any[] {
-		const rows: any[] = [];
-		this.e.each((elem) => {
+	public select(fieldOfQueries: string[]): any[] {console.log(3);
+		const rows: any[] = [];console.log(this.e);
+		this.e.each((elem) => {console.log(4);
 			let row = {};
-			for (const queries of fieldOfQueries) {
+			for (const queries of fieldOfQueries) {console.log(5);
 				row = $.extend(row, this._selectOne($(elem), queries));
 			}
 			rows.push(row);
-		});
+		});console.log(6);
 		return rows;
 	}
 	private _selectOne(e: JQuery, queries: string): {} {

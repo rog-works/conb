@@ -47,7 +47,8 @@ export default class File extends Model {
 	// @override
 	public export(): FileEntity {
 		const entity = <any>super.export(); // XXX down cast...
-		entity.name = this.name;
+		entity.path = this.path;
+		entity.store = this.store();
 		return entity;
 	}
 	public get name() {
@@ -56,11 +57,11 @@ export default class File extends Model {
 	public get dir() {
 		return Path.dirname(this.path);
 	}
-	public async downloaded(uri: string, dir: string): Promise<void> {
+	public async downloaded(url: string, dir: string): Promise<void> {
 		this.state(States.Downloading);
 		const result = await DAO.self.get<boolean>(
 			'download',
-			{ uri: uri, dir: dir, filename: this.name }
+			{ url: url, dir: dir, filename: this.name }
 		);
 		this.store(result);
 		this.state(this.store() ? States.Stored : States.Failed);

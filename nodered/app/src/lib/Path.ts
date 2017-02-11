@@ -1,7 +1,7 @@
 export default class Path {
 	public static confirm(dir: string): string { // XXX not pure js
 		dir = prompt('input save dir', dir) || '';
-		return Path.valid(dir) ? dir : '';
+		return Path.valid(dir) ? Path.dirname(dir) : '';
 	}
 	public static real(path: string): string {
 		return `images/${path}`; // XXX

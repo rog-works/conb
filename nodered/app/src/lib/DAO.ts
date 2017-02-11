@@ -39,7 +39,7 @@ export default class DAO {
 			const callback = (self: any, message: MessageEvent): boolean => {
 				const response = JSON.parse(message.data);
 				if (response.digest === request.digest) {
-					console.log('once respond', response);
+					console.log('once respond', 'OK');//response);
 					this._ws.off('message', callback);
 					return resolve(response.data);
 				}

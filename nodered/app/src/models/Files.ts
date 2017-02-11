@@ -25,7 +25,7 @@ export default class Files extends Model { // XXX Posts???
 	public constructor(entity: FilesEntity) {
 		super(['update', 'delete']);
 		this.entries = ko.observableArray([]);
-		this.state = ko.observable(States.Closed);
+		this.state = ko.observable(entity.entries ? States.Opened : States.Closed);
 		this.stores = ko.observable(0);
 		this.store = ko.computed({ owner: this, read: this._computedStore });
 		for (const entryEntity of entity.entries) {
@@ -37,10 +37,18 @@ export default class Files extends Model { // XXX Posts???
 	// @override
 	public import(entity: FilesEntity): void {
 		super.import(entity);
+		const before = this.entries().length;
 		for (const entryEntity of entity.entries) {
-			this.add(ModelFactory.self.create<Entry>(entryEntity));
+			const entry = this.uriAt(entryEntity.uri);
+			if (entry) {
+				entry.import(entryEntity);
+			} else {
+				this.add(ModelFactory.self.create<Entry>(entryEntity));
+			}
 		}
-		this.emit('update', this);
+		if (before < this.entries().length) {
+			this.emit('update', this);
+		}
 	}
 	// @override
 	public export(): FilesEntity {
@@ -53,14 +61,25 @@ export default class Files extends Model { // XXX Posts???
 		this.import(await DAO.self.get<FilesEntity>('posts/show', { uri: uri })); // XXX unmatch resource name
 		this.state(States.Opened);
 	}
-	public downloaded(): void {
-		for (const entry of this.entries()) {
-			const file = entry.getAttr<File>('file');
-			const post = entry.getAttr<Post>('post');
-			if (!file.store()) {
-				file.downloaded(post.href, Path.dirname(post.text)); // XXX href is not endpoint
+	public downloaded(parent: Entry): void { // XXX bad dependency parent
+		let dir = `${Path.real(parent.getAttr<Post>('post').text)}/`;
+		if (!Path.valid(dir)) {
+			dir = Path.confirm(dir);
+			if (!dir) {
+				console.log('save cancel');
+				return;
 			}
 		}
+		for (const entry of this.entries()) {
+			const file = entry.getAttr<File>('file');
+			if (!file.store()) {
+				const post = entry.getAttr<Post>('post');
+				file.downloaded(post.href, dir);
+			}
+		}
+	}
+	public uriAt(uri: string): Entry | undefined {
+		return this.entries().filter(entry => entry.uri === uri).pop();
 	}
 	public add(entry: Entry): boolean {
 		if (entry.hasAttr('file')) {
@@ -71,12 +90,10 @@ export default class Files extends Model { // XXX Posts???
 		return false;
 	}
 	private _onUpdate(sender: File): boolean {
-		this.stores(this.entries().filter(entry => {
-			return entry.getAttr<File>('file').store();
-		}).length);
+		this.stores(this.entries().filter(entry => entry.getAttr<File>('file').store()).length);
 		return true;
 	}
 	private _computedStore(): boolean {
-		return this.stores() === this.entries().length;
+		return this.entries() && this.stores() === this.entries().length;
 	}
 }

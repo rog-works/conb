@@ -71,7 +71,7 @@
 									<div class="fc-w w-8 h-1 absolute abs-top flex just-center" data-bind="visible: $parent.focus() === type">
 										<div class="w-2 h-1 flex arounding">
 											<i class="wh-hq round-hq border flex centering hover fa" data-bind="click: loaded.bind($data, $parent.getAttr('post').href), css: { 'fa-folder': state() === 'closed', 'fa-folder-open': state() === 'opened', 'fa-spin': state() === 'loading', 'fa-refresh': state() === 'loading' }"></i>
-											<i class="wh-hq round-hq border flex centering hover fa fa-cloud-download" data-bind="click: downloaded, css: { 'fc-b': store() === true }"></i>
+											<i class="wh-hq round-hq border flex centering hover fa fa-cloud-download" data-bind="click: downloaded.bind($data, $parent), css: { 'fc-b': store() === true }"></i>
 										</div>
 									</div>
 									<div class="fc-w bc-b trans w-8 h-10 absolute abs-bottom wrap scroll-y" data-bind="visible: $parent.focus() === type, foreach: entries">
