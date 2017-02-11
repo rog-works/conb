@@ -24,7 +24,7 @@ export default class File extends Model {
 	public readonly date: string
 	public readonly state: KnockoutObservable<string>
 	public constructor(entity: FileEntity) {
-		super(['update']);
+		super(['update', 'delete']);
 		this.path = entity.path;
 		this.store = ko.observable(entity.store || false);
 		this.size = entity.size || 0;
@@ -56,11 +56,11 @@ export default class File extends Model {
 	public get dir() {
 		return Path.dirname(this.path);
 	}
-	public async downloaded(uri: string): Promise<void> {
+	public async downloaded(uri: string, dir: string): Promise<void> {
 		this.state(States.Downloading);
 		const result = await DAO.self.get<boolean>(
 			'download',
-			{ uri: uri, path: this.path }
+			{ uri: uri, dir: dir, filename: this.name }
 		);
 		this.store(result);
 		this.state(this.store() ? States.Stored : States.Failed);

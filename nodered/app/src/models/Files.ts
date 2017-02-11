@@ -1,9 +1,11 @@
 import * as ko from 'knockout';
 import DAO from '../lib/DAO';
+import Path from '../lib/Path';
 import {Model, ModelEntity} from './Model';
 import ModelFactory from './ModelFactory';
 import {default as Entry, EntryEntity} from './Entry';
 import {default as File, FileEntity} from './File';
+import {default as Post, PostEntity} from './Post';
 
 export interface FilesEntity extends ModelEntity {
 	entries: EntryEntity[]
@@ -54,14 +56,15 @@ export default class Files extends Model { // XXX Posts???
 	public downloaded(): void {
 		for (const entry of this.entries()) {
 			const file = entry.getAttr<File>('file');
+			const post = entry.getAttr<Post>('post');
 			if (!file.store()) {
-				file.downloaded(entry.uri); // XXX uri is not endpoint
+				file.downloaded(post.href, Path.dirname(post.text)); // XXX uri is not endpoint
 			}
 		}
 	}
 	public add(entry: Entry): boolean {
 		if (entry.hasAttr('file')) {
-			entry.on('update', this._onUpdate.bind(this));
+			entry.getAttr<File>('file').on('update', this._onUpdate.bind(this));
 			this.entries.push(entry);
 			return true;
 		}
