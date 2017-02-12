@@ -38,16 +38,17 @@ export default class Site extends Model {
 		entity.where = this.where();
 		return entity;
 	}
+	public get querify(): string {
+		return `sites/${this.name}`;
+	}
 	public get domain(): string { // XXX copied via Post
 		const matches = this.from().match(/^[\w]+:\/\/([^\/]+)/);
 		return matches ? matches[1] : 'localhost';
 	}
-	public async loaded(params: any = {}): Promise<ModelEntity[]> {
+	public async load<T extends ModelEntity>(params: any = {}): Promise<T[]> {
 		const from = this._inject(this.from(), params);
 		const html = await Query.from(from);
-		const rows = html.where(this.where()).select(this.select());
-		console.log(rows);
-		return rows;
+		return html.where(this.where()).select(this.select());
 	}
 	private _inject(from: string, params: any): string {
 		for (const key in Object.keys(params)) {

@@ -4,7 +4,7 @@ import DAO from '../lib/DAO';
 import Path from '../lib/Path';
 import ModelFactory from './ModelFactory';
 import {default as Entry, EntryEntity} from './Entry';
-import Post from './Post';
+import {default as Post, PostEntity} from './Post';
 import File from './File';
 import Site from './Site'; // FIXME
 
@@ -18,6 +18,8 @@ export default class Entries extends EventEmitter {
 		this.emit('beforeUpdate', this, page); // XXX page?
 		if (/^https?:\/\//.test(url)) {
 			this._loadPosts(url, page);
+		} else if (/^\/sites\//.test(url)) {
+			this._loadSites(url, page);
 		} else if (/^\/entries\//.test(url)) {
 			this._loadEntries(url, page);
 		} else {
@@ -34,7 +36,35 @@ export default class Entries extends EventEmitter {
 			entry.get();
 			this.list.push(entry);
 		}
-		this.emit('update', this, entities);
+		this.emit('update', this);
+	}
+	private async _loadSites(url: string, page: number): Promise<void> {
+		const where = { ['attrs.site.name']: url.substr('/sites/'.length) };
+		const siteEntry = (await Entry.find({
+			where: where,
+			skip: 0,
+			limit: 1
+		})).pop();
+		if (!siteEntry) {
+			throw new Error(`Unknown site. ${url}`);
+		}
+		const site = siteEntry.getAttr<Site>('site');
+		const postEntities = await site.load<PostEntity>({ page: page });
+		for (const postEntity of postEntities) {
+			const entity = {
+				type: 'entry',
+				uri: postEntity.href,
+				attrs: {
+					post: postEntity,
+					tags: { type: 'tags', tags: [] },
+					files: { type: 'files', entries: [] },
+				}
+			};
+			const entry = ModelFactory.self.create<Entry>(entity);
+			entry.get();
+			this.list.push(entry);
+		}
+		this.emit('update', this);
 	}
 	private async _loadEntries(url: string, page: number): Promise<void> {
 		const where = this._toWhere(url.substr('/entries/'.length));
@@ -46,7 +76,7 @@ export default class Entries extends EventEmitter {
 		for (const entry of entries) {
 			this.list.push(entry);
 		}
-		this.emit('update', this, entries);
+		this.emit('update', this);
 	}
 	private _toWhere(query: string): any {
 		return {}; // XXX impl
