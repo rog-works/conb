@@ -13,6 +13,11 @@ $ d exec nodered-db mongoexport -d nodered -c entry | gzip > .backup/nodered.ent
 > db.entry.find({uri: /google/})
 ```
 
+* Exists
+```
+> db.entry.find({"attrs.files": {$exists: true}})
+```
+
 ## Alter table
 
 ### Add field
