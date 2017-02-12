@@ -83,6 +83,23 @@ export default class Main {
 	public filtered(): void {
 		this.entries.filtered(this.searcher.filter.value());
 	}
+	public addedSite(): void { // XXX NG
+		const uri = prompt('added site url');
+		if (!uri) {
+			return;
+		}
+		const entity = {
+			type: 'entry',
+			uri: uri,
+			attrs: {
+				site: {
+					type: 'site',
+					from: uri
+				}
+			}
+		}
+		this.entries.list.push(ModelFactory.self.create<Entry>(entity));
+	}
 	private _onEntryBeforeUpdate(sender: Entries, page: number): boolean {
 		this.searcher.page.next.number = page;
 		this.webObserver.update(`begin none`);

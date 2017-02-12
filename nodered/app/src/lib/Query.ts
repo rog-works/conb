@@ -5,7 +5,7 @@ export default class Query {
 	public static PARSE_QUERY: RegExp = /^select\s+(.+)\s+from\s+([^\s]+)\s+where\s+(.+)/
 	public static SELECT_QUERY: RegExp = /^\$\("([^"]+)"\)\.([^(]+)\(\)\s+as\s+([\w.]+)/
 	public static SELECT_QUERY_ATTR: RegExp = /^\$\("([^"]+)"\)\.([^(]+)\("([^"]+)"\)\s+as\s+([\w.]+)/
-	public static SELECT_QUERY_LITERAL: RegExp = /([^\s]+)\s+as\s+([\w.]+)/
+	public static SELECT_QUERY_LITERAL: RegExp = /(.+)\s+as\s+([\w.]+)/
 	public constructor(private _e: JQuery) {}
 	public static parse(query: string): RegExpMatchArray | null {
 		return query.match(Query.PARSE_QUERY);
@@ -14,7 +14,7 @@ export default class Query {
 		const html = await DAO.self.get<string>('html', { url: from });
 		return new Query($(html));
 	}
-	public where(queries: string): Query {console.log(2);
+	public where(queries: string): Query {
 		const matches = queries.match(/\$\("([^"]+)"\)/) || [];
 		matches.shift();
 		const query = matches.shift() || '';
@@ -25,13 +25,14 @@ export default class Query {
 		this._e.each((index, elem) => {
 			let row = {};
 			for (const queries of fieldOfQueries) {
-				if (this._hasSelectQuery(queries)) {
-					row = $.extend(row, this._selectQuery($(elem), queries));
-				} else if (this._hasSelectQueryAttr(queries)) {
-					row = $.extend(row, this._selectQueryAttr($(elem), queries));
-				} else if (this._hasSelectQueryLiteral(queries)) {
-					row = $.extend(row, this._selectQueryLiteral($(elem), queries));
-				}
+				// if (this._hasSelectQuery(queries)) {
+				// 	row = $.extend(row, this._selectQuery($(elem), queries));
+				// } else if (this._hasSelectQueryAttr(queries)) {
+				// 	row = $.extend(row, this._selectQueryAttr($(elem), queries));
+				// } else if (this._hasSelectQueryLiteral(queries)) {
+				// 	row = $.extend(row, this._selectQueryLiteral($(elem), queries));
+				// }
+				row = $.extend(row, this._selectQueryEval($(elem), queries));
 			}
 			rows.push(row);
 		});
@@ -69,8 +70,14 @@ export default class Query {
 		const value = matches.shift() || '';
 		const as  = matches.shift() || '';
 		return JSON.parse(`{"${as}":${value}}`);
-		// const result = this._invoke(e, value);
-		// return { [as]: result };
+	}
+	private _selectQueryEval(e: JQuery, queries: string): {} {
+		const matches = queries.match(Query.SELECT_QUERY_LITERAL) || [];
+		matches.shift();
+		const value = matches.shift() || '';
+		const as  = matches.shift() || '';
+		const result = this._invoke(e, value);
+		return { [as]: result };
 	}
 	private _invoke(context: any, script: string): any {
 		return eval(`(function f($){ return ${script}; })`)(context);
