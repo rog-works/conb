@@ -83,6 +83,10 @@ export default class Main {
 	public filtered(): void {
 		this.entries.filtered(this.searcher.filter.value());
 	}
+	public searched2(query: string): void {
+		this.searcher.url.value(query);
+		this.entries.load(query, '', '', 1);
+	}
 	public addedSite(): void { // XXX NG
 		const uri = prompt('added site url');
 		if (!uri) {

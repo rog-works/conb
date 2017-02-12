@@ -15,7 +15,7 @@ export default class Query {
 		return new Query($(html));
 	}
 	public where(queries: string): Query {
-		const matches = queries.match(/\$\("([^"]+)"\)/) || [];
+		const matches = queries.match(/^\$\("(.+)"\)$/) || [];
 		matches.shift();
 		const query = matches.shift() || '';
 		return new Query(this._e.find(query));

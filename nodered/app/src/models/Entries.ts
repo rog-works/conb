@@ -36,7 +36,7 @@ export default class Entries extends EventEmitter {
 			entry.get();
 			this.list.push(entry);
 		}
-		this.emit('update', this);
+		this.emit('update', this, entities);
 	}
 	private async _loadSites(url: string, page: number): Promise<void> {
 		const where = { ['attrs.site.name']: url.substr('/sites/'.length) };
@@ -64,7 +64,7 @@ export default class Entries extends EventEmitter {
 			entry.get();
 			this.list.push(entry);
 		}
-		this.emit('update', this);
+		this.emit('update', this, postEntities);
 	}
 	private async _loadEntries(url: string, page: number): Promise<void> {
 		const where = this._toWhere(url.substr('/entries/'.length));
@@ -76,10 +76,10 @@ export default class Entries extends EventEmitter {
 		for (const entry of entries) {
 			this.list.push(entry);
 		}
-		this.emit('update', this);
+		this.emit('update', this, entries);
 	}
 	private _toWhere(query: string): any {
-		return {}; // XXX impl
+		return query ? JSON.parse(query) : {}; // XXX impl
 	}
 	public remove(entry: Entry): void {
 		this.list.remove(entry);

@@ -39,7 +39,7 @@ export default class Site extends Model {
 		return entity;
 	}
 	public get querify(): string {
-		return `sites/${this.name}`;
+		return `/sites/${this.name()}`;
 	}
 	public get domain(): string { // XXX copied via Post
 		const matches = this.from().match(/^[\w]+:\/\/([^\/]+)/);
@@ -51,7 +51,7 @@ export default class Site extends Model {
 		return html.where(this.where()).select(this.select());
 	}
 	private _inject(from: string, params: any): string {
-		for (const key in Object.keys(params)) {
+		for (const key of Object.keys(params)) {
 			from = from.replace(`{${key}}`, params[key]);
 		}
 		return from;
