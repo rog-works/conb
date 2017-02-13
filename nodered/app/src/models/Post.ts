@@ -13,6 +13,7 @@ export interface PostEntity extends ModelEntity {
 	store?: boolean
 	bookmark?: boolean
 	favorite?: boolean
+	site?: string
 }
 
 export default class Post extends Model {
@@ -24,6 +25,7 @@ export default class Post extends Model {
 	public readonly bookmark: KnockoutObservable<boolean>
 	public readonly favorite: KnockoutObservable<boolean>
 	public readonly image: Image
+	public readonly site: string
 	public constructor(entity: PostEntity) {
 		super(['update', 'delete']);
 		this.href = entity.href;
@@ -34,6 +36,7 @@ export default class Post extends Model {
 		this.bookmark = ko.observable(entity.bookmark || false);
 		this.favorite = ko.observable(entity.favorite || false);
 		this.image = new Image({ type: 'image', uri: entity.src }); // XXX
+		this.site = entity.site || '';
 	}
 	// @override
 	public get uniqueKey(): string { return ''; } // XXX
@@ -56,6 +59,7 @@ export default class Post extends Model {
 		entity.store = this.store();
 		entity.bookmark = this.bookmark();
 		entity.favorite = this.favorite();
+		entity.site = this.site;
 		return entity;
 	}
 	public get domain(): string {

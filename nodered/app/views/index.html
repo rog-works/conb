@@ -70,7 +70,7 @@
 								<!-- ko if: type === 'files' -->
 									<div class="fc-w w-8 h-1 absolute abs-top flex just-center" data-bind="visible: $parent.focus() === type">
 										<div class="w-2 h-1 flex arounding">
-											<i class="wh-hq round-hq border flex centering hover fa" data-bind="click: loaded.bind($data, $parent.getAttr('post').href), css: { 'fa-folder': state() === 'closed', 'fa-folder-open': state() === 'opened', 'fa-spin': state() === 'loading', 'fa-refresh': state() === 'loading' }"></i>
+											<i class="wh-hq round-hq border flex centering hover fa" data-bind="click: loaded.bind($data, $parent.getAttr('post').href, $parent.getAttr('post').site), css: { 'fa-folder': state() === 'closed', 'fa-folder-open': state() === 'opened', 'fa-spin': state() === 'loading', 'fa-refresh': state() === 'loading' }"></i>
 											<i class="wh-hq round-hq border flex centering hover fa fa-cloud-download" data-bind="click: downloaded.bind($data, $parent), css: { 'fc-b': store() === true }"></i>
 										</div>
 									</div>
@@ -102,7 +102,7 @@
 											<div class="w-8 h-hq flex centering"><i class="w-1 h-hq flex centering fa fa-tag"></i><input class="w-7 h-hq less transparent" data-bind="value: name"></div>
 											<div class="w-8 h-1 flex centering"><span class="line-b-g">select</span><i class="w-1 h-1 flex centering fa fa-plus hover" data-bind="click: addedSelect"></i></div>
 											<div class="w-8" data-bind="foreach: select">
-												<div class="w-8 h-hq flex centering"><i class="w-1 h-hq flex centering fa" data-bind="css: { 'fa-question': /type$/.test($data), 'fa-link': /href$/.test($data), 'fa-file-image-o': /src$/.test($data), 'fa-file-text-o': /text$/.test($data), 'fa-clock-o': /date$/.test($data) }"></i><input class="w-7 h-hq less transparent" data-bind="value: $data"></div>
+												<div class="w-8 h-hq flex centering"><i class="w-1 h-hq flex centering fa" data-bind="css: { 'fa-question': /type$/.test($data), 'fa-link': /href$/.test($data), 'fa-file-image-o': /src$/.test($data), 'fa-file-text-o': /text$/.test($data), 'fa-clock-o': /date$/.test($data), 'fa-send': /site$/.test($data) }"></i><input class="w-7 h-hq less transparent" data-bind="value: $data"></div>
 											</div>
 											<div class="w-8 h-1 flex centering"><span class="line-b-g">from</span></div>
 											<div class="w-8 h-hq flex centering"><i class="w-1 h-hq flex centering fa fa-globe"></i><input class="w-7 h-hq less transparent" data-bind="value: from"></div>

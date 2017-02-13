@@ -1,5 +1,4 @@
 import * as ko from 'knockout';
-import * as $ from 'jquery';
 import DAO from './lib/DAO';
 import {Events} from './events/Events';
 import Scroll from './events/Scroll';
@@ -142,16 +141,14 @@ export default class Main {
 	}
 	private _getEntriesByRange(selectRange: Range): Entry[] {
 		const entries: Entry[] = [];
-		// XXX jQuery
-		$('.post').each((index, elem) => {
-			const e = $(elem);
-			const offset = e.offset();
-			const range = { x: offset.left, y: offset.top, w: e.width(), h: e.height() };
+		for (const elem of document.querySelectorAll('.post')) {
+			const offset = elem.getBoundingClientRect();
+			const range = { x: offset.left, y: offset.top, w: elem.clientWidth, h: elem.clientHeight };
 			if (this._intersectRect(selectRange, range)) {
 				const entry = ko.contextFor(elem).$data;
 				entries.push(entry);
 			}
-		});
+		}
 		return entries;
 	}
 	private _intersectRect(a: Range, b: Range): boolean {

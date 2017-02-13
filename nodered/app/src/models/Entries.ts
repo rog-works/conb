@@ -5,8 +5,8 @@ import Path from '../lib/Path';
 import ModelFactory from './ModelFactory';
 import {default as Entry, EntryEntity} from './Entry';
 import {default as Post, PostEntity} from './Post';
-import File from './File';
-import Site from './Site'; // FIXME
+import {default as File, FileEntity} from './File';
+import Site from './Site';
 
 export default class Entries extends EventEmitter {
 	public list: KnockoutObservableArray<Entry>
@@ -14,19 +14,19 @@ export default class Entries extends EventEmitter {
 		super('beforeUpdate', 'update');
 		this.list = ko.observableArray([]);
 	}
-	public load(url: string, path: string, query: string, page: number): void {
+	public load(uri: string, path: string, query: string, page: number): void {
 		this.emit('beforeUpdate', this, page); // XXX page?
-		if (/^https?:\/\//.test(url)) {
-			this._loadPosts(url, page);
-		} else if (/^\/sites\//.test(url)) {
-			this._loadSites(url, page);
-		} else if (/^\/entries\//.test(url)) {
-			this._loadEntries(url, page);
+		if (/^https?:\/\//.test(uri)) {
+			this._loadUris(uri, page);
+		} else if (/^\/sites\/posts\//.test(uri)) {
+			this._loadPosts(uri, page);
+		} else if (/^\/entries\//.test(uri)) {
+			this._loadEntries(uri, page);
 		} else {
-			throw Error(`Unknown protocol. ${url}`);
+			throw Error(`Unexpected uri. ${uri}, ${/^\/sites\/posts\//.test(uri)}`);
 		}
 	}
-	private async _loadPosts(url: string, page: number): Promise<void> {
+	private async _loadUris(url: string, page: number): Promise<void> {
 		const entities = await DAO.self.get<EntryEntity[]>(
 			'posts',
 			{ url: url.replace(/{page}/, `${page}`) }
@@ -38,7 +38,7 @@ export default class Entries extends EventEmitter {
 		}
 		this.emit('update', this, entities);
 	}
-	private async _loadSites(url: string, page: number): Promise<void> {
+	private async _loadPosts(url: string, page: number): Promise<void> {
 		const where = { ['attrs.site.name']: url.substr('/sites/'.length) };
 		const siteEntry = (await Entry.find({
 			where: where,

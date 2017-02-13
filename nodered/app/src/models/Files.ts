@@ -6,6 +6,7 @@ import ModelFactory from './ModelFactory';
 import {default as Entry, EntryEntity} from './Entry';
 import {default as File, FileEntity} from './File';
 import {default as Post, PostEntity} from './Post'; // XXX bad dependency
+import Site from './Site';
 
 export interface FilesEntity extends ModelEntity {
 	entries: EntryEntity[]
@@ -56,9 +57,36 @@ export default class Files extends Model { // XXX Posts???
 		entity.entries = this.entries().map((entry) => entry.export());
 		return entity;
 	}
-	public async loaded(uri: string): Promise<void> {
+	public async loaded(uri: string, sitePath: string): Promise<void> {
 		this.state(States.Loading);
-		this.import(await DAO.self.get<FilesEntity>('posts/show', { uri: uri })); // XXX unmatch resource name
+		// this.import(await DAO.self.get<FilesEntity>('posts/show', { uri: uri })); // XXX unmatch resource name
+		const where = { ['attrs.site.name']: sitePath };
+		const siteEntry = (await Entry.find({
+			where: where,
+			skip: 0,
+			limit: 1
+		})).pop();
+		if (!siteEntry) {
+			throw new Error(`Unknown site. ${uri}`);
+		}
+		const site = siteEntry.getAttr<Site>('site');
+		const postEntities = await site.load<PostEntity>({ from: uri });
+		for (const postEntity of postEntities) {
+			const entity = {
+				type: 'entry',
+				uri: postEntity.href,
+				attrs: {
+					post: postEntity,
+					file: {
+						type: 'file',
+						path: Path.filename(postEntity.href)
+					}
+				}
+			};
+			const entry = ModelFactory.self.create<Entry>(entity);
+			this.entries.push(entry);
+		}
+		this.emit('update', this, postEntities);
 		this.state(States.Opened);
 	}
 	public downloaded(parent: Entry): void { // XXX bad dependency parent

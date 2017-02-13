@@ -1,5 +1,4 @@
 import * as ko from 'knockout';
-import * as $ from 'jquery';
 import DAO from '../lib/DAO';
 import Query from '../lib/Query';
 import {Model, ModelEntity} from './Model';
