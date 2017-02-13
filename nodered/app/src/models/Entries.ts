@@ -20,6 +20,8 @@ export default class Entries extends EventEmitter {
 			this._loadUris(uri, page);
 		} else if (/^\/sites\/posts\//.test(uri)) {
 			this._loadPosts(uri, page);
+		} else if (/^\/sites\//.test(uri)) {
+			this._loadSites(uri, page);
 		} else if (/^\/entries\//.test(uri)) {
 			this._loadEntries(uri, page);
 		} else {
@@ -37,6 +39,9 @@ export default class Entries extends EventEmitter {
 			this.list.push(entry);
 		}
 		this.emit('update', this, entities);
+	}
+	private _loadSites(url: string, page: number): void {
+		this._loadEntries('/entries/{"attrs.site":{"$exists":true}}', page);
 	}
 	private async _loadPosts(url: string, page: number): Promise<void> {
 		const where = { ['attrs.site.name']: url.substr('/sites/'.length) };
