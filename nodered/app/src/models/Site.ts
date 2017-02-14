@@ -74,9 +74,9 @@ export default class Site extends Model {
 	}
 }
 
-class QueryBuilder {
-	public constructor() {}
-	public build() {
-		return `${this.protocol}://${this.host}/${this.path}`${this.q}`
-	}
-}
+// class QueryBuilder {
+// 	public constructor() {}
+// 	public build() {
+// 		return `${this.protocol}://${this.host}/${this.path}/${this.q}`
+// 	}
+// }
