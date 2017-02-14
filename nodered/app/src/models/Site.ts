@@ -10,15 +10,22 @@ export interface SiteEntity extends ModelEntity {
 	where?: string
 }
 
+class Select {
+	value: KnockoutObservable<string>
+	public constructor(value: string) {
+		this.value = ko.observable(value);
+	}
+}
+
 export default class Site extends Model {
 	public readonly name: KnockoutObservable<string>
-	public readonly select: KnockoutObservableArray<string>
+	public readonly select: KnockoutObservableArray<Select>
 	public readonly from: KnockoutObservable<string>
 	public readonly where: KnockoutObservable<string>
 	public constructor(entity: SiteEntity) {
 		super(['update', 'delete']);
 		this.name = ko.observable(entity.name || '');
-		this.select = ko.observableArray(entity.select || []);
+		this.select = ko.observableArray(entity.select ? entity.select.map(value => new Select(value)) : []);
 		this.from = ko.observable(entity.from);
 		this.where = ko.observable(entity.where || '');
 	}
@@ -32,7 +39,7 @@ export default class Site extends Model {
 	public export(): SiteEntity {
 		const entity = <any>super.export(); // XXX down cast...
 		entity.name = this.name();
-		entity.select = this.select();
+		entity.select = this.select().map(select => select.value());
 		entity.from = this.from();
 		entity.where = this.where();
 		return entity;
@@ -45,9 +52,10 @@ export default class Site extends Model {
 		return matches ? matches[1] : 'localhost';
 	}
 	public async load<T extends ModelEntity>(params: any = {}): Promise<T[]> {
+		// https://domain/path{/tag}{?query=}{&tags=tag,tag}#flagment
 		const from = this._inject(this.from(), params);
 		const html = await Query.from(from);
-		return html.where(this.where()).select(this.select());
+		return html.where(this.where()).select(this.select().map(select => select.value()));
 	}
 	private _inject(from: string, params: any): string {
 		for (const key of Object.keys(params)) {
@@ -62,9 +70,13 @@ export default class Site extends Model {
 		this.emit('delete', this);
 	}
 	public addedSelect(): void {
-		const select = prompt('added select');
-		if (select) {
-			this.select.push(select);
-		}
+		this.select.push(new Select('"" as empty'));
+	}
+}
+
+class QueryBuilder {
+	public constructor() {}
+	public build() {
+		return `${this.protocol}://${this.host}/${this.path}`${this.q}`
 	}
 }

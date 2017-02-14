@@ -102,7 +102,10 @@
 											<div class="w-8 h-hq flex centering"><i class="w-1 h-hq flex centering fa fa-tag"></i><input class="w-7 h-hq less transparent" data-bind="value: name"></div>
 											<div class="w-8 h-1 flex centering"><span class="line-b-g">select</span><i class="w-1 h-1 flex centering fa fa-plus hover" data-bind="click: addedSelect"></i></div>
 											<div class="w-8" data-bind="foreach: select">
-												<div class="w-8 h-hq flex centering"><i class="w-1 h-hq flex centering fa" data-bind="css: { 'fa-question': /type$/.test($data), 'fa-link': /href$/.test($data), 'fa-file-image-o': /src$/.test($data), 'fa-file-text-o': /text$/.test($data), 'fa-clock-o': /date$/.test($data), 'fa-send': /site$/.test($data) }"></i><input class="w-7 h-hq less transparent" data-bind="value: $data"></div>
+												<div class="w-8 h-hq flex centering">
+													<i class="w-1 h-hq flex centering fa" data-bind="css: { 'fa-question': /type$/.test(value()), 'fa-link': /href$/.test(value()), 'fa-file-image-o': /src$/.test(value()), 'fa-file-text-o': /text$/.test(value()), 'fa-clock-o': /date$/.test(value()), 'fa-send': /site$/.test(value()) }"></i>
+													<input class="w-7 h-hq less transparent" data-bind="value: value">
+												</div>
 											</div>
 											<div class="w-8 h-1 flex centering"><span class="line-b-g">from</span></div>
 											<div class="w-8 h-hq flex centering"><i class="w-1 h-hq flex centering fa fa-globe"></i><input class="w-7 h-hq less transparent" data-bind="value: from"></div>
