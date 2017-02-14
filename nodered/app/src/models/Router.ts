@@ -2,11 +2,11 @@
 interface Handlers {
 	[path: string]: Function
 }
- 
+
 interface Matchers {
 	[path: string]: RegExp
 }
- 
+
 export default class Router {
 	private static _self: Router
 	private _routes: Handlers
@@ -32,7 +32,7 @@ export default class Router {
 		const [handler, args] = this._dispache(path);
 		return await handler(...args);
 	}
-	private _dispache(path: string): [Function, string] {
+	private _dispache(path: string): [Function, string[]] {
 		for (const key of Object.keys(this._matchers)) {
 			if (this._matchers[key].test(path)) {
 				const matches = path.match(this._matchers[key]);
@@ -43,18 +43,18 @@ export default class Router {
 		throw new Error(`Unmatch route. ${path}`);
 	}
 }
- 
+
 export interface Behavior {
 	before(): (...any) => any
 	after(): (...any) => any
 }
- 
+
 class EntryProvider {
 	public async load(query: string): Promise<Entry[]> {
 		return await Router.self.async<Entry[]>(query); // FIXME
 	}
 }
- 
+
 export class Site {
 	public name: string
 	public from: string
@@ -77,13 +77,13 @@ export class Site {
 		return query.fetch(content);
 	}
 }
- 
+
 class Query {
 	public fetch(content: string): Entry[] {
 		return [];
 	}
 }
- 
+
 export class Post {
 	public constructor() {
 		Router.self.use(/^http.+$/, Post.index.bind(this));
@@ -93,7 +93,7 @@ export class Post {
 		return [];
 	}
 }
- 
+
 export class Entry {
 	public constructor() {
 		Router.self.use('/entries/index', Entry.index.bind(this));
