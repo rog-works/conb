@@ -63,22 +63,23 @@ export class Site {
 		Router.self.use('/sites/index(/[^/]+/)', Site.index.bind(this));
 		Router.self.use('/sites/show', Site.show.bind(this));
 	}
-	public static async index(uri: string): Promise<Entry[]> {
-		// /sites/index
-		return [];
+	public static async index(uri?: string): Promise<Entry[]> {
+		// /sites/index(?:\?uri=(.+))?
+		const where = uri ? { uri: `/^${uri}/` } : {};
+		return await Site.find({ where: where });
 	}
 	public static async show(uri: string): Promise<Entry> {
-		// /sites/show</path/to/>[/<query>][?tags=tag,tag]
+		// /sites/show([^?]+)(query=([^&]+))?[?tags=tag,tag]
 		return new Entry();
 	}
 	public async load(): Promise<Entry[]> {
 		const content = await Router.self.async<string>(this.from);
-		const query = await Router.self.async<Query>(`/queries/show/${this.query}`);
-		return query.fetch(content);
+		const projector = await Router.self.async<Projector>(`/projectors/show/${this.query}`);
+		return projector.fetch(content);
 	}
 }
 
-class Query {
+class Projector {
 	public fetch(content: string): Entry[] {
 		return [];
 	}
@@ -90,7 +91,11 @@ export class Post {
 	}
 	public static async index(uri: string): Promise<Entry[]> {
 		// protocol://[user[:pass]@]host[:port][/path][?query][#flagment]
-		return [];
+		
+		if (sites) {
+			return await Rooter.self.async(sites.pop().querify);
+		}
+		throw new Error(`Unknown domain. ${uri}`);
 	}
 }
 
