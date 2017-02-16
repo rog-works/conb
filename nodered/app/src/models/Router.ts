@@ -60,26 +60,70 @@ export class Site {
 	public from: string
 	public query: string
 	public constructor() {
-		Router.self.use('/sites/index(/[^/]+/)', Site.index.bind(this));
+		Router.self.use('/sites', Site.index.bind(this));
 		Router.self.use('/sites/show', Site.show.bind(this));
 	}
-	public static async index(uri?: string): Promise<Entry[]> {
-		// /sites/index(?:\?uri=(.+))?
-		const where = uri ? { uri: `/^${uri}/` } : {};
-		return await Site.find({ where: where });
+	public static async index(): Promise<Entry[]> {
+		// /sites
+		return await Site.find();
 	}
-	public static async show(uri: string): Promise<Entry> {
-		// /sites/show([^?]+)(query=([^&]+))?[?tags=tag,tag]
+	public static async show(query?: string, tags?: string): Promise<Entry> {
+		// /sites/show(?:[?&]([^=]+=[^&]+))*
+		const query = await Router.self.async(`/queries/show?uri=${uri}`);
 		return new Entry();
 	}
 	public async load(): Promise<Entry[]> {
 		const content = await Router.self.async<string>(this.from);
-		const projector = await Router.self.async<Projector>(`/projectors/show/${this.query}`);
-		return projector.fetch(content);
+		const map = await Router.self.async<Mapper>(`/maps/show/${this.query}`);
+		return map.fetch(content);
 	}
 }
 
-class Projector {
+class URI {
+	private _base: string
+	private _scheme: string
+	private _host: string
+	private _path: string
+	private _queries: any // XXX
+	public constructor(uri: string) {
+		const [scheme, host, path, queries] = this._parse(uri);
+		this._base = uri;
+		this._scheme = scheme;
+		this._host = host;
+		this._path = path;
+		this._queries = {};
+		for (const query of queries) {
+			const [key, value] = query.split('=');
+			this._queries[key] = value;
+		}
+	}
+	public _parse(uri: string) {
+		const matches = uri.match(/^(?:([^:]+):\/\/)?([^\/]+)\/([^?]+)(?:[?&]([^&]+))*/);
+		return [
+			matches.shift() || '',
+			matches.shift() || '',
+			matches.shift() || '',
+			matches.shift() || ''
+		];
+	}
+	public get scheme(): string {
+		return this._scheme;
+	}
+	public get host(): string {
+		return this._host;
+	}
+	public get path(): string {
+		return this._path;
+	}
+	public hasQuery(key: string) {
+		return key in this._queries;
+	}
+	public query(key: string): string {
+		return this._queries[key] || '';
+	}
+}
+
+class Mapper {
 	public fetch(content: string): Entry[] {
 		return [];
 	}
@@ -87,15 +131,11 @@ class Projector {
 
 export class Post {
 	public constructor() {
-		Router.self.use(/^http.+$/, Post.index.bind(this));
+		Router.self.use('http', Post.index.bind(this));
 	}
 	public static async index(uri: string): Promise<Entry[]> {
 		// protocol://[user[:pass]@]host[:port][/path][?query][#flagment]
-		
-		if (sites) {
-			return await Rooter.self.async(sites.pop().querify);
-		}
-		throw new Error(`Unknown domain. ${uri}`);
+		return await DAO.get('html', uri);
 	}
 }
 
@@ -115,16 +155,19 @@ export class Entry {
 	public async get(): Promise<Entry> {
 		return new Entry();
 	}
-	public static async index(query: string, tags: string): Promise<Entry[]> {
-		// /entries/index[/query][?tags=tag,tag]
-		return await Entry.find({
-			where: {
-				'attrs.tags': {'$in': tags},
-				'attrs.post.text': `/${query}/`
-			}
-		});
+	public static async index(query?: string, tags?: string): Promise<Entry[]> {
+		// /entries/index[?query=query][&tags=tag,tag]
+		const where = {};
+		if (tags) {
+			where['attrs.tags'] = { '$in': tags };
+		}
+		if (query) {
+			where['attrs.post.text'] = `/${query}/`;
+		}
+		return await Entry.find(where);
 	}
 	public static async show(uri: string): Promise<Entry> {
-		// /entries/show/<signature>
+		// /entries/show/([\w\d]+)
+		return new Entry(uri).get();
 	}
 }
