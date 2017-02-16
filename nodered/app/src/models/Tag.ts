@@ -23,4 +23,7 @@ export default class Tag extends Model {
 		entity.name = this.name;
 		return entity;
 	}
+	public get querify(): string {
+		return `sites?tags=${this.name}`;
+	}
 }

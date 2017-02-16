@@ -9,38 +9,38 @@ interface Matchers {
 
 export default class Router {
 	private static _self: Router
-	private _routes: Handlers
+	private _handlers: Handlers
 	private _matchers: Matchers
 	public constructor() {
-		this._routes = {};
+		this._handlers = {};
 		this._matchers = {};
 	}
 	public static get self(): Router {
 		return Router._self || (Router._self = new Router());
 	}
-	public use(path: string | RegExp, callback: Function): void {
-		const key = path.toString();
-		const exp = path instanceof RegExp ? path : new RegExp(path);
-		this._routes[key] = callback;
-		this._matchers[key] = exp;
+	public use(pattern: string, handler: Function): void {
+		const key = pattern.toString();
+		this._handlers[key] = handler;
+		this._matchers[key] = new RegExp(pattern);
 	}
-	public get<T extends Object>(path: string): T {
-		const [handler, args] = this._dispache(path);
+	public get<T extends Object>(uri: string): T {
+		const [handler, args] = this._dispache(uri);
 		return handler(...args);
 	}
-	public async async<T extends Object>(path: string): Promise<T> {
-		const [handler, args] = this._dispache(path);
+	public async async<T extends Object>(uri: string): Promise<T> {
+		const [handler, args] = this._dispache(uri);
 		return await handler(...args);
 	}
-	private _dispache(path: string): [Function, string[]] {
+	private _dispache(uri: string): [Function, string[]] {
 		for (const key of Object.keys(this._matchers)) {
-			if (this._matchers[key].test(path)) {
-				const matches = path.match(this._matchers[key]);
-				matches.shift();
-				return [this._routes[key], matches];
+			const matcher = this._matchers[key];
+			if (matcher.test(uri)) {
+				const args = uri.match(matcher);
+				args.shift();
+				return [this._handlers[key], args];
 			}
 		}
-		throw new Error(`Unmatch route. ${path}`);
+		throw new Error(`Unmatch route. ${uri}`);
 	}
 }
 
@@ -52,30 +52,6 @@ export interface Behavior {
 class EntryProvider {
 	public async load(query: string): Promise<Entry[]> {
 		return await Router.self.async<Entry[]>(query); // FIXME
-	}
-}
-
-export class Site {
-	public name: string
-	public from: string
-	public query: string
-	public constructor() {
-		Router.self.use('/sites', Site.index.bind(this));
-		Router.self.use('/sites/show', Site.show.bind(this));
-	}
-	public static async index(): Promise<Entry[]> {
-		// /sites
-		return await Site.find();
-	}
-	public static async show(query?: string, tags?: string): Promise<Entry> {
-		// /sites/show(?:[?&]([^=]+=[^&]+))*
-		const query = await Router.self.async(`/queries/show?uri=${uri}`);
-		return new Entry();
-	}
-	public async load(): Promise<Entry[]> {
-		const content = await Router.self.async<string>(this.from);
-		const map = await Router.self.async<Mapper>(`/maps/show/${this.query}`);
-		return map.fetch(content);
 	}
 }
 
@@ -98,7 +74,7 @@ class URI {
 		}
 	}
 	public _parse(uri: string) {
-		const matches = uri.match(/^(?:([^:]+):\/\/)?([^\/]+)\/([^?]+)(?:[?&]([^&]+))*/);
+		const matches = uri.match(/^(?:([^:]+):\/\/)?([^\/]+)\/([^?]+)(?:[?&]([^&#]+))*/);
 		return [
 			matches.shift() || '',
 			matches.shift() || '',
@@ -126,6 +102,30 @@ class URI {
 class Mapper {
 	public fetch(content: string): Entry[] {
 		return [];
+	}
+}
+
+export class Site {
+	public name: string
+	public from: string
+	public query: string
+	public constructor() {
+		Router.self.use('/sites', Site.index.bind(this));
+		Router.self.use('/sites/show', Site.show.bind(this));
+	}
+	public static async index(): Promise<Entry[]> {
+		// /sites
+		return await Site.find();
+	}
+	public static async show(query?: string, tags?: string): Promise<Entry> {
+		// /sites/show(?:[?&]([^=]+=[^&]+))*
+		const query = await Router.self.async(`/queries/show?uri=${uri}`);
+		return new Entry();
+	}
+	public async load(): Promise<Entry[]> {
+		const content = await Router.self.async<string>(this.from);
+		const map = await Router.self.async<Mapper>(`/maps/show/${this.query}`);
+		return map.fetch(content);
 	}
 }
 
