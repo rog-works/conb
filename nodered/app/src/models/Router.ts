@@ -74,7 +74,7 @@ class URI {
 		}
 	}
 	public _parse(uri: string) {
-		const matches = uri.match(/^(?:([^:]+):\/\/)?([^\/]+)\/([^?]+)(?:[?&]([^&#]+))*/);
+		const matches = uri.match(/^(?:([^:]+):\/\/)?([^\/]+)(\/[^?]+)(?:[?&]([^&#]+))*/);
 		return [
 			matches.shift() || '',
 			matches.shift() || '',
@@ -99,6 +99,19 @@ class URI {
 	}
 }
 
+class Querify {
+	public constructor(entity: QuerifyEntity) {
+		this._template = entuty.template;
+	}
+	public build(map: any): string {
+		let query = this._template;
+		for (const key of Object.keys(map)) {
+			query = query.replace(`{${key}}`, map[key]);
+		}
+		return query;
+	}
+}
+
 class Mapper {
 	public fetch(content: string): Entry[] {
 		return [];
@@ -111,21 +124,17 @@ export class Site {
 	public query: string
 	public constructor() {
 		Router.self.use('/sites', Site.index.bind(this));
-		Router.self.use('/sites/show', Site.show.bind(this));
+		Router.self.use('/sites/inquiry', Site.inquiry.bind(this));
 	}
 	public static async index(): Promise<Entry[]> {
 		// /sites
-		return await Site.find();
+		const where = { "attrs.site": { "$exists": true } };
+		return await Router.self.async(`/entries/search?where=${JSON.stringify(where)}`);
 	}
-	public static async show(query?: string, tags?: string): Promise<Entry> {
+	public static async inquiry(query?: string, tags?: string): Promise<Entry> {
 		// /sites/show(?:[?&]([^=]+=[^&]+))*
-		const query = await Router.self.async(`/queries/show?uri=${uri}`);
-		return new Entry();
-	}
-	public async load(): Promise<Entry[]> {
-		const content = await Router.self.async<string>(this.from);
-		const map = await Router.self.async<Mapper>(`/maps/show/${this.query}`);
-		return map.fetch(content);
+		const querify = await Router.self.async(`/queries/show?uri=${uri}`);
+		return await Router.self.async<Entry[]>(querify.build({ query: query, tags: tags });
 	}
 }
 
@@ -135,17 +144,20 @@ export class Post {
 	}
 	public static async index(uri: string): Promise<Entry[]> {
 		// protocol://[user[:pass]@]host[:port][/path][?query][#flagment]
-		return await DAO.get('html', uri);
+		const mapper = await Router.self.async<Mapper>(`/maps/show/${uri}`);
+		const content = await DAO.get('html', uri);
+		return mapper.fetch(content);
 	}
 }
 
 export class Entry {
 	public constructor() {
-		Router.self.use('/entries/index', Entry.index.bind(this));
+		Router.self.use('/entries(?:[?&]([^&#]+))*', Entry.index.bind(this));
 		Router.self.use('/entries/show', Entry.show.bind(this));
 		Router.self.use('/entries/edit', Entry.edit.bind(this));
 		Router.self.use('/entries/create', Entry.create.bind(this));
 		Router.self.use('/entries/destroy', Entry.destroy.bind(this));
+		Router.self.use('/entries/search(?:[?&]([^&#]+))*', Entry.search.bind(this));
 	}
 	public attach(behavior: Behavior): void {
 	}
@@ -166,8 +178,15 @@ export class Entry {
 		}
 		return await Entry.find(where);
 	}
-	public static async show(uri: string): Promise<Entry> {
+	public static async show(signature: string): Promise<Entry> {
 		// /entries/show/([\w\d]+)
-		return new Entry(uri).get();
+		return new Entry(signature).get();
+	}
+	public static async search(page?: number, where?: any): Promise<Entry[]> {
+		return await Entry.find({
+			where: where || {},
+			skip: (page || 0) * 50,
+			limit: 50
+		});
 	}
 }
