@@ -100,8 +100,9 @@ class URI {
 }
 
 class Querify {
-	public constructor(entity: QuerifyEntity) {
-		this._template = entuty.template;
+	private _template: string
+	public constructor(template: string) {
+		this._template = template;
 	}
 	public build(map: any): string {
 		let query = this._template;
@@ -129,7 +130,7 @@ export class Site {
 	public static async index(): Promise<Entry[]> {
 		// /sites
 		const where = { "attrs.site": { "$exists": true } };
-		return await Router.self.async(`/entries/search?where=${JSON.stringify(where)}`);
+		return await Router.self.async<Entry[]>(`/entries/search?where=${JSON.stringify(where)}`);
 	}
 	public static async inquiry(query?: string, tags?: string): Promise<Entry> {
 		// /sites/show(?:[?&]([^=]+=[^&]+))*
