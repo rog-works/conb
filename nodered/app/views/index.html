@@ -64,7 +64,10 @@
 										</div>
 									</div>
 									<div class="fc-w bc-b trans w-8 h-10 absolute abs-bottom" data-bind="visible: $parent.focus() === type, foreach: tags">
-										<div class="flex row-center left pr-q1"><i class="fa fa-remove hover" data-bind="click: $parent.untagged.bind($parent, $data)"></i><div data-bind="text: name" data-bind="click: $root.searched2.bind($root, $data.querify)"></div></div>
+										<div class="flex row-center left pr-q1">
+											<i class="fa fa-remove hover" data-bind="click: $parent.untagged.bind($parent, $data)"></i>
+											<div data-bind="text: name, click: click"></div>
+										</div>
 									</div>
 								<!-- /ko -->
 								<!-- ko if: type === 'files' -->

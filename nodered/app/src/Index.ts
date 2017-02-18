@@ -1,5 +1,6 @@
 import * as ko from 'knockout';
 import DAO from './lib/DAO';
+import URI from './lib/URI';
 import {Events} from './events/Events';
 import Scroll from './events/Scroll';
 import WSObserver from './models/WSObserver';
