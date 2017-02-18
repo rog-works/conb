@@ -52,10 +52,13 @@ export default class Site extends Model {
 		return matches ? matches[1] : 'localhost';
 	}
 	public async load<T extends ModelEntity>(params: any = {}): Promise<T[]> {
-		// https://domain/path{/tag}{?query=}{&tags=tag,tag}#flagment
 		const from = this._inject(this.from(), params);
-		const html = await Query.from(from);
-		return html.where(this.where()).select(this.select().map(select => select.value()));
+		return await Query.create()
+			.select(this.select().map(select => select.value()))
+			.from(from)
+			.where(this.where())
+			.build()
+			.exec();
 	}
 	private _inject(from: string, params: any): string {
 		for (const key of Object.keys(params)) {
@@ -73,10 +76,3 @@ export default class Site extends Model {
 		this.select.push(new Select('"" as empty'));
 	}
 }
-
-// class QueryBuilder {
-// 	public constructor() {}
-// 	public build() {
-// 		return `${this.protocol}://${this.host}/${this.path}/${this.q}`
-// 	}
-// }

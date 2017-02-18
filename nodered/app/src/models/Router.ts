@@ -55,10 +55,9 @@ class EntryProvider {
 }
 
 class Querify {
-	private _template: string
-	public constructor(template: string) {
-		this._template = template;
-	}
+	public constructor(
+		private _template: string
+	) {}
 	public build(map: any): string {
 		let query = this._template;
 		for (const key of Object.keys(map)) {
@@ -79,24 +78,24 @@ export class Site {
 	public from: string
 	public query: string
 	public constructor() {
-		Router.self.use('/sites', Site.index.bind(this));
-		Router.self.use('/sites/inquiry', Site.inquiry.bind(this));
+		Router.self.use('/sites', Site.index);
+		Router.self.use('/sites/inquiry', Site.inquiry);
 	}
 	public static async index(): Promise<Entry[]> {
 		// /sites
 		const where = { "attrs.site": { "$exists": true } };
 		return await Router.self.async<Entry[]>(`/entries/search?where=${JSON.stringify(where)}`);
 	}
-	public static async inquiry(signature: string, query?: string, tags?: string): Promise<Entry> {
+	public static async inquiry(signature: string, query?: string, tags?: string): Promise<Entry[]> {
 		// /sites/show/([^?]+)(?:[?&]([^=]+=[^&]+))*
-		const querify = await Router.self.async(`/queries/show/${signature}`);
-		return await Router.self.async<Entry[]>(querify.build({ query: query, tags: tags });
+		const querify = await Router.self.async<Querify>(`/queries/show/${signature}`);
+		return await Router.self.async<Entry[]>(querify.build({ query: query, tags: tags }));
 	}
 }
 
 export class Post {
 	public constructor() {
-		Router.self.use('http', Post.index.bind(this));
+		Router.self.use('http', Post.index);
 	}
 	public static async index(uri: string): Promise<Entry[]> {
 		// protocol://[user[:pass]@]host[:port][/path][?query][#flagment]
@@ -109,12 +108,12 @@ export class Post {
 
 export class Entry {
 	public constructor() {
-		Router.self.use('/entries(?:[?&]([^&#]+))*', Entry.index.bind(this));
-		Router.self.use('/entries/show', Entry.show.bind(this));
-		Router.self.use('/entries/edit', Entry.edit.bind(this));
-		Router.self.use('/entries/create', Entry.create.bind(this));
-		Router.self.use('/entries/destroy', Entry.destroy.bind(this));
-		Router.self.use('/entries/search(?:[?&]([^&#]+))*', Entry.search.bind(this));
+		Router.self.use('/entries(?:[?&]([^&#]+))*', Entry.index);
+		Router.self.use('/entries/show', Entry.show);
+		Router.self.use('/entries/edit', Entry.edit);
+		Router.self.use('/entries/create', Entry.create);
+		Router.self.use('/entries/destroy', Entry.destroy);
+		Router.self.use('/entries/search(?:[?&]([^&#]+))*', Entry.search);
 	}
 	public attach(behavior: Behavior): void {
 	}

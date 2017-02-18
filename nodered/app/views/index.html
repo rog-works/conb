@@ -29,7 +29,7 @@
 						</div>
 					</div>
 					<!-- entry -->
-					<div class="fill-x h-1 grow-1 scroll no-selection" data-bind="foreach: entries.list, css: entries.css, event: events">
+					<div class="fill-x h-1 grow-1 scroll no-selection" data-bind="foreach: { data: entries.list, as: 'entry' }, css: entries.css, event: events">
 						<div class="post bc-1 w-8 h-11 m-q1 left relative shadow-1" data-bind="css: css">
 							<!-- ko foreach: $data.attrs -->
 								<!-- ko if: type === 'post' -->
@@ -66,7 +66,7 @@
 									<div class="fc-w bc-b trans w-8 h-10 absolute abs-bottom" data-bind="visible: $parent.focus() === type, foreach: tags">
 										<div class="flex row-center left pr-q1">
 											<i class="fa fa-remove hover" data-bind="click: $parent.untagged.bind($parent, $data)"></i>
-											<div data-bind="text: name, click: click"></div>
+											<div data-bind="text: 'from ' + entry.getAttr('post').site + ' where tags in (' + name + ')'"></div>
 										</div>
 									</div>
 								<!-- /ko -->

@@ -2,6 +2,7 @@ import * as ko from 'knockout';
 import EventEmitter from '../lib/EventEmitter';
 import DAO from '../lib/DAO';
 import Path from '../lib/Path';
+import Query from '../lib/Query';
 import ModelFactory from './ModelFactory';
 import {default as Entry, EntryEntity} from './Entry';
 import {default as Post, PostEntity} from './Post';
@@ -17,7 +18,9 @@ export default class Entries extends EventEmitter {
 	public load(uri: string, path: string, query: string, page: number): void {
 		this.emit('beforeUpdate', this, page); // XXX page?
 		if (/^https?:\/\//.test(uri)) {
-			this._loadUris(uri, page);
+			this._loadPostsByUrl(uri, page);
+		} else if (/^(select|from)/.test(uri)) {
+			this._loadPostsByQuery(uri, page);
 		} else if (/^\/sites\/posts\//.test(uri)) {
 			this._loadPosts(uri, page);
 		} else if (/^\/sites\//.test(uri)) {
@@ -28,7 +31,7 @@ export default class Entries extends EventEmitter {
 			throw Error(`Unexpected uri. ${uri}, ${/^\/sites\/posts\//.test(uri)}`);
 		}
 	}
-	private async _loadUris(url: string, page: number): Promise<void> {
+	private async _loadPostsByUrl(url: string, page: number): Promise<void> {
 		const entities = await DAO.self.get<EntryEntity[]>(
 			'posts',
 			{ url: url.replace(/{page}/, `${page}`) }
@@ -39,6 +42,57 @@ export default class Entries extends EventEmitter {
 			this.list.push(entry);
 		}
 		this.emit('update', this, entities);
+	}
+	private async _loadPostsByQuery(query: string, page: number): Promise<void> {
+		const matches = query.match(/from\s+([^\s]+)(?:\s+where\s+(.+))/);
+		if (!matches || matches.length !== 2) {
+			throw new Error(`Unexpected query. ${query}`);
+		}
+		const uri = matches[1];
+		const where = `page=${page} and ${matches[2]}`;
+		const siteEntry = (await Entry.find({
+			where: uri,
+			skip: 0,
+			limit: 1
+		})).pop();
+		if (!siteEntry) {
+			throw new Error(`Unknown site. ${uri}`);
+		}
+		const site = siteEntry.getAttr<Site>('site');
+		// 
+		let _where = site.where();
+		for (const cond of matches[2].split(/\s+and\s+/)) {
+			const params = cond.split(/\s+=\s+/);
+			if (params.length !== 2) {
+				throw new Error(`Unexpected query. ${query}`);
+			}
+			const key = params[0];
+			const value = params[1];
+			_where = _where.split(`{${key}}`).join(value);
+		}
+		const from = site.from().replace('{where}', _where);
+		// 
+		const postEntities = await Query.create()
+			.select(site.select().map(select => select.value()))
+			.from(from)
+			.where('')
+			.build()
+			.exec();
+		for (const postEntity of postEntities) {
+			const entity = {
+				type: 'entry',
+				uri: postEntity.href,
+				attrs: {
+					post: postEntity,
+					tags: { type: 'tags', tags: [] },
+					files: { type: 'files', entries: [] },
+				}
+			};
+			const entry = ModelFactory.self.create<Entry>(entity);
+			entry.get();
+			this.list.push(entry);
+		}
+		this.emit('update', this, postEntities);
 	}
 	private _loadSites(url: string, page: number): void {
 		this._loadEntries('/entries/{"attrs.site":{"$exists":true}}', page);

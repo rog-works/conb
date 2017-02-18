@@ -1,4 +1,3 @@
-
 export default class URI {
 	private _base: string
 	private _scheme: string
@@ -17,13 +16,13 @@ export default class URI {
 			this._queries[key] = value;
 		}
 	}
-	public _parse(uri: string) {
+	public _parse(uri: string): string[] {
 		const matches = uri.match(/^(?:([^:]+):\/\/)?([^\/]+)(\/[^?]+)(?:[?&]([^&#]+))*/);
 		return [
-			matches.shift() || '',
-			matches.shift() || '',
-			matches.shift() || '',
-			matches.shift() || ''
+			matches ? matches.shift() || '' : '',
+			matches ? matches.shift() || '' : '',
+			matches ? matches.shift() || '' : '',
+			matches ? matches.shift() || '' : ''
 		];
 	}
 	public get scheme(): string {
