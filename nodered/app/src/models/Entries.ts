@@ -8,6 +8,7 @@ import {default as Entry, EntryEntity} from './Entry';
 import {default as Post, PostEntity} from './Post';
 import {default as File, FileEntity} from './File';
 import Site from './Site';
+import {URIBuilderTest} from '../lib/URIBuilder';
 
 export default class Entries extends EventEmitter {
 	public list: KnockoutObservableArray<Entry>
@@ -69,6 +70,22 @@ export default class Entries extends EventEmitter {
 			const key = params[0];
 			const value = params[1];
 			_where = _where.split(`{${key}}`).join(value);
+		}
+		
+		for (const cond of [""]) {
+			const params = cond.split(/\s+=\s+/);
+			if (params.length !== 2) {
+				throw new Error(`Unexpected query. ${query}`);
+			}
+			const key = params[0];
+			const value = params[1];
+			const wheres: any[] = [{key:""}];
+			for (const __where of wheres) {
+				if (key !== __where.key) {
+					continue;
+				}
+
+			}
 		}
 		const from = site.from().replace('{where}', _where);
 		// 
@@ -198,6 +215,7 @@ export default class Entries extends EventEmitter {
 		}
 	}
 	public test(): void {
+		console.log(URIBuilderTest.create());
 	/*	for (let i = 0; i < 5; i += 1) {
 			const entity = {
 				type: 'entry',

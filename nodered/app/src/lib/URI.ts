@@ -1,29 +1,42 @@
+interface QueryMap {
+	[key: string]: string
+}
+
 export default class URI {
-	private _base: string
+	private _origin: string
 	private _scheme: string
 	private _host: string
 	private _path: string
-	private _queries: any // XXX
+	private _queries: QueryMap
 	public constructor(uri: string) {
-		const [scheme, host, path, queries] = this._parse(uri);
-		this._base = uri;
+		const [scheme, host, path, queries] = URI._parse(uri);
+		this._origin = uri;
 		this._scheme = scheme;
 		this._host = host;
 		this._path = path;
-		this._queries = {};
-		for (const query of queries) {
-			const [key, value] = query.split('=');
-			this._queries[key] = value;
-		}
+		this._queries = URI._parseQueies(queries);
 	}
-	public _parse(uri: string): string[] {
-		const matches = uri.match(/^(?:([^:]+):\/\/)?([^\/]+)(\/[^?]+)(?:[?&]([^&#]+))*/);
+	public static _parse(uri: string): string[] {
+		const matches = uri.match(/^([^:]+):\/\/([^\/]+)(\/[^?]*)(?:[?]([^#]+))?/); // XXX inaccuracy
+		if (!matches || matches.length !== 5) {
+			throw new Error(`Unexpected URI. ${uri}`);
+		}
 		return [
-			matches ? matches.shift() || '' : '',
-			matches ? matches.shift() || '' : '',
-			matches ? matches.shift() || '' : '',
-			matches ? matches.shift() || '' : ''
+			matches[1],
+			matches[2],
+			matches[3],
+			matches[4] || '',
 		];
+	}
+	public static _parseQueies(queries: string): QueryMap {
+		const map: QueryMap = {};
+		for (const query of queries.split('&')) {
+			if (query.length > 0) {
+				const [key, value] = query.split('=');
+				map[key] = value;
+			}
+		}
+		return map;
 	}
 	public get scheme(): string {
 		return this._scheme;
@@ -34,10 +47,10 @@ export default class URI {
 	public get path(): string {
 		return this._path;
 	}
-	public hasQuery(key: string) {
-		return key in this._queries;
-	}
 	public query(key: string): string {
 		return this._queries[key] || '';
+	}
+	public hasQuery(key: string) {
+		return key in this._queries;
 	}
 }

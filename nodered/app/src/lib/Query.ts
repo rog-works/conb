@@ -33,10 +33,10 @@ class QueryBuilder {
 		}
 		this._from = from;
 		this._uri = matches[1];
-		this._normalizer = `$${matches[2]}`;
+		this._normalizer = `$${matches[2]}`; // XXX
 		return this;
 	}
-	public where(where: string): this {
+	public where(where: string): this { // FIXME
 		if (!/\s+and\s+/.test(where)) {
 			return this;
 		}
@@ -67,7 +67,7 @@ class QueryExecutor {
 		return await DAO.self.get<string>('html', { url: from });
 	}
 	public static normalize(content: string, normalizer: string): Cheerio {
-		return QueryExecutor._invoke<Cheerio>($(content), normalizer);
+		return QueryExecutor._evaluate<Cheerio>($(content), normalizer);
 	}
 	public static projection(e: Cheerio, fieldOfQueries: string[]): any[] {
 		const rows: any[] = [];
@@ -85,10 +85,10 @@ class QueryExecutor {
 		matches.shift();
 		const value = matches.shift() || '';
 		const as = matches.shift() || '';
-		const result = QueryExecutor._invoke<string>(e, value);
+		const result = QueryExecutor._evaluate<string>(e, value);
 		return { [as]: result };
 	}
-	private static _invoke<T>(context: Cheerio, script: string): T {
+	private static _evaluate<T>(context: Cheerio, script: string): T {
 		return eval(`(function f($){ return ${script}; })`)(context);
 	}
 }
