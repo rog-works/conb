@@ -7,7 +7,7 @@ import WSObserver from './models/WSObserver';
 import WebObserver from './models/WebObserver';
 import Logger from './models/Logger';
 import ModelFactory from './models/ModelFactory';
-import Entry from './models/Entry';
+import {default as Entry, EntryEntity} from './models/Entry';
 import Entries from './models/Entries';
 import Post from './models/Post';
 import Tag from './models/Tag';
@@ -15,7 +15,7 @@ import Tags from './models/Tags';
 import File from './models/File';
 import Files from './models/Files';
 import Image from './models/Image';
-import Site from './models/Site';
+import {default as Site, SiteEntity} from './models/Site';
 import Searcher from './models/Searcher';
 import {default as Selector, Range} from './models/Selector';
 
@@ -88,19 +88,27 @@ export default class Main {
 		this.entries.load(query, '', '', 1);
 	}
 	public addedSite(): void { // XXX NG
-		const uri = prompt('added site url');
-		if (!uri) {
+		const url = prompt('Input indivisual site url');
+		if (!url) {
 			return;
 		}
-		const entity = {
+		const uri = new URI(url);
+		const site: SiteEntity = {
+			type: 'site',
+			name: uri.host,
+			select: [],
+			from: {
+				scheme: uri.scheme,
+				host: uri.host,
+				path: uri.path,
+				queries: []
+			},
+			where: ''
+		};
+		const entity: EntryEntity = {
 			type: 'entry',
-			uri: uri,
-			attrs: {
-				site: {
-					type: 'site',
-					from: uri
-				}
-			}
+			uri: uri.full,
+			attrs: { site: site }
 		}
 		this.entries.list.push(ModelFactory.self.create<Entry>(entity));
 	}

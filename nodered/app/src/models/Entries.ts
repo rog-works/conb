@@ -8,7 +8,8 @@ import {default as Entry, EntryEntity} from './Entry';
 import {default as Post, PostEntity} from './Post';
 import {default as File, FileEntity} from './File';
 import Site from './Site';
-import {URIBuilderTest} from '../lib/URIBuilder';
+import URIBuilder from '../lib/URIBuilder';
+import SiteMigrate from '../lib/SiteMigrate';
 
 export default class Entries extends EventEmitter {
 	public list: KnockoutObservableArray<Entry>
@@ -18,12 +19,10 @@ export default class Entries extends EventEmitter {
 	}
 	public load(uri: string, path: string, query: string, page: number): void {
 		this.emit('beforeUpdate', this, page); // XXX page?
-		if (/^https?:\/\//.test(uri)) {
-			this._loadPostsByUrl(uri, page);
-		} else if (/^(select|from)/.test(uri)) {
+		if (/^from/.test(uri)) {
 			this._loadPostsByQuery(uri, page);
 		} else if (/^\/sites\/posts\//.test(uri)) {
-			this._loadPosts(uri, page);
+			this._loadPosts(uri, { page: page });
 		} else if (/^\/sites\//.test(uri)) {
 			this._loadSites(uri, page);
 		} else if (/^\/entries\//.test(uri)) {
@@ -32,6 +31,7 @@ export default class Entries extends EventEmitter {
 			throw Error(`Unexpected uri. ${uri}, ${/^\/sites\/posts\//.test(uri)}`);
 		}
 	}
+	// deprecated
 	private async _loadPostsByUrl(url: string, page: number): Promise<void> {
 		const entities = await DAO.self.get<EntryEntity[]>(
 			'posts',
@@ -45,56 +45,41 @@ export default class Entries extends EventEmitter {
 		this.emit('update', this, entities);
 	}
 	private async _loadPostsByQuery(query: string, page: number): Promise<void> {
-		const matches = query.match(/from\s+([^\s]+)(?:\s+where\s+(.+))/);
-		if (!matches || matches.length !== 2) {
+		const matches = query.match(/from\s+([^\s]+)(?:\s+where\s+(.+))?/);
+		if (!matches || matches.length !== 3) {
 			throw new Error(`Unexpected query. ${query}`);
 		}
 		const uri = matches[1];
-		const where = `page=${page} and ${matches[2]}`;
-		const siteEntry = (await Entry.find({
-			where: uri,
+		const wheres = matches[2] || '';
+		const params: any = { page: page };
+		for (const where of wheres.split(/\s+and\s+/)) {
+			if (where.length > 0) {
+				if (/\s+in\s+/.test(where)) {
+					const [key, _values] = where.split(/\s+in\s+/);
+					const values = _values.split(/\s+/); // XXX short hand
+					params[key] = values;
+				} else if (/\s*=\s*/.test(where)) {
+					const [key, value] = where.split(/\s*=\s*/);
+					params[key] = value;
+				} else {
+					throw new Error(`Not supported operator. ${where}`);
+				}
+			}
+		}
+		this._loadPosts(`/sites/posts/${uri}`, params);
+	}
+	private async _loadPosts(uri: string, params: any): Promise<void> {
+		const where = { ['attrs.site.name']: uri.substr('/sites/'.length) };
+		const siteEntries = await Entry.find({
+			where: where,
 			skip: 0,
 			limit: 1
-		})).pop();
-		if (!siteEntry) {
-			throw new Error(`Unknown site. ${uri}`);
+		});
+		if (!siteEntries || siteEntries.length === 0) {
+			throw new Error(`Site not found. ${uri}`);
 		}
-		const site = siteEntry.getAttr<Site>('site');
-		// 
-		let _where = site.where();
-		for (const cond of matches[2].split(/\s+and\s+/)) {
-			const params = cond.split(/\s+=\s+/);
-			if (params.length !== 2) {
-				throw new Error(`Unexpected query. ${query}`);
-			}
-			const key = params[0];
-			const value = params[1];
-			_where = _where.split(`{${key}}`).join(value);
-		}
-		
-		for (const cond of [""]) {
-			const params = cond.split(/\s+=\s+/);
-			if (params.length !== 2) {
-				throw new Error(`Unexpected query. ${query}`);
-			}
-			const key = params[0];
-			const value = params[1];
-			const wheres: any[] = [{key:""}];
-			for (const __where of wheres) {
-				if (key !== __where.key) {
-					continue;
-				}
-
-			}
-		}
-		const from = site.from().replace('{where}', _where);
-		// 
-		const postEntities = await Query.create()
-			.select(site.select().map(select => select.value()))
-			.from(from)
-			.where('')
-			.build()
-			.exec();
+		const site = siteEntries[0].getAttr<Site>('site');
+		const postEntities = await site.load<PostEntity>(params);
 		for (const postEntity of postEntities) {
 			const entity = {
 				type: 'entry',
@@ -113,34 +98,6 @@ export default class Entries extends EventEmitter {
 	}
 	private _loadSites(url: string, page: number): void {
 		this._loadEntries('/entries/{"attrs.site":{"$exists":true}}', page);
-	}
-	private async _loadPosts(url: string, page: number): Promise<void> {
-		const where = { ['attrs.site.name']: url.substr('/sites/'.length) };
-		const siteEntry = (await Entry.find({
-			where: where,
-			skip: 0,
-			limit: 1
-		})).pop();
-		if (!siteEntry) {
-			throw new Error(`Unknown site. ${url}`);
-		}
-		const site = siteEntry.getAttr<Site>('site');
-		const postEntities = await site.load<PostEntity>({ page: page });
-		for (const postEntity of postEntities) {
-			const entity = {
-				type: 'entry',
-				uri: postEntity.href,
-				attrs: {
-					post: postEntity,
-					tags: { type: 'tags', tags: [] },
-					files: { type: 'files', entries: [] },
-				}
-			};
-			const entry = ModelFactory.self.create<Entry>(entity);
-			entry.get();
-			this.list.push(entry);
-		}
-		this.emit('update', this, postEntities);
 	}
 	private async _loadEntries(url: string, page: number): Promise<void> {
 		const where = this._toWhere(url.substr('/entries/'.length));
@@ -215,57 +172,9 @@ export default class Entries extends EventEmitter {
 		}
 	}
 	public test(): void {
-		console.log(URIBuilderTest.create());
-	/*	for (let i = 0; i < 5; i += 1) {
-			const entity = {
-				type: 'entry',
-				uri: 'https://google.co.jp/' + i,
-				attrs: {
-					post: {
-						type: 'post',
-						href: 'https://google.co.jp/' + i,
-						src: '',
-						text: 'hogehoge, ' + i,
-						date: 'none'
-					},
-					tags: {
-						type: 'tags',
-						tags: [
-							{ type: 'tag', name: 'hoge0' },
-							{ type: 'tag', name: 'hoge1' },
-							{ type: 'tag', name: 'hoge2' },
-						]
-					},
-					files: {
-						type: 'files',
-						entries: [
-							{
-								type: 'entry',
-								uri: `https://google.co.jp/${i}/1.jpg`,
-								attrs: {
-									post: {
-										type: 'post',
-										href: `https://google.co.jp/${i}/1.jpg`,
-										src: `https://google.co.jp/${i}/1.jpg`,
-										text: `${i}/1.jpg`,
-										date: 'none'
-									},
-									file: {
-										type: 'file',
-										path: `${i}.jpg`,
-										size: 0,
-										date: 'none',
-										store: false
-									}
-								}
-							}
-						]
-					}
-				}
-			};
-			const entry = ModelFactory.self.create<Entry>(entity);
-			entry.get();
-			this.list.push(entry);
-		}*/
+		SiteMigrate.create().forEach((entity) => {
+			console.log(JSON.stringify(entity));
+			console.log(URIBuilder.create(entity, { page: 1, category: 'famale' }));
+		});
 	}
 }

@@ -1,6 +1,6 @@
 import URI from './URI'
 
-interface URIEntity {
+export interface URIEntity {
 	scheme: string
 	host: string
 	path: string
@@ -42,11 +42,5 @@ export default class URIBuilder {
 	}
 	public static _evaluete(context: any, script: string): string {
 		return eval(`(function f($){ return ${script}; })`)(context);
-	}
-}
-
-export class URIBuilderTest {
-	public static create(): URI[] {
-		return [new URI("")];
 	}
 }

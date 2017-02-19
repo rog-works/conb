@@ -111,7 +111,16 @@
 												</div>
 											</div>
 											<div class="w-8 h-1 flex centering"><span class="line-b-g">from</span></div>
-											<div class="w-8 h-hq flex centering"><i class="w-1 h-hq flex centering fa fa-globe"></i><input class="w-7 h-hq less transparent" data-bind="value: from"></div>
+											<div class="w-8 h-hq flex centering"><i class="w-1 h-hq flex centering fa fa-cog"></i><input class="w-7 h-hq less transparent" data-bind="value: from.scheme"></div>
+											<div class="w-8 h-hq flex centering"><i class="w-1 h-hq flex centering fa fa-user"></i><input class="w-7 h-hq less transparent" data-bind="value: from.host"></div>
+											<div class="w-8 h-hq flex centering"><i class="w-1 h-hq flex centering fa fa-file-o"></i><input class="w-7 h-hq less transparent" data-bind="value: from.path"></div>
+											<div class="w-8 h-1 flex centering"><span class="line-b-g">from.queries</span><i class="w-1 h-1 flex centering fa fa-plus hover" data-bind="click: addedQuery"></i></div>
+											<div class="w-8" data-bind="foreach: from.queries">
+												<div class="w-8 h-hq flex centering">
+													<i class="w-1 h-hq flex centering fa fa-check"></i>
+													<input class="w-7 h-hq less transparent" data-bind="value: value">
+												</div>
+											</div>
 											<div class="w-8 h-1 flex centering"><span class="line-b-g">where</span></div>
 											<div class="w-8 h-hq flex centering"><i class="w-1 h-hq flex centering fa fa-search"></i><input class="w-7 h-hq less transparent" data-bind="value: where"></div>
 										</div>

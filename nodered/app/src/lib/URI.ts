@@ -3,14 +3,14 @@ interface QueryMap {
 }
 
 export default class URI {
-	private _origin: string
+	private _full: string
 	private _scheme: string
 	private _host: string
 	private _path: string
 	private _queries: QueryMap
 	public constructor(uri: string) {
 		const [scheme, host, path, queries] = URI._parse(uri);
-		this._origin = uri;
+		this._full = uri;
 		this._scheme = scheme;
 		this._host = host;
 		this._path = path;
@@ -37,6 +37,9 @@ export default class URI {
 			}
 		}
 		return map;
+	}
+	public get full(): string {
+		return this._full;
 	}
 	public get scheme(): string {
 		return this._scheme;

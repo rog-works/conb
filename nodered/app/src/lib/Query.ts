@@ -8,10 +8,10 @@ export default class Query {
 		private _normalizer: string,
 		private _fieldOfQueries: string[]
 	) {}
-	public static create(): QueryBuilder {
-		return new QueryBuilder();
+	public static select(fieldOfQueries: string[]): QueryBuilder {
+		return new QueryBuilder().select(fieldOfQueries);
 	}
-	public async exec(): Promise<any[]> {
+	public async async<T>(): Promise<T[]> { // FIXME T not used
 		const content = await QueryExecutor.load(this._uri);
 		const e = QueryExecutor.normalize(content, this._normalizer);
 		return QueryExecutor.projection(e, this._fieldOfQueries);
@@ -39,6 +39,9 @@ class QueryBuilder {
 	}
 	public build(): Query {
 		return new Query(this._uri, this._normalizer, this._fieldOfQueries);
+	}
+	public async<T>(): Promise<T[]> {
+		return this.build().async();
 	}
 }
 

@@ -13,7 +13,7 @@ export interface PostEntity extends ModelEntity {
 	store?: boolean
 	bookmark?: boolean
 	favorite?: boolean
-	site?: string
+	site?: string // XXX
 }
 
 export default class Post extends Model {
@@ -25,7 +25,7 @@ export default class Post extends Model {
 	public readonly bookmark: KnockoutObservable<boolean>
 	public readonly favorite: KnockoutObservable<boolean>
 	public readonly image: Image
-	public readonly site: string
+	public readonly site: string // XXX
 	public constructor(entity: PostEntity) {
 		super(['update', 'delete']);
 		this.href = entity.href;

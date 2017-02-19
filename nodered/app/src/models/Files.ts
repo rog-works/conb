@@ -59,17 +59,16 @@ export default class Files extends Model { // XXX Posts???
 	}
 	public async loaded(uri: string, sitePath: string): Promise<void> {
 		this.state(States.Loading);
-		// this.import(await DAO.self.get<FilesEntity>('posts/show', { uri: uri })); // XXX unmatch resource name
 		const where = { ['attrs.site.name']: sitePath };
-		const siteEntry = (await Entry.find({
+		const siteEntries = await Entry.find({
 			where: where,
 			skip: 0,
 			limit: 1
-		})).pop();
-		if (!siteEntry) {
+		});
+		if (!siteEntries || siteEntries.length === 0) {
 			throw new Error(`Unknown site. ${uri}`);
 		}
-		const site = siteEntry.getAttr<Site>('site');
+		const site = siteEntries[0].getAttr<Site>('site');
 		const postEntities = await site.load<PostEntity>({ from: uri });
 		for (const postEntity of postEntities) {
 			const entity = {
