@@ -89,22 +89,22 @@ $ docker exec nodered-db mongoexport -d nodered -c entry | gzip > .backup/nodere
 ```
 > db.entry.findOne();
 {
-        "_id" : ObjectId("588d9f4e4c71c80010c1fa09"),
-        "type" : "entry",
-        "signature" : "22b65a646f337c6effbedb9a6d6d64d6e644281e",
-        "uri" : "https://google.co.jp/0",
-        "attrs" : {
-                "post" : {
-                        "type" : "post",
-                        "href" : "https://google.co.jp/0",
-                        "src" : "",
-                        "text" : "hogehoge, 0",
-                        "date" : "none",
-                        "visit" : true,
-                        "store" : false,
-                        "bookmark" : true,
-                        "favorite" : true
-                }
+    "_id" : ObjectId("588d9f4e4c71c80010c1fa09"),
+    "type" : "entry",
+    "signature" : "22b65a646f337c6effbedb9a6d6d64d6e644281e",
+    "uri" : "https://google.co.jp/0",
+    "attrs" : {
+        "post" : {
+            "type" : "post",
+            "href" : "https://google.co.jp/0",
+            "src" : "",
+            "text" : "hogehoge, 0",
+            "date" : "none",
+            "visit" : true,
+            "store" : false,
+            "bookmark" : true,
+            "favorite" : true
         }
+    }
 }
 ```

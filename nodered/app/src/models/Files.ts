@@ -1,6 +1,7 @@
 import * as ko from 'knockout';
 import DAO from '../lib/DAO';
 import Path from '../lib/Path';
+import URI from '../lib/URI';
 import {Model, ModelEntity} from './Model';
 import ModelFactory from './ModelFactory';
 import {default as Entry, EntryEntity} from './Entry';
@@ -57,7 +58,7 @@ export default class Files extends Model { // XXX Posts???
 		entity.entries = this.entries().map((entry) => entry.export());
 		return entity;
 	}
-	public async loaded(uri: string, sitePath: string): Promise<void> {
+	public async loaded(url: string, sitePath: string): Promise<void> {
 		this.state(States.Loading);
 		const where = { ['attrs.site.name']: sitePath };
 		const siteEntries = await Entry.find({
@@ -66,10 +67,11 @@ export default class Files extends Model { // XXX Posts???
 			limit: 1
 		});
 		if (!siteEntries || siteEntries.length === 0) {
-			throw new Error(`Unknown site. ${uri}`);
+			throw new Error(`Unknown site. ${url}`);
 		}
+		const uri = new URI(url);
 		const site = siteEntries[0].getAttr<Site>('site');
-		const postEntities = await site.load<PostEntity>({ from: uri });
+		const postEntities = await site.load<PostEntity>({ path: uri.path });
 		for (const postEntity of postEntities) {
 			const entity = {
 				type: 'entry',
