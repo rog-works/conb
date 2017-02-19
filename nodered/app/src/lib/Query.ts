@@ -3,7 +3,6 @@ import * as $ from 'cheerio';
 import DAO from './DAO';
 
 export default class Query {
-	public static SELECT_QUERY: RegExp = /(.+)\s+as\s+([\w.]+)/
 	public constructor(
 		private _uri: string,
 		private _normalizer: string,
@@ -27,30 +26,11 @@ class QueryBuilder {
 		private _fieldOfQueries: string[] = []
 	) {}
 	public from(from: string): this {
-		const matches = from.match(/^\$\("(.+)"\)(.+)$/);
-		if (!matches || matches.length !== 3) {
-			throw new Error(`Unexpected from format. ${from}`);
-		}
-		this._from = from;
-		this._uri = matches[1];
-		this._normalizer = `$${matches[2]}`; // XXX
+		this._uri = from;
 		return this;
 	}
-	public where(where: string): this { // FIXME
-		if (!/\s+and\s+/.test(where)) {
-			return this;
-		}
-		let from = this._from;
-		for (const cond of where.split(/\s+and\s+/)) {
-			const params = cond.split(/\s*=\s*/);
-			if (params.length != 2) {
-				throw new Error(`Unexpected where format. ${where}`);
-			}
-			const key = params[0];
-			const value = params[1];
-			from = from.split(`${key}`).join(value);
-		}
-		this._uri = from;
+	public where(where: string): this {
+		this._normalizer = where;
 		return this;
 	}
 	public select(fieldOfQueries: string[]): this {
@@ -81,7 +61,7 @@ class QueryExecutor {
 		return rows;
 	}
 	private static _selectQuery(e: Cheerio, queries: string): {} {
-		const matches = queries.match(Query.SELECT_QUERY) || [];
+		const matches = queries.match(/(.+)\s+as\s+([\w.]+)/) || [];
 		matches.shift();
 		const value = matches.shift() || '';
 		const as = matches.shift() || '';
