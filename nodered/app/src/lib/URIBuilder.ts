@@ -38,7 +38,7 @@ export default class URIBuilder {
 		const value = matches[1];
 		const as = matches[2];
 		const result = URIBuilder._evaluete(params, value);
-		return result.length > 0 ? `${as}=${result}` : '';
+		return result !== '' ? `${as}=${result}` : '';
 	}
 	public static _evaluete(context: any, script: string): string {
 		return eval(`(function f($){ return ${script}; })`)(context);

@@ -9,8 +9,6 @@ import {default as Post, PostEntity} from './Post';
 import {default as File, FileEntity} from './File';
 import Site from './Site';
 import URIBuilder from '../lib/URIBuilder';
-import SiteMigrate from '../lib/SiteMigrate';
-
 export default class Entries extends EventEmitter {
 	public list: KnockoutObservableArray<Entry>
 	public constructor() {
@@ -172,9 +170,5 @@ export default class Entries extends EventEmitter {
 		}
 	}
 	public test(): void {
-		SiteMigrate.create().forEach((entity) => {
-			console.log(JSON.stringify(entity));
-			console.log(URIBuilder.create(entity, { page: 1, category: 'famale' }));
-		});
 	}
 }

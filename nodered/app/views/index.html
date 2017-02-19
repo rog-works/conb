@@ -117,7 +117,7 @@
 											<div class="w-8 h-1 flex centering"><span class="line-b-g">from.queries</span><i class="w-1 h-1 flex centering fa fa-plus hover" data-bind="click: addedQuery"></i></div>
 											<div class="w-8" data-bind="foreach: from.queries">
 												<div class="w-8 h-hq flex centering">
-													<i class="w-1 h-hq flex centering fa fa-check"></i>
+													<i class="w-1 h-hq flex centering fa fa-remove" data-bind="click: $parent.removedQuery.bind($parent, $data)"></i>
 													<input class="w-7 h-hq less transparent" data-bind="value: value">
 												</div>
 											</div>

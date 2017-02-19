@@ -9,7 +9,6 @@ export interface SiteEntity extends ModelEntity {
 	select: string[]
 	from: URIEntity
 	where: string
-	base?: string // TODO impl
 }
 
 class Param {
@@ -107,5 +106,8 @@ export default class Site extends Model {
 	}
 	public addedQuery(): void {
 		this.from.queries.push(new Param('"" as empty'));
+	}
+	public removedQuery(query: Param): void {
+		this.from.queries.remove(query);
 	}
 }

@@ -3,7 +3,7 @@ Cheet sheet
 
 ## Export
 ```
-$ d exec nodered-db mongoexport -d nodered -c entry | gzip > .backup/nodered.entry-`date +%y%m%d`.json.gz
+$ docker exec nodered-db mongoexport -d nodered -c entry | gzip > .backup/nodered.entry-`date +%y%m%d`.json.gz
 ```
 
 ## Find
@@ -11,6 +11,7 @@ $ d exec nodered-db mongoexport -d nodered -c entry | gzip > .backup/nodered.ent
 * Regular expression
 ```
 > db.entry.find({uri: /google/})
+> db.entry.find({uri: {$regex: "google", $options: "i"}})
 ```
 
 * Exists
