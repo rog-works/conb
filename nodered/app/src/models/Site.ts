@@ -89,12 +89,6 @@ export default class Site extends Model {
 			.where(this.where())
 			.async<T>();
 	}
-	private _inject(from: string, params: any): string {
-		for (const key of Object.keys(params)) {
-			from = from.replace(`{${key}}`, params[key]);
-		}
-		return from;
-	}
 	public saved(): void {
 		this.emit('update', this);
 	}

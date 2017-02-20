@@ -23,4 +23,7 @@ export default class Tag extends Model {
 		entity.name = this.name;
 		return entity;
 	}
+	public querify(siteUri: string): string { // XXX
+		return `from ${siteUri.replace('/show', '')} where tags in ${this.name}`;
+	}
 }

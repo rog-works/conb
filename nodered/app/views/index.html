@@ -66,7 +66,7 @@
 									<div class="fc-w bc-b trans w-8 h-10 absolute abs-bottom" data-bind="visible: $parent.focus() === type, foreach: tags">
 										<div class="flex row-center left pr-q1">
 											<i class="fa fa-remove hover" data-bind="click: $parent.untagged.bind($parent, $data)"></i>
-											<div data-bind="text: 'from ' + entry.getAttr('post').site + ' where tags in (' + name + ')'"></div>
+											<div data-bind="text: querify.bind($data, entry.getAttr('post').site)"></div>
 										</div>
 									</div>
 								<!-- /ko -->
