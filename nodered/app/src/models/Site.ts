@@ -16,10 +16,10 @@ class Param {
 	public constructor(value: string) {
 		this.value = ko.observable(value);
 	}
-	public static deserialize(params: string[]): Param[] {
+	public static toObjs(params: string[]): Param[] {
 		return params.map(param => new this(param));
 	}
-	public static serialize(params: Param[]): string[] {
+	public static toValues(params: Param[]): string[] {
 		return params.map(query => query.value());
 	}
 }
@@ -33,7 +33,7 @@ class From implements Serializer {
 		this.scheme = ko.observable(entity.scheme);
 		this.host = ko.observable(entity.host);
 		this.path = ko.observable(entity.path);
-		this.queries = ko.observableArray(Param.deserialize(entity.queries));
+		this.queries = ko.observableArray(Param.toObjs(entity.queries));
 	}
 	// @override
 	public import(entity: URIEntity): void {
@@ -44,7 +44,7 @@ class From implements Serializer {
 			scheme: this.scheme(),
 			host: this.host(),
 			path: this.path(),
-			queries: Param.serialize(this.queries())
+			queries: Param.toValues(this.queries())
 		};
 	}
 }
@@ -57,7 +57,7 @@ export default class Site extends Model {
 	public constructor(entity: SiteEntity) {
 		super(['update', 'delete']);
 		this.name = ko.observable(entity.name);
-		this.select = ko.observableArray(Param.deserialize(entity.select));
+		this.select = ko.observableArray(Param.toObjs(entity.select));
 		this.from = new From(entity.from);
 		this.where = ko.observable(entity.where);
 	}
@@ -71,7 +71,7 @@ export default class Site extends Model {
 	public export(): SiteEntity {
 		const entity = <any>super.export(); // XXX down cast...
 		entity.name = this.name();
-		entity.select = Param.serialize(this.select());
+		entity.select = Param.toValues(this.select());
 		entity.from = this.from.export();
 		entity.where = this.where();
 		return entity;
@@ -84,7 +84,7 @@ export default class Site extends Model {
 	}
 	public async load<T extends ModelEntity>(params: any = {}): Promise<T[]> {
 		const uri = URIBuilder.create(this.from.export(), params);
-		return await Query.select(Param.serialize(this.select()))
+		return await Query.select(Param.toValues(this.select()))
 			.from(uri.full)
 			.where(this.where())
 			.async<T>();

@@ -24,6 +24,6 @@ export default class Tag extends Model {
 		return entity;
 	}
 	public querify(siteUri: string): string { // XXX
-		return `from ${siteUri.replace('/show', '')} where tags in ${this.name}`;
+		return `from ${siteUri.replace('posts/show/', '')} where tags in ${this.name}`;
 	}
 }

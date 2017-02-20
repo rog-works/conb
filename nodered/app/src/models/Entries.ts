@@ -77,22 +77,13 @@ export default class Entries extends EventEmitter {
 			throw new Error(`Site not found. ${uri}`);
 		}
 		const site = siteEntries[0].getAttr<Site>('site');
-		const postEntities = await site.load<PostEntity>(params);
-		for (const postEntity of postEntities) {
-			const entity = {
-				type: 'entry',
-				uri: postEntity.href,
-				attrs: {
-					post: postEntity,
-					tags: { type: 'tags', tags: [] },
-					files: { type: 'files', entries: [] },
-				}
-			};
+		const entities = await site.load<EntryEntity>(params);
+		for (const entity of entities) {
 			const entry = ModelFactory.self.create<Entry>(entity);
 			entry.get();
 			this.list.push(entry);
 		}
-		this.emit('update', this, postEntities);
+		this.emit('update', this, entities);
 	}
 	private _loadSites(url: string, page: number): void {
 		this._loadEntries('/entries/{"attrs.site":{"$exists":true}}', page);

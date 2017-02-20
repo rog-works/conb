@@ -217,7 +217,8 @@ a { text-decoration: none; }
 
 /* state */
 
-.hover:hover { /*color: #4c4;*/ cursor: hand; }
+.hover:hover { cursor: hand; }
+.hover-g:hover { color: #4c4; }
 
 a:hover,
 a:link,

@@ -29,7 +29,7 @@
 						</div>
 					</div>
 					<!-- entry -->
-					<div class="fill-x h-1 grow-1 scroll no-selection" data-bind="foreach: { data: entries.list, as: 'entry' }, css: entries.css, event: events">
+					<div class="fill-x h-1 grow-1 scroll" data-bind="foreach: { data: entries.list, as: 'entry' }, css: entries.css, event: events">
 						<div class="post bc-1 w-8 h-11 m-q1 left relative shadow-1" data-bind="css: css">
 							<!-- ko foreach: $data.attrs -->
 								<!-- ko if: type === 'post' -->
@@ -66,7 +66,7 @@
 									<div class="fc-w bc-b trans w-8 h-10 absolute abs-bottom" data-bind="visible: $parent.focus() === type, foreach: tags">
 										<div class="flex row-center left pr-q1">
 											<i class="fa fa-remove hover" data-bind="click: $parent.untagged.bind($parent, $data)"></i>
-											<div data-bind="text: querify.bind($data, entry.getAttr('post').site)"></div>
+											<div class="hover hover-g" data-bind="text: name, click: $root.searched2.bind($root, `from ${entry.getAttr('post').site.replace('posts/show/', '')} where tags in ${name}`)"></div>
 										</div>
 									</div>
 								<!-- /ko -->
@@ -102,11 +102,11 @@
 									<div class="w-8 h-10 absolute abs-bottom">
 										<div class="w-8 h-9 wrap scroll-y">
 											<div class="w-8 h-1 flex centering"><span class="line-b-g">name</span></div>
-											<div class="w-8 h-hq flex centering"><i class="w-1 h-hq flex centering fa fa-tag"></i><input class="w-7 h-hq less transparent" data-bind="value: name"></div>
+											<div class="w-8 h-hq flex centering"><i class="w-1 h-hq flex centering fa fa-key"></i><input class="w-7 h-hq less transparent" data-bind="value: name"></div>
 											<div class="w-8 h-1 flex centering"><span class="line-b-g">select</span><i class="w-1 h-1 flex centering fa fa-plus hover" data-bind="click: addedSelect"></i></div>
 											<div class="w-8" data-bind="foreach: select">
 												<div class="w-8 h-hq flex centering">
-													<i class="w-1 h-hq flex centering fa" data-bind="css: { 'fa-question': /type$/.test(value()), 'fa-link': /href$/.test(value()), 'fa-file-image-o': /src$/.test(value()), 'fa-file-text-o': /text$/.test(value()), 'fa-clock-o': /date$/.test(value()), 'fa-send': /site$/.test(value()) }"></i>
+													<i class="w-1 h-hq flex centering fa" data-bind="css: { 'fa-question': /type$/.test(value()), 'fa-globe': /uri$/.test(value()), 'fa-link': /href$/.test(value()), 'fa-file-image-o': /src$/.test(value()), 'fa-pencil': /text$/.test(value()), 'fa-clock-o': /date$/.test(value()), 'fa-send': /site$/.test(value()), 'fa-tags': /tags$/.test(value()), 'fa-files-o': /files$/.test(value()) }"></i>
 													<input class="w-7 h-hq less transparent" data-bind="value: value">
 												</div>
 											</div>
@@ -122,7 +122,7 @@
 												</div>
 											</div>
 											<div class="w-8 h-1 flex centering"><span class="line-b-g">where</span></div>
-											<div class="w-8 h-hq flex centering"><i class="w-1 h-hq flex centering fa fa-search"></i><input class="w-7 h-hq less transparent" data-bind="value: where"></div>
+											<div class="w-8 h-hq flex centering"><i class="w-1 h-hq flex centering fa fa-arrow-right"></i><input class="w-7 h-hq less transparent" data-bind="value: where"></div>
 										</div>
 									</div>
 								<!-- /ko -->
@@ -140,7 +140,7 @@
 						</div>
 					</div>
 					<!-- selector -->
-					<div id="selector" class="bc-1 selected trans absolute" data-bind="css: selector.css, style: selector.style"></div>
+					<!--<div id="selector" class="bc-1 selected trans absolute" data-bind="css: selector.css, style: selector.style"></div>-->
 				</div>
 				<!-- log -->
 				<div class="fill flex column" data-bind="visible: focus() === 'log'">

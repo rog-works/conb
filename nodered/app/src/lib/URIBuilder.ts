@@ -1,4 +1,5 @@
-import URI from './URI'
+import Util from './Util';
+import URI from './URI';
 
 export interface URIEntity {
 	scheme: string
@@ -18,7 +19,7 @@ export default class URIBuilder {
 		return new URI(uri);
 	}
 	public static _buildPath(path: string, params: any): string {
-		return URIBuilder._evaluete(params, path);
+		return Util.evaluate<string>(params, path);
 	}
 	public static _buildQueries(queries: string[], params: any): string {
 		const strings = [];
@@ -35,12 +36,9 @@ export default class URIBuilder {
 		if (!matches || matches.length !== 3) {
 			return '';
 		}
-		const value = matches[1];
-		const as = matches[2];
-		const result = URIBuilder._evaluete(params, value);
-		return result !== '' ? `${as}=${result}` : '';
-	}
-	public static _evaluete(context: any, script: string): string {
-		return eval(`(function f($){ return ${script}; })`)(context);
+		const filter = matches[1];
+		const key = matches[2];
+		const value = Util.evaluate<string>(params, filter);
+		return value !== '' ? `${key}=${value}` : '';
 	}
 }

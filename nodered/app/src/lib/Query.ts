@@ -1,6 +1,7 @@
 import * as ko from 'knockout';
 import * as $ from 'cheerio';
 import DAO from './DAO';
+import Util from './Util';
 
 export default class Query {
 	public constructor(
@@ -13,8 +14,8 @@ export default class Query {
 	}
 	public async async<T>(): Promise<T[]> { // FIXME T not used
 		const content = await QueryExecutor.load(this._uri);
-		const e = QueryExecutor.normalize(content, this._normalizer);
-		return QueryExecutor.projection(e, this._fieldOfQueries);
+		const elems = QueryExecutor.normalize(content, this._normalizer);
+		return QueryExecutor.projection(elems, this._fieldOfQueries);
 	}
 }
 
@@ -50,38 +51,26 @@ class QueryExecutor {
 		return await DAO.self.get<string>('html', { url: from });
 	}
 	public static normalize(content: string, normalizer: string): Cheerio {
-		return QueryExecutor._evaluate<Cheerio>($(content), normalizer);
+		return Util.evaluate<Cheerio>($(content), normalizer);
 	}
-	public static projection(e: Cheerio, fieldOfQueries: string[]): any[] {
+	public static projection(elems: Cheerio, fieldOfQueries: string[]): any[] {
 		const rows: any[] = [];
-		e.each((_, elem) => {
+		elems.each((_, elem) => {
 			let row = {};
 			for (const queries of fieldOfQueries) {
-				row = ko.utils.extend(row, QueryExecutor._selectQuery($(elem), queries));
+				const field = QueryExecutor._selectQuery($(elem), queries);
+				row = Util.extend(row, field);
 			}
 			rows.push(row);
 		});
 		return rows;
 	}
-	private static _selectQuery(e: Cheerio, queries: string): {} {
+	private static _selectQuery(elem: Cheerio, queries: string): {} {
 		const matches = queries.match(/(.+)\s+as\s+([\w.]+)/) || [];
 		matches.shift();
-		const value = matches.shift() || '';
-		const as = matches.shift() || '';
-		const result = QueryExecutor._evaluate<any>(e, value);
-		return QueryExecutor._createRoute(as, result);
-	}
-	private static _evaluate<T>(context: Cheerio, script: string): T {
-		return eval(`(function f($){ return ${script}; })`)(context);
-	}
-	private static _createRoute(route: string, value: any): any {
-		const obj: any = {};
-		let ref: any = obj;
-		for (const key of route.split('.')) {
-			ref[key] = {};
-			ref = ref[key];
-		}
-		ref = value;
-		return obj;
+		const filter = matches.shift() || '';
+		const key = matches.shift() || '';
+		const value = Util.evaluate<any>(elem, filter);
+		return Util.createObject(key, value);
 	}
 }
