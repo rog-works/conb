@@ -68,10 +68,20 @@ class QueryExecutor {
 		matches.shift();
 		const value = matches.shift() || '';
 		const as = matches.shift() || '';
-		const result = QueryExecutor._evaluate<string>(e, value);
-		return { [as]: result };
+		const result = QueryExecutor._evaluate<any>(e, value);
+		return QueryExecutor._createRoute(as, result);
 	}
 	private static _evaluate<T>(context: Cheerio, script: string): T {
 		return eval(`(function f($){ return ${script}; })`)(context);
+	}
+	private static _createRoute(route: string, value: any): any {
+		const obj: any = {};
+		let ref: any = obj;
+		for (const key of route.split('.')) {
+			ref[key] = {};
+			ref = ref[key];
+		}
+		ref = value;
+		return obj;
 	}
 }
