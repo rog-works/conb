@@ -118,6 +118,7 @@ export default class Main {
 		return true;
 	}
 	private _onEntryUpdate(sender: Entries, data: any[]): boolean {
+		console.log(data);
 		if (data.length > 0) {
 			this.searcher.page.curr.number = this.searcher.page.next.number;
 		}
