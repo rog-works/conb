@@ -12,11 +12,12 @@ export enum KeyCodes {
 }
 
 export default class Input extends EventEmitter {
-	public constructor(
-		public value: string,
-		public focus: boolean = false
-	) {
+	public value: string
+	public focus: boolean
+	public constructor(value: string | number = '') {
 		super('focus', 'accept', 'cancel', 'keyup');
+		this.value = `${value}`;
+		this.focus = false;
 		ko.track(this);
 	}
 	public get number(): number {

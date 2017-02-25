@@ -60,11 +60,11 @@ export default class File extends Model {
 	}
 	public async downloaded(url: string, dir: string): Promise<void> {
 		this.state = States.Downloading;
-		const result = await DAO.self.get<boolean>(
+		const stored = await DAO.self.get<boolean>(
 			'download',
 			{ url: url, dir: dir, filename: this.name }
 		);
-		this.store = result;
+		this.store = stored;
 		this.state = this.store ? States.Stored : States.Failed;
 		this.emit('update', this);
 	}

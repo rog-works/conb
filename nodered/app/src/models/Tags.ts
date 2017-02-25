@@ -16,7 +16,7 @@ export default class Tags extends Model {
 		for (const tagEntity of entity.tags) {
 			this.add(new Tag(tagEntity));
 		}
-		this.input = new Input('').on('accept', this._onAccept.bind(this));
+		this.input = new Input().on('accept', this._onAccept.bind(this));
 		ko.track(this, ['tags']);
 	}
 	// @override

@@ -15,27 +15,22 @@ export default class Searcher extends EventEmitter {
 	public readonly events: any
 	public constructor() {
 		super('accept');
-		this.url = new Input('');
-		this.path = new Input('');
-		this.query = new Input('');
-		this.filter = new Input('');
+		this.url = new Input();
+		this.path = new Input();
+		this.query = new Input();
+		this.filter = new Input();
 		this.page = {
-			curr: new Input('1'), // XXX number
-			next: new Input('1')
+			curr: new Input(1),
+			next: new Input(1)
 		};
 		this.urls = [];
 		this.events = {
-			focus: this.url.onFocus.bind(this.url),
 			keyup: this.url.onKeyup.bind(this.url)
 		};
-		this.url.on('focus', this._onFocus.bind(this));
 		this.url.on('accept', this._onAccept.bind(this));
 		this.url.on('cancel', this._onCancel.bind(this));
 		this.url.on('keyup', this._onKeyup.bind(this));
 		ko.track(this, ['urls']);
-	}
-	private _onFocus(sender: any): boolean {
-		return true;
 	}
 	private _onAccept(sender: any): boolean {
 		this.emit('accept', sender);
@@ -45,7 +40,7 @@ export default class Searcher extends EventEmitter {
 		this.clear();
 		return true;
 	}
-	private _onKeyup(self: Searcher, event: KeyboardEvent): boolean {
+	private _onKeyup(sender: any, event: KeyboardEvent): boolean {
 		if (event.shiftKey && event.ctrlKey) {
 			return this._shiftCtrlKeyup(event); // FIXME
 		} else {

@@ -52,7 +52,7 @@ export default class Entry extends Model {
 	}
 	// @override
 	public static async find(where: any = {}): Promise<Entry[]> {
-		const entities = await Model.find(Entry.RESOURCE_NAME, where)
+		const entities = await Model.find(Entry.RESOURCE_NAME, where);
 		return entities.map(entity => ModelFactory.self.create<Entry>(entity));
 	}
 	public static sign(uri: string): string {
@@ -123,7 +123,7 @@ export default class Entry extends Model {
 		return this._attr;
 	}
 	public getAttr<T extends Model>(type: string): T {
-		return <any>this._attr[type]; // XXX returned nullable
+		return this._attr[type] as T; // XXX returned nullable
 	}
 	private _addAttr(attr: Model): void {
 		if (!this.hasAttr(attr.type)) {
