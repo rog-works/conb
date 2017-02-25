@@ -13,7 +13,7 @@
 		<!-- content -->
 		<div class="w-1 fill-y grow-1">
 			<div class="fill">
-				<div class="fill flex column" data-bind="visible: focus() === 'entry'">
+				<div class="fill flex column" data-bind="visible: focus === 'entry'">
 					<!-- search -->
 					<div class="bc-g fill-x h-1 grow-0 flex shadow-1">
 						<div class="w-1 fill-y grow-1">
@@ -31,7 +31,7 @@
 					<!-- entry -->
 					<div class="fill-x h-1 grow-1 scroll" data-bind="foreach: { data: entries.list, as: 'entry' }, css: entries.css, event: events">
 						<div class="post bc-1 w-8 h-11 m-q1 left relative shadow-1" data-bind="css: css">
-							<!-- ko foreach: $data.attrs -->
+							<!-- ko foreach: entry.attrs -->
 								<!-- ko if: type === 'post' -->
 									<div class="w-8 h-10 absolute abs-bottom flex centering">
 										<img class="w-max-8 h-max-10" data-bind="attr: { src: image.src || 'image/404.gif' }">
@@ -39,7 +39,7 @@
 									<div class="bc-g w-8 h-1 absolute abs-top shadow-1">
 										<div class="wh-1 flex centering"><img data-bind="attr: { src: `http://www.google.com/s2/favicons?domain=${domain}` }"></div>
 									</div>
-									<div class="w-8 h-1 absolute abs-top flex just-center" data-bind="visible: $parent.focus() === type">
+									<div class="w-8 h-1 absolute abs-top flex just-center" data-bind="visible: entry.focus === type">
 										<div class="fc-w w-5 h-1 flex arounding">
 											<i class="wh-hq round-hq border flex centering hover fa fa-cloud-download" data-bind="click: downloaded, css: { 'fc-b': store === true }"></i>
 											<i class="wh-hq round-hq border flex centering hover fa fa-bookmark" data-bind="click: bookmarked, css: { 'fc-r': bookmark === true }"></i>
@@ -48,7 +48,7 @@
 											<i class="wh-hq round-hq border flex centering hover fa fa-trash" data-bind="click: unretentioned"></i>
 										</div>
 									</div>
-									<div class="w-8 h-3 absolute abs-bottom" data-bind="visible: $parent.focus() === type">
+									<div class="w-8 h-3 absolute abs-bottom" data-bind="visible: entry.focus === type">
 										<div class="h-h"></div>
 										<div class="fc-orange text-shadow h-h right" data-bind="text: date"></div>
 										<div class="bc-b fc-w trans w-8 h-2 text-wrap">
@@ -57,13 +57,13 @@
 									</div>
 								<!-- /ko -->
 								<!-- ko if: type === 'tags' -->
-									<div class="fc-w w-8 h-1 absolute abs-top flex just-center" data-bind="visible: $parent.focus() === type">
+									<div class="fc-w w-8 h-1 absolute abs-top flex just-center" data-bind="visible: entry.focus === type">
 										<div class="w-6 h-1 flex arounding">
-											<i class="bc-w fc-g flex centering w-1 h-hq fa fa-tag hover" data-bind="click: tagged.bind($data, $data.input.value())"></i>
+											<i class="bc-w fc-g flex centering w-1 h-hq fa fa-tag hover" data-bind="click: tagged.bind($data, $data.input.value)"></i>
 											<input class="w-5 h-hq less" type="text" placeholder="Input tag name" data-bind="value: input.value, event: { keyup: input.onKeyup.bind($data.input) }">
 										</div>
 									</div>
-									<div class="fc-w bc-b trans w-8 h-10 absolute abs-bottom" data-bind="visible: $parent.focus() === type, foreach: tags">
+									<div class="fc-w bc-b trans w-8 h-10 absolute abs-bottom" data-bind="visible: entry.focus === type, foreach: tags">
 										<div class="flex row-center left pr-q1">
 											<i class="fa fa-remove hover" data-bind="click: $parent.untagged.bind($parent, $data)"></i>
 											<div class="hover hover-g" data-bind="text: name, click: $root.searched2.bind($root, `from ${entry.getAttr('post').site.replace('posts/show/', '')} where tags in ${name}`)"></div>
@@ -71,13 +71,13 @@
 									</div>
 								<!-- /ko -->
 								<!-- ko if: type === 'files' -->
-									<div class="fc-w w-8 h-1 absolute abs-top flex just-center" data-bind="visible: $parent.focus() === type">
+									<div class="fc-w w-8 h-1 absolute abs-top flex just-center" data-bind="visible: entry.focus === type">
 										<div class="w-2 h-1 flex arounding">
 											<i class="wh-hq round-hq border flex centering hover fa" data-bind="click: loaded.bind($data, $parent.getAttr('post').href, $parent.getAttr('post').site), css: { 'fa-folder': state === 'closed', 'fa-folder-open': state === 'opened', 'fa-spin': state === 'loading', 'fa-refresh': state === 'loading' }"></i>
 											<i class="wh-hq round-hq border flex centering hover fa fa-cloud-download" data-bind="click: downloaded.bind($data, $parent), css: { 'fc-b': store === true }"></i>
 										</div>
 									</div>
-									<div class="fc-w bc-b trans w-8 h-10 absolute abs-bottom wrap scroll-y" data-bind="visible: $parent.focus() === type, foreach: entries">
+									<div class="fc-w bc-b trans w-8 h-10 absolute abs-bottom wrap scroll-y" data-bind="visible: entry.focus === type, foreach: entries">
 										<!-- ko foreach: $data.attrs -->
 										<!-- ko if: type === 'file' -->
 										<div class="flex row-center pr-q1">
@@ -129,12 +129,12 @@
 							<!-- /ko -->
 							<!-- remove entry -->
 							<div class="w-1 h-1 absolute abs-top abs-right">
-								<i class="fc-w wh-1 flex centering fa fa-remove hover" data-bind="click: $root.entries.remove.bind($root.entries, $data)"></i>
+								<i class="fc-w wh-1 flex centering fa fa-remove hover" data-bind="click: $root.entries.remove.bind($root.entries, entry)"></i>
 							</div>
 							<!-- attr pager -->
 							<div class="w-8 h-1 absolute abs-bottom flex just-center">
 								<div class="fc-g w-3 h-1 flex arounding" data-bind="foreach: attrs">
-									<i class="wh-1 flex centering hover fa" data-bind="click: $parent.focused.bind($parent, $data), css: { 'fa-dot-circle-o': $parent.focus() === type, 'fa-circle-o': $parent.focus() !== type }"></i>
+									<i class="wh-1 flex centering hover fa" data-bind="click: entry.focused.bind(entry, $data), css: { 'fa-dot-circle-o': entry.focus === type, 'fa-circle-o': entry.focus !== type }"></i>
 								</div>
 							</div>
 						</div>
@@ -143,7 +143,7 @@
 					<!--<div id="selector" class="bc-1 selected trans absolute" data-bind="css: selector.css, style: selector.style"></div>-->
 				</div>
 				<!-- log -->
-				<div class="fill flex column" data-bind="visible: focus() === 'log'">
+				<div class="fill flex column" data-bind="visible: focus === 'log'">
 					<div class="bc-g fill-x h-1 grow-0 flex shadow-1">
 						<div class="w-1 fill-y grow-1">
 							<div class="w-2 h-1 grow-0 flex arounding">
@@ -160,13 +160,13 @@
 		</div>
 		<!-- toolbar -->
 		<div class="bc-g w-1 fill-y grow-0">
-			<i class="fc-w wh-1 flex centering font-3 fa fa-globe hover" data-bind="css: { primary: focus() === 'entry' }, click: focused.bind($data, 'entry')"></i>
-			<i class="fc-w wh-1 flex centering font-3 fa fa-commenting hover" data-bind="css: { primary: focus() === 'log' }, click: focused.bind($data, 'log')"></i>
-			<i class="fc-w wh-1 flex centering font-3 fa" data-bind="css: { 'fa-wifi': wsObserver.connected() === true, 'fa-warning': wsObserver.connected() === false }"></i>
+			<i class="fc-w wh-1 flex centering font-3 fa fa-globe hover" data-bind="css: { primary: focus === 'entry' }, click: focused.bind($data, 'entry')"></i>
+			<i class="fc-w wh-1 flex centering font-3 fa fa-commenting hover" data-bind="css: { primary: focus === 'log' }, click: focused.bind($data, 'log')"></i>
+			<i class="fc-w wh-1 flex centering font-3 fa" data-bind="css: { 'fa-wifi': wsObserver.connected === true, 'fa-warning': wsObserver.connected === false }"></i>
 			<i class="fc-w wh-1 flex centering font-3 fa" data-bind="css: webObserver.css"></i>
 			<i class="fc-w wh-1 flex centering font-3 fa fa-plus hover" data-bind="click: addedSite"></i>
 			<i class="fc-w wh-1 flex centering font-3 fa fa-question hover" data-bind="click: entries.test.bind($data.entries)"></i>
-			<!-- ko if: focus() === 'entry' -->
+			<!-- ko if: focus === 'entry' -->
 				<i class="fc-w wh-1 flex centering font-3 fa fa-cloud-download hover" data-bind="click: entries.downloaded.bind($data.entries)"></i>
 				<i class="fc-w wh-1 flex centering font-3 fa fa-trash hover" data-bind="click: entries.cleared.bind($data.entries)"></i>
 			<!-- /ko -->

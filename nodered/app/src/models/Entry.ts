@@ -25,28 +25,29 @@ export default class Entry extends Model {
 	public readonly signature: string
 	public readonly uri: string
 	private readonly _attr: Models // XXX
-	private readonly _attrKeys: KnockoutObservableArray<string> // XXX
+	private readonly _attrKeys: string[] // XXX
 	public readonly attrs: KnockoutComputed<Model[]>
 	public readonly css: any // XXX
-	public readonly focus: KnockoutObservable<string>
+	public focus: string
 	public constructor(entity: EntryEntity) {
 		super();
 		this._id = entity._id || '';
 		this.signature = Entry.sign(entity.uri);
 		this.uri = entity.uri;
 		this._attr = {};
-		this._attrKeys = ko.observableArray([]);
-		this.attrs = ko.computed({ owner: this, read: this._computeAttrs }); // XXX
-		this.focus = ko.observable('');
+		this._attrKeys = [];
+		this.focus = '';
 		this.css = {
 			close: ko.observable(false),
 			selected: ko.observable(false)
 		};
+		ko.track(this, ['_attrKeys', 'focus']);
+		this.attrs = ko.computed({ owner: this, read: this._computeAttrs }); // XXX
 		// init attributes
 		for(const key of Object.keys(entity.attrs)) {
 			this._addAttr(this._createAttr(entity.attrs[key]));
 		}
-		this.focus(this._attrKeys().length > 0 ? this._attrKeys()[0] : ''); // XXX
+		this.focus = this._attrKeys.length > 0 ? this._attrKeys[0] : ''; // XXX
 	}
 	// @override
 	public static async find(where: any = {}): Promise<Entry[]> {
@@ -109,10 +110,10 @@ export default class Entry extends Model {
 		this.css.close(enabled);
 	}
 	public focused(attr: Model): void {
-		this.focus(attr.type);
+		this.focus = attr.type;
 	}
 	private _computeAttrs(): Model[] {
-		return this._attrKeys().map((key) => this._attr[key]);
+		return this._attrKeys.map(key => this._attr[key]);
 	}
 	public hasAttr(type: string): boolean {
 		return type in this._attr;

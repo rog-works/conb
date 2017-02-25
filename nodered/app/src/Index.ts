@@ -29,7 +29,7 @@ export default class Main {
 	public selector: Selector
 	public entries: Entries
 	public events: Events
-	public focus: KnockoutObservable<string>
+	public focus: string
 	private constructor() {}
 	public static get self(): Main {
 		return Main._self || (Main._self = new Main());
@@ -61,7 +61,7 @@ export default class Main {
 			mousedown: this.selector.onDown.bind(this.selector),
 			mousemove: this.selector.onMove.bind(this.selector)
 		};
-		this.focus = ko.observable('entry'); // XXX magic string
+		this.focus = 'entry'; // XXX magic string
 		this._scroll.on('bottom', this._onBottom.bind(this));
 		this.selector.on('select', this._onSelect.bind(this));
 		this.searcher.on('accept', this.searched.bind(this));
@@ -70,21 +70,21 @@ export default class Main {
 		ko.applyBindings(this, e);
 	}
 	public focused(tag: string): void {
-		this.focus(tag);
+		this.focus = tag;
 	}
 	public searched(): void {
 		this.entries.load(
-			this.searcher.url.value(),
-			this.searcher.path.value(),
-			this.searcher.query.value(),
+			this.searcher.url.value,
+			this.searcher.path.value,
+			this.searcher.query.value,
 			this.searcher.page.curr.number
 		);
 	}
 	public filtered(): void {
-		this.entries.filtered(this.searcher.filter.value());
+		this.entries.filtered(this.searcher.filter.value);
 	}
 	public searched2(query: string): void {
-		this.searcher.url.value(query);
+		this.searcher.url.value = query;
 		this.entries.load(query, '', '', 1);
 	}
 	public addedSite(): void { // XXX NG
@@ -135,11 +135,11 @@ export default class Main {
 	}
 	private _onBottom (sender: any, event: any): boolean {
 		// console.log('bottom');
-		if (this.entries.list.length > 0 && this.searcher.url.value().length > 0 && this.searcher.page.next.number === this.searcher.page.curr.number) {
+		if (this.entries.list.length > 0 && this.searcher.url.value.length > 0 && this.searcher.page.next.number === this.searcher.page.curr.number) {
 			this.entries.load(
-				this.searcher.url.value(),
-				this.searcher.path.value(),
-				this.searcher.query.value(),
+				this.searcher.url.value,
+				this.searcher.path.value,
+				this.searcher.query.value,
 				this.searcher.page.curr.number + 1
 			);
 		}

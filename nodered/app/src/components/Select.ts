@@ -1,11 +1,11 @@
 import * as ko from 'knockout-es5';
 
 export default class Select {
-	public options: KnockoutObservableArray<Option>
-	public value: KnockoutObservable<string>
-	public constructor(options: Array<Option>) {
-		this.options = ko.observableArray(options);
-		this.value = ko.observable('');
+	public constructor(
+		public readonly options: Option[],
+		public value: string = ''
+	) {
+		ko.track(this);
 	}
 }
 

@@ -29,11 +29,11 @@ export default class Files extends Model { // XXX Posts???
 		this.entries = [];
 		this.state = entity.entries ? States.Opened : States.Closed;
 		this.stores = 0;
+		ko.track(this);
 		this.store = ko.computed({ owner: this, read: this._computedStore });
 		for (const entryEntity of entity.entries) {
 			this.add(ModelFactory.self.create<Entry>(entryEntity));
 		}
-		ko.track(this);
 	}
 	// @override
 	public get uniqueKey(): string { return ''; } // XXX

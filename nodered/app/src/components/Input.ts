@@ -12,18 +12,18 @@ export enum KeyCodes {
 }
 
 export default class Input extends EventEmitter {
-	public value: KnockoutObservable<string>
-	public focus: KnockoutObservable<boolean>
-	public constructor(value: string) {
+	public constructor(
+		public value: string,
+		public focus: boolean = false
+	) {
 		super('focus', 'accept', 'cancel', 'keyup');
-		this.value = ko.observable(value);
-		this.focus = ko.observable(false);
+		ko.track(this);
 	}
 	public get number(): number {
-		return parseInt(this.value());
+		return parseInt(this.value);
 	}
 	public set number(number: number) {
-		this.value(`${number}`);
+		this.value = `${number}`;
 	}
 	public onFocus(sender: any): boolean {
 		this.emit('focus', sender);

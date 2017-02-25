@@ -11,7 +11,7 @@ export default class Searcher extends EventEmitter {
 	public readonly filter: Input
 	public readonly page: { curr: Input, next: Input }
 	public readonly css: any
-	public readonly urls: KnockoutObservableArray<Option>
+	public readonly urls: Option[]
 	public readonly events: any
 	public constructor() {
 		super('accept');
@@ -23,7 +23,7 @@ export default class Searcher extends EventEmitter {
 			curr: new Input('1'), // XXX number
 			next: new Input('1')
 		};
-		this.urls = ko.observableArray([]);
+		this.urls = [];
 		this.events = {
 			focus: this.url.onFocus.bind(this.url),
 			keyup: this.url.onKeyup.bind(this.url)
@@ -32,6 +32,7 @@ export default class Searcher extends EventEmitter {
 		this.url.on('accept', this._onAccept.bind(this));
 		this.url.on('cancel', this._onCancel.bind(this));
 		this.url.on('keyup', this._onKeyup.bind(this));
+		ko.track(this, ['urls']);
 	}
 	private _onFocus(sender: any): boolean {
 		return true;
@@ -61,15 +62,15 @@ export default class Searcher extends EventEmitter {
 	}
 	private _shiftCtrlKeyup(event: KeyboardEvent): boolean {
 		if (event.keyCode === KeyCodes.F) {
-			this.url.focus(true);
+			this.url.focus = true;
 		}
 		return true;
 	}
 	public clear(): void {
-		this.url.value('');
-		this.path.value('');
-		this.query.value('');
-		this.filter.value('');
+		this.url.value = '';
+		this.path.value = '';
+		this.query.value = '';
+		this.filter.value = '';
 		this.page.curr.number = 1;
 		this.page.next.number = 1;
 	}
