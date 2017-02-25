@@ -38,9 +38,10 @@ export default class Entry extends Model {
 		this._attrKeys = [];
 		this.focus = '';
 		this.css = {
-			close: ko.observable(false),
-			selected: ko.observable(false)
+			close: false,
+			selected: false
 		};
+		ko.track(this.css);
 		ko.track(this, ['_attrKeys', 'focus']);
 		this.attrs = ko.computed({ owner: this, read: this._computeAttrs }); // XXX
 		// init attributes
@@ -98,16 +99,16 @@ export default class Entry extends Model {
 		return JSON.stringify(this.export()); // XXX
 	}
 	public get selected(): boolean {
-		return this.css.selected();
+		return this.css.selected;
 	}
 	public set selected(enabled: boolean) {
-		this.css.selected(enabled);
+		this.css.selected = enabled;
 	}
 	public get closed(): boolean {
-		return this.css.close();
+		return this.css.close;
 	}
 	public set closed(enabled: boolean) {
-		this.css.close(enabled);
+		this.css.close = enabled;
 	}
 	public focused(attr: Model): void {
 		this.focus = attr.type;

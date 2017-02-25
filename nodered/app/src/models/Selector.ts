@@ -15,48 +15,50 @@ export default class Selector extends EventEmitter {
 	constructor() {
 		super('select');
 		this.css = {
-			close: ko.observable(true)
+			close: true
 		};
 		this.style = {
-			left: ko.observable(0),
-			top: ko.observable(0),
-			width: ko.observable(0),
-			height: ko.observable(0)
+			left: 0,
+			top: 0,
+			width: 0,
+			height: 0
 		};
 		this.start = { x: 0, y: 0, w: 0, h: 0 };
+		ko.track(this.css);
+		ko.track(this.style);
 	}
 	get closed(): boolean {
-		return this.css.close();
+		return this.css.close;
 	}
 	set closed(enabled: boolean) {
-		this.css.close(enabled);
+		this.css.close = enabled;
 	}
 	get range(): Range {
 		return { x: this.x, y: this.y, w: this.w, h: this.h };
 	}
 	get x(): number {
-		return this.style.left();
+		return this.style.left;
 	}
 	set x(value: number) {
-		this.style.left(value);
+		this.style.left = value;
 	}
 	get y(): number {
-		return this.style.top();
+		return this.style.top;
 	}
 	set y(value: number) {
-		this.style.top(value);
+		this.style.top = value;
 	}
 	get w(): number {
-		return this.style.width();
+		return this.style.width;
 	}
 	set w(value: number) {
-		this.style.width(value);
+		this.style.width = value;
 	}
 	get h(): number {
-		return this.style.height();
+		return this.style.height;
 	}
 	set h(value: number) {
-		this.style.height(value);
+		this.style.height = value;
 	}
 	public onEnter(sender: any, event: MouseEvent): boolean {
 		// console.log('enter');

@@ -88,7 +88,7 @@ export default class Main {
 		this.entries.load(query, '', '', 1);
 	}
 	public addedSite(): void { // XXX NG
-		const url = prompt('Input indivisual site url');
+		const url = prompt('Input unique site url');
 		if (!url) {
 			return;
 		}
