@@ -1,4 +1,4 @@
-import * as ko from 'knockout';
+import * as ko from 'knockout-es5';
 import DAO from '../lib/DAO';
 import Query from '../lib/Query';
 import {default as URIBuilder, URIEntity} from '../lib/URIBuilder';
@@ -12,15 +12,14 @@ export interface SiteEntity extends ModelEntity {
 }
 
 class Param {
-	public readonly value: KnockoutObservable<string>
-	public constructor(value: string) {
-		this.value = ko.observable(value);
+	public constructor(public value: string) {
+		ko.track(this);
 	}
 	public static toObjs(params: string[]): Param[] {
 		return params.map(param => new this(param));
 	}
 	public static toValues(params: Param[]): string[] {
-		return params.map(query => query.value());
+		return params.map(query => query.value);
 	}
 }
 
