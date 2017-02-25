@@ -1,5 +1,6 @@
 import * as ko from 'knockout-es5';
 import DAO from '../lib/DAO';
+import Component from '../components/Component';
 import {Model, ModelEntity} from './Model';
 
 export interface ImageEntity extends ModelEntity {
@@ -46,3 +47,6 @@ export default class Image extends Model {
 		return entity;
 	}
 }
+// FIXME
+declare function require(name: string): any;
+Component.regist(Image, require('./Image.html'));

@@ -6,11 +6,12 @@ module.exports = {
 		filename: 'bundle.js'
 	},
 	resolve: {
-		extensions: ['.ts', '.js']
+		extensions: ['.ts', '.js', '.html']
 	},
 	module: {
 		loaders: [
-			{ test: /\.ts$/, loader: 'ts-loader' }
+			{ test: /\.ts$/, loader: 'ts-loader' },
+			{ test: /\.html$/, loader: 'raw-loader' }
 		]
 	},
 	plugins: [
