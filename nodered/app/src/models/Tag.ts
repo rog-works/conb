@@ -1,4 +1,4 @@
-import * as ko from 'knockout';
+import * as ko from 'knockout-es5';
 import {Model, ModelEntity} from './Model';
 
 export interface TagEntity extends ModelEntity {

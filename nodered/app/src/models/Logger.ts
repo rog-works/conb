@@ -1,19 +1,21 @@
-import * as ko from 'knockout';
+import * as ko from 'knockout-es5';
 
 export default class Logger {
-	public lines: KnockoutObservableArray<string>
-	private _log: Function
-	private _error: Function
-	public constructor() {
+	public constructor(
+		public lines: string[] = [],
+		private _log: Function = () => {},
+		private _error: Function = () => {}
+	) {
 		if (this.target) {
 			this.bind();
 		}
+		ko.track(this, ['lines']);
 	}
 	public get target(): boolean {
-		return /iphone|android/.test(navigator.userAgent.toLowerCase());
+		return /iphone|android/.test(navigator.userAgent.toLowerCase()); // XXX not pure js
 	}
 	public bind(): void {
-		this.lines = ko.observableArray([]);
+		this.lines = [];
 		this._log = console.log.bind(console);
 		this._error = console.error.bind(console);
 		console.log = this.log.bind(this);

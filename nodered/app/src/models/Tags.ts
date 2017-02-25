@@ -1,4 +1,4 @@
-import * as ko from 'knockout';
+import * as ko from 'knockout-es5';
 import Input from '../components/Input';
 import {Model, ModelEntity} from './Model';
 import {default as Tag, TagEntity} from './Tag';

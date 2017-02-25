@@ -1,4 +1,4 @@
-import * as ko from 'knockout';
+import * as ko from 'knockout-es5';
 import Path from '../lib/Path';
 import {Model, ModelEntity} from './Model';
 import File from './File';
@@ -20,10 +20,10 @@ export default class Post extends Model {
 	public readonly href: string
 	public readonly text: string
 	public readonly date: string
-	public readonly visit: KnockoutObservable<boolean>
-	public readonly store: KnockoutObservable<boolean>
-	public readonly bookmark: KnockoutObservable<boolean>
-	public readonly favorite: KnockoutObservable<boolean>
+	public visit: boolean
+	public store: boolean
+	public bookmark: boolean
+	public favorite: boolean
 	public readonly image: Image
 	public readonly site: string // XXX
 	public constructor(entity: PostEntity) {
@@ -31,22 +31,23 @@ export default class Post extends Model {
 		this.href = entity.href;
 		this.text = entity.text;
 		this.date = entity.date;
-		this.visit = ko.observable(entity.visit || false);
-		this.store = ko.observable(entity.store || false);
-		this.bookmark = ko.observable(entity.bookmark || false);
-		this.favorite = ko.observable(entity.favorite || false);
+		this.visit = entity.visit || false;
+		this.store = entity.store || false;
+		this.bookmark = entity.bookmark || false;
+		this.favorite = entity.favorite || false;
 		this.image = new Image({ type: 'image', uri: entity.src }); // XXX
 		this.site = entity.site || '';
+		ko.track(this, ['visit', 'store', 'bookmark', 'favorite']);
 	}
 	// @override
 	public get uniqueKey(): string { return ''; } // XXX
 	// @override
 	public import(entity: PostEntity): void {
 		super.import(entity);
-		this.visit(entity.visit || this.visit());
-		this.store(entity.store || this.store());
-		this.bookmark(entity.bookmark || this.bookmark());
-		this.favorite(entity.favorite || this.favorite());
+		this.visit = entity.visit || this.visit;
+		this.store = entity.store || this.store;
+		this.bookmark = entity.bookmark || this.bookmark;
+		this.favorite = entity.favorite || this.favorite;
 	}
 	// @override
 	public export(): PostEntity {
@@ -55,10 +56,10 @@ export default class Post extends Model {
 		entity.src = this.image.uri;
 		entity.text = this.text;
 		entity.date = this.date;
-		entity.visit = this.visit();
-		entity.store = this.store();
-		entity.bookmark = this.bookmark();
-		entity.favorite = this.favorite();
+		entity.visit = this.visit;
+		entity.store = this.store;
+		entity.bookmark = this.bookmark;
+		entity.favorite = this.favorite;
 		entity.site = this.site;
 		return entity;
 	}
@@ -68,8 +69,8 @@ export default class Post extends Model {
 	}
 	public opened() {
 		window.open(this.href); // XXX not pure js
-		if (!this.visit()) {
-			this.visit(true);
+		if (!this.visit) {
+			this.visit = true;
 			this.emit('update', this);
 		}
 	}
@@ -83,26 +84,26 @@ export default class Post extends Model {
 			}
 		}
 		File.save(this.href, dir);
-		this.store(true);
+		this.store = true;
 		this.emit('update', this);
 	}
 	public bookmarked() {
-		this.bookmark(!this.bookmark());
+		this.bookmark = !this.bookmark;
 		this.emit('update', this);
 	}
 	public favorited() {
-		this.favorite(!this.favorite());
+		this.favorite = !this.favorite;
 		this.emit('update', this);
 	}
 	public stored() {
-		this.store(!this.store());
+		this.store = !this.store;
 		this.emit('update', this);
 	}
 	public unretentioned() { // XXX
-		this.visit(false);
-		this.store(false);
-		this.bookmark(false);
-		this.favorite(false);
+		this.visit = false;
+		this.store = false;
+		this.bookmark = false;
+		this.favorite = false;
 		this.emit('delete', this);
 	}
 }

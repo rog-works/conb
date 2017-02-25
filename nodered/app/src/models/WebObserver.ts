@@ -1,4 +1,4 @@
-import * as ko from 'knockout';
+import * as ko from 'knockout-es5';
 import Observer from '../lib/Observer';
 
 export default class WebObserver extends Observer {

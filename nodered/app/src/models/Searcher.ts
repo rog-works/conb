@@ -1,4 +1,4 @@
-import * as ko from 'knockout';
+import * as ko from 'knockout-es5';
 import EventEmitter from '../lib/EventEmitter';
 import DAO from '../lib/DAO';
 import {default as Input, KeyCodes} from '../components/Input';

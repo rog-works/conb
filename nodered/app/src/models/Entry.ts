@@ -1,4 +1,4 @@
-import * as ko from 'knockout';
+import * as ko from 'knockout-es5';
 import Sign from '../lib/Sign';
 import {Model, ModelEntity} from './Model';
 import ModelFactory from './ModelFactory';

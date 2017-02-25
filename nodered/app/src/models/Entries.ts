@@ -1,4 +1,4 @@
-import * as ko from 'knockout';
+import * as ko from 'knockout-es5';
 import EventEmitter from '../lib/EventEmitter';
 import DAO from '../lib/DAO';
 import Path from '../lib/Path';
@@ -10,10 +10,11 @@ import {default as File, FileEntity} from './File';
 import Site from './Site';
 import URIBuilder from '../lib/URIBuilder';
 export default class Entries extends EventEmitter {
-	public list: KnockoutObservableArray<Entry>
-	public constructor() {
+	public constructor(
+		public list: Entry[] = []
+	) {
 		super('beforeUpdate', 'update');
-		this.list = ko.observableArray([]);
+		ko.track(this);
 	}
 	public load(uri: string, path: string, query: string, page: number): void {
 		this.emit('beforeUpdate', this, page); // XXX page?
@@ -110,28 +111,28 @@ export default class Entries extends EventEmitter {
 		this.list.removeAll();
 	}
 	public fliped(): void {
-		this.list().forEach(entry => entry.closed = !entry.closed);
+		this.list.forEach(entry => entry.closed = !entry.closed);
 	}
 	public filtered(query: string): void {
-		this.list().forEach(entry => entry.closed = true)
+		this.list.forEach(entry => entry.closed = true)
 		this.findByQuery(query).forEach(entry => entry.closed = false);
 	}
 	public export(): string {
-		return JSON.stringify(this.list().map((entry: Entry) => entry.export()));
+		return JSON.stringify(this.list.map((entry: Entry) => entry.export()));
 	}
 	public import(entities: any[]): void {
 		entities.forEach((entity: any) => this.list.push(ModelFactory.self.create<Entry>(entity)));
 		this.emit('update', this);
 	}
 	public selectedEntries(): Entry[] {
-		return this.list().filter(entry => entry.selected);
+		return this.list.filter(entry => entry.selected);
 	}
 	public findByQuery(query: string): Entry[] {
 		if (/^\/[^\/]*\//.test(query)) {
 			const reg = new RegExp(query.substr(1, query.length - 2));
-			return this.list().filter(entry => reg.test(entry.description));
+			return this.list.filter(entry => reg.test(entry.description));
 		} else {
-			return this.list().filter(entry => entry.description.indexOf(query) !== -1);
+			return this.list.filter(entry => entry.description.indexOf(query) !== -1);
 		}
 	}
 	public downloaded(): void {

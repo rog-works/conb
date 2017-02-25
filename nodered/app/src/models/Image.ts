@@ -1,4 +1,4 @@
-import * as ko from 'knockout';
+import * as ko from 'knockout-es5';
 import DAO from '../lib/DAO';
 import {Model, ModelEntity} from './Model';
 
@@ -8,16 +8,17 @@ export interface ImageEntity extends ModelEntity {
 
 export default class Image extends Model {
 	public readonly uri: string
-	public src: KnockoutObservable<string>
+	public src: string
 	public constructor(entity: ImageEntity) {
 		super();
 		this.uri = entity.uri;
-		this.src = ko.observable('');
+		this.src = '';
 		if (this._canLoad(this.uri)) {
 			this._load(this._parseUri(this.uri));
 		} else {
-			this.src(this.uri);
+			this.src = this.uri;
 		}
+		ko.track(this, ['src']);
 	}
 	private _canLoad(uri: string): boolean {
 		return /^images\/[^?]+[?].+$/.test(uri);
@@ -29,7 +30,8 @@ export default class Image extends Model {
 		return [route, url];
 	}
 	private async _load([route, url]: [string, string]): Promise<void> {
-		this.src((await DAO.self.get<{ src: string }>(route, { url: url })).src);
+		const data = await DAO.self.get<{ src: string }>(route, { url: url });
+		this.src = data.src;
 	}
 	// @override
 	public get uniqueKey(): string { return ''; } // XXX

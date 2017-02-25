@@ -1,13 +1,13 @@
-import * as ko from 'knockout';
+import * as ko from 'knockout-es5';
 import DAO from '../lib/DAO';
 import Path from '../lib/Path';
 import {Model, ModelEntity} from './Model';
 
 export interface FileEntity extends ModelEntity {
 	path: string
-	store?: boolean
 	size?: number
 	date?: string
+	store?: boolean
 }
 
 class States {
@@ -19,17 +19,18 @@ class States {
 
 export default class File extends Model {
 	public readonly path: string
-	public readonly store: KnockoutObservable<boolean>
 	public readonly size: number
 	public readonly date: string
-	public readonly state: KnockoutObservable<string>
+	public store: boolean
+	public state: string
 	public constructor(entity: FileEntity) {
 		super(['update', 'delete']);
 		this.path = entity.path;
-		this.store = ko.observable(entity.store || false);
 		this.size = entity.size || 0;
 		this.date = entity.date || 'none';
-		this.state = ko.observable(this.store() ? States.Stored : States.Reserved);
+		this.store = entity.store || false;
+		this.state = this.store ? States.Stored : States.Reserved;
+		ko.track(this, ['store', 'state']);
 	}
 	public static save(url: string, dir: string): void {
 		DAO.self.send('download', {
@@ -42,13 +43,13 @@ export default class File extends Model {
 	// @override
 	public import(entity: FileEntity): void {
 		super.import(entity);
-		this.store(entity.store || this.store());
+		this.store = entity.store || this.store;
 	}
 	// @override
 	public export(): FileEntity {
 		const entity = <any>super.export(); // XXX down cast...
 		entity.path = this.path;
-		entity.store = this.store();
+		entity.store = this.store;
 		return entity;
 	}
 	public get name() {
@@ -58,13 +59,13 @@ export default class File extends Model {
 		return Path.dirname(this.path);
 	}
 	public async downloaded(url: string, dir: string): Promise<void> {
-		this.state(States.Downloading);
+		this.state = States.Downloading;
 		const result = await DAO.self.get<boolean>(
 			'download',
 			{ url: url, dir: dir, filename: this.name }
 		);
-		this.store(result);
-		this.state(this.store() ? States.Stored : States.Failed);
+		this.store = result;
+		this.state = this.store ? States.Stored : States.Failed;
 		this.emit('update', this);
 	}
 }

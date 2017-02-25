@@ -1,4 +1,4 @@
-import * as ko from 'knockout';
+import * as ko from 'knockout-es5';
 
 export default class Select {
 	public options: KnockoutObservableArray<Option>

@@ -12,7 +12,9 @@ export interface SiteEntity extends ModelEntity {
 }
 
 class Param {
-	public constructor(public value: string) {
+	public constructor(
+		public value: string
+	) {
 		ko.track(this);
 	}
 	public static toObjs(params: string[]): Param[] {
@@ -24,15 +26,16 @@ class Param {
 }
 
 class From implements Serializer {
-	public readonly scheme: KnockoutObservable<string>
-	public readonly host: KnockoutObservable<string>
-	public readonly path: KnockoutObservable<string>
-	public readonly queries: KnockoutObservableArray<Param>
+	public scheme: string
+	public host: string
+	public path: string
+	public readonly queries: Param[]
 	public constructor(entity: URIEntity) {
-		this.scheme = ko.observable(entity.scheme);
-		this.host = ko.observable(entity.host);
-		this.path = ko.observable(entity.path);
-		this.queries = ko.observableArray(Param.toObjs(entity.queries));
+		this.scheme = entity.scheme;
+		this.host = entity.host;
+		this.path = entity.path;
+		this.queries = Param.toObjs(entity.queries);
+		ko.track(this);
 	}
 	// @override
 	public import(entity: URIEntity): void {
@@ -40,25 +43,26 @@ class From implements Serializer {
 	// @override
 	public export(): URIEntity {
 		return {
-			scheme: this.scheme(),
-			host: this.host(),
-			path: this.path(),
-			queries: Param.toValues(this.queries())
+			scheme: this.scheme,
+			host: this.host,
+			path: this.path,
+			queries: Param.toValues(this.queries)
 		};
 	}
 }
 
 export default class Site extends Model {
-	public readonly name: KnockoutObservable<string>
-	public readonly select: KnockoutObservableArray<Param>
+	public name: string
+	public readonly select: Param[]
 	public readonly from: From
-	public readonly where: KnockoutObservable<string>
+	public where: string
 	public constructor(entity: SiteEntity) {
 		super(['update', 'delete']);
-		this.name = ko.observable(entity.name);
-		this.select = ko.observableArray(Param.toObjs(entity.select));
+		this.name = entity.name;
+		this.select = Param.toObjs(entity.select);
 		this.from = new From(entity.from);
-		this.where = ko.observable(entity.where);
+		this.where = entity.where;
+		ko.track(this);
 	}
 	// @override
 	public get uniqueKey(): string { return ''; } // XXX
@@ -69,23 +73,23 @@ export default class Site extends Model {
 	// @override
 	public export(): SiteEntity {
 		const entity = <any>super.export(); // XXX down cast...
-		entity.name = this.name();
-		entity.select = Param.toValues(this.select());
+		entity.name = this.name;
+		entity.select = Param.toValues(this.select);
 		entity.from = this.from.export();
-		entity.where = this.where();
+		entity.where = this.where;
 		return entity;
 	}
 	public get querify(): string {
-		return `/sites/${this.name()}`;
+		return `/sites/${this.name}`;
 	}
 	public get domain(): string {
-		return this.from.host();
+		return this.from.host;
 	}
 	public async load<T extends ModelEntity>(params: any = {}): Promise<T[]> {
 		const uri = URIBuilder.create(this.from.export(), params);
-		return await Query.select(Param.toValues(this.select()))
+		return await Query.select(Param.toValues(this.select))
 			.from(uri.full)
-			.where(this.where())
+			.where(this.where)
 			.async<T>();
 	}
 	public saved(): void {

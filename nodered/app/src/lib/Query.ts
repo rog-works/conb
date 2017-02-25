@@ -1,4 +1,4 @@
-import * as ko from 'knockout';
+import * as ko from 'knockout-es5';
 import * as $ from 'cheerio';
 import DAO from './DAO';
 import Util from './Util';

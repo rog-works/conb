@@ -1,4 +1,4 @@
-import * as ko from 'knockout';
+import * as ko from 'knockout-es5';
 import EventEmitter from '../lib/EventEmitter';
 
 export enum KeyCodes {
