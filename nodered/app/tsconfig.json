@@ -5,7 +5,11 @@
 		"noImplicitAny": true,
 		"module": "amd",
 		"target": "es6",
-		"strictNullChecks": true
+		"strictNullChecks": true,
+		"typeRoots": [
+			"./@types",
+			"./node_modules/@types"
+		]
 	},
 	"files": [
 		"./src/Index.ts"

@@ -48,5 +48,4 @@ export default class Image extends Model {
 	}
 }
 // FIXME
-declare function require(name: string): any;
 Component.regist(Image, require('./Image.html'));

@@ -1,5 +1,5 @@
-import Util from './Util';
 import URI from './URI';
+import Util from '../utils/Util';
 
 export interface URIEntity {
 	scheme: string

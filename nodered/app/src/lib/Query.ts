@@ -1,7 +1,7 @@
 import * as ko from 'knockout-es5';
 import * as $ from 'cheerio';
 import DAO from './DAO';
-import Util from './Util';
+import Util from '../utils/Util';
 
 export default class Query {
 	public constructor(
