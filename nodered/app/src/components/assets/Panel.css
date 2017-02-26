@@ -1,0 +1,3 @@
+.fill {
+	composes: fill from '../../../public/css/styles.css'
+}

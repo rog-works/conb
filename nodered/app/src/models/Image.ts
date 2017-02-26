@@ -16,12 +16,15 @@ export default class Image extends Model {
 		this.uri = entity.uri;
 		this.src = '';
 		this.css = require('./assets/Image.css');
+		ko.track(this);
+		this._init();
+	}
+	private _init(): void {
 		if (this._canLoad(this.uri)) {
 			this._load(this._parseUri(this.uri));
 		} else {
 			this.src = this.uri;
 		}
-		ko.track(this, ['src']);
 	}
 	private _canLoad(uri: string): boolean {
 		return /^images\/[^?]+[?].+$/.test(uri);
