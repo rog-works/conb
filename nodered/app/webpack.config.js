@@ -1,4 +1,6 @@
 const webpack = require('webpack');
+// const autoprefixer = require('autoprefixer');
+
 module.exports = {
 	entry: './src/Index.ts',
 	output: {
@@ -6,12 +8,26 @@ module.exports = {
 		filename: 'bundle.js'
 	},
 	resolve: {
-		extensions: ['.ts', '.js', '.html']
+		extensions: ['.ts', '.js']
 	},
 	module: {
-		loaders: [
-			{ test: /\.ts$/, loader: 'ts-loader' },
-			{ test: /\.html$/, loader: 'raw-loader' }
+		rules: [
+			{
+				test: /\.ts$/,
+				use: 'ts-loader'
+			},
+			{
+				test: /\.css$/,
+				use: [
+					'style-loader',
+					{ loader: 'css-loader', options: { modules: true, importLoaders: 1, localIdentName: '[name]__[local]__[hash:base64:5]' } }
+					// { loader: 'postcss-loader', options: { plugins: () => [autoprefixer] } },
+				]
+			},
+			{
+				test: /\.html$/,
+				use: 'raw-loader'
+			}
 		]
 	},
 	plugins: [

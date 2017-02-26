@@ -10,10 +10,12 @@ export interface ImageEntity extends ModelEntity {
 export default class Image extends Model {
 	public readonly uri: string
 	public src: string
+	public css: any // XXX
 	public constructor(entity: ImageEntity) {
 		super();
 		this.uri = entity.uri;
 		this.src = '';
+		this.css = require('./assets/Image.css');
 		if (this._canLoad(this.uri)) {
 			this._load(this._parseUri(this.uri));
 		} else {
@@ -47,5 +49,5 @@ export default class Image extends Model {
 		return entity;
 	}
 }
-// FIXME
-Component.regist(Image, require('./Image.html'));
+// XXX
+Component.regist(Image, require('./assets/Image.html'));

@@ -1,0 +1,7 @@
+.css {
+	composes: w-max-8 h-max-10 from '../../../public/css/style.css';
+}
+
+.frame {
+	composes: w-8 h-10 absolute abs-bottom flex centering from '../../../public/css/style.css';
+}
