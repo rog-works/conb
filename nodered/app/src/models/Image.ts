@@ -1,6 +1,7 @@
 import * as ko from 'knockout-es5';
 import DAO from '../lib/DAO';
 import Component from '../components/Component';
+import Panel from '../components/Panel';
 import {Model, ModelEntity} from './Model';
 
 export interface ImageEntity extends ModelEntity {
