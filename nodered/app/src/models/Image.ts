@@ -16,7 +16,7 @@ export default class Image extends Model {
 		super();
 		this.uri = entity.uri;
 		this.src = '';
-		this.css = require('./assets/Image.css');
+		this.css = require('./assets/Image.css').css;
 		ko.track(this);
 		this._init();
 	}
