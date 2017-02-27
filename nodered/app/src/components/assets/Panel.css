@@ -1,23 +1,24 @@
-.dockFill {
-	composes: fill from '../../../public/css/styles.css';
-}
-
 .dockNone {}
-
-.alignLeft {}
-
-.alignBotton {
-	composes: abs-bottom '../../../public/css/styles.css';
+.dockFill {
+	composes: fill from '../../../public/css/style.css';
 }
 
 .alignNone {}
-
-.positionNone {}
-
-.positionAbsolute {
-	composes: absolute '../../../public/css/styles.css';
+.alignCenter {
+	composes: flex centering from '../../../public/css/style.css';
 }
 
-.w8  { composes:  w-8 '../../../public/css/styles.css'; }
-.w10 { composes: w-10 '../../../public/css/styles.css'; }
+.anchorNone {}
+.anchorLeft {}
+.anchorBotton {
+	composes: abs-bottom from '../../../public/css/style.css';
+}
+
+.positionNone {}
+.positionAbsolute {
+	composes: absolute from '../../../public/css/style.css';
+}
+
+.w8  { composes:  w-8 from '../../../public/css/style.css'; }
+.h10 { composes: h-10 from '../../../public/css/style.css'; }
 

@@ -52,6 +52,7 @@ export default class Image extends Model {
 		entity.uri = this.uri;
 		return entity;
 	}
+	public static regist(): void {
+		Component.regist(Image, require('./assets/Image.html'));
+	}
 }
-// XXX
-Component.regist(Image, require('./assets/Image.html'));

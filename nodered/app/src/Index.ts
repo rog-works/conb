@@ -3,6 +3,7 @@ import DAO from './lib/DAO';
 import URI from './lib/URI';
 import {Events} from './events/Events';
 import Scroll from './events/Scroll';
+import Panel from './components/Panel';
 import WSObserver from './models/WSObserver';
 import WebObserver from './models/WebObserver';
 import Logger from './models/Logger';
@@ -38,6 +39,10 @@ export default class Main {
 		DAO.create('ws://localhost:1880/ws/api')
 			.on('open', this._onOpen.bind(this))
 			.on('close', this._onClose.bind(this));
+		// XXX
+		Panel.regist();
+		Image.regist();
+		// XXX
 		ModelFactory.self.regist(Entry);
 		ModelFactory.self.regist(Post);
 		ModelFactory.self.regist(Tags);

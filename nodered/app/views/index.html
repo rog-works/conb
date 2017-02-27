@@ -33,7 +33,7 @@
 						<div class="post bc-1 w-8 h-11 m-q1 left relative shadow-1" data-bind="css: css">
 							<!-- ko foreach: entry.attrs -->
 								<!-- ko if: type === 'post' -->
-									<!-- ko component: { name: 'Image', params: $data.image } --><!-- /ko -->
+									<!-- ko component: { name: 'Panel', params: { anchor: 'Bottom', align: 'Center', w: 8, h: 10, children: [ { name: 'Image', params: $data.image } ] } } --><!-- /ko -->
 									<div class="bc-g w-8 h-1 absolute abs-top shadow-1">
 										<div class="wh-1 flex centering"><img data-bind="attr: { src: `http://www.google.com/s2/favicons?domain=${domain}` }"></div>
 									</div>

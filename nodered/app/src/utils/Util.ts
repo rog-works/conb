@@ -1,5 +1,11 @@
 export default class Util {
-	public static extend(dist: any, src: any): any {
+	public static extend(dist: any, ...srcs: any[]): any {
+		for (const src of srcs) {
+			dist = Util._extend(dist, src);
+		}
+		return dist;
+	}
+	private static _extend(dist: any, src: any): any {
 		if (!Array.isArray(src) && src && typeof src === 'object') {
 			for (const key in src) {
 				if ((key in dist) && !Array.isArray(dist[key]) && dist[key] && typeof dist[key] === 'object') {
