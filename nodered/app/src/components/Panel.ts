@@ -1,5 +1,4 @@
 import * as ko from 'knockout-es5';
-import Util from '../utils/Util';
 import Component from './Component';
 
 type Anchors = 'none' | 'left' | 'right' | 'top' | 'bottom';
@@ -51,12 +50,12 @@ export default class Panel {
 	public children: any[]
 	public css: KnockoutComputed<string>
 	public constructor(entity: PanelEntity) {
-		this._anchor = entity.anchor || Anchors.None,
-		this._align = entity.align || Aligns.None,
-		this._position = entity.position || Positions.None,
-		this._dock = entity.dock || Docks.None,
-		this._w = entity.w || 1,
-		this._h = entity.h || 1,
+		this._anchor = entity.anchor || Anchors.None;
+		this._align = entity.align || Aligns.None;
+		this._position = entity.position || Positions.None;
+		this._dock = entity.dock || Docks.None;
+		this._w = entity.w || 1;
+		this._h = entity.h || 1;
 		this.children = entity.children || [];
 		this.css = ko.computed({ owner: this, read: this._computedCss });
 		ko.track(this);

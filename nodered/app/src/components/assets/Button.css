@@ -1,0 +1,15 @@
+.css {
+	composes: wh-hq round-hq border flex centering hover icon from '../../../public/css/style.css';
+}
+
+.standby,
+.progress {
+}
+
+.success {
+	composes: fc-b from '../../../public/css/style.css';
+}
+
+.error {
+	composes: fc-r from '../../../public/css/style.css';
+}

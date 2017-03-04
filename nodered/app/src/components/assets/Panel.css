@@ -19,6 +19,8 @@
 	composes: absolute from '../../../public/css/style.css';
 }
 
+.whq { composes: w-hq from '../../../public/css/style.css'; }
 .w8  { composes:  w-8 from '../../../public/css/style.css'; }
+.hhq { composes: h-hq from '../../../public/css/style.css'; }
 .h10 { composes: h-10 from '../../../public/css/style.css'; }
 

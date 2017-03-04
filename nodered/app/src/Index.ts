@@ -4,6 +4,8 @@ import URI from './lib/URI';
 import {Events} from './events/Events';
 import Scroll from './events/Scroll';
 import Panel from './components/Panel';
+import Button from './components/Button';
+import Toolbar from './components/Toolbar';
 import WSObserver from './models/WSObserver';
 import WebObserver from './models/WebObserver';
 import Logger from './models/Logger';
@@ -41,6 +43,8 @@ export default class Main {
 			.on('close', this._onClose.bind(this));
 		// XXX
 		Panel.regist();
+		Button.regist();
+		Toolbar.regist();
 		Image.regist();
 		// XXX
 		ModelFactory.self.regist(Entry);

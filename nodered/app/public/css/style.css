@@ -9,6 +9,16 @@ a { text-decoration: none; }
 
 .no-selection ::selection { color: inherit; background-color: inherit; }
 
+/* XXX awesome font */
+.icon {
+	display: inline-block;
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: inherit;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
 /* wrap */
 
 .text-wrap {
@@ -240,4 +250,10 @@ a:visited {
 
 .scroll   {   overflow: scroll; }
 .scroll-x { overflow-x: scroll; overflow-y: hidden; }
-.scroll-y { overflow-y: scroll; overflow-y: scroll; }
+.scroll-y { overflow-x: hidden; overflow-y: scroll; }
+
+.scroll.scroll-hide::-webkit-scrollbar,
+.scroll-x.scroll-hide::-webkit-scrollbar,
+.scroll-y.scroll-hide::-webkit-scrollbar {
+	display: none;
+}

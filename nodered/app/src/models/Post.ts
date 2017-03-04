@@ -37,7 +37,7 @@ export default class Post extends Model {
 		this.favorite = entity.favorite || false;
 		this.image = new Image({ type: 'image', uri: entity.src }); // XXX
 		this.site = entity.site || '';
-		ko.track(this, ['visit', 'store', 'bookmark', 'favorite']);
+		ko.track(this);
 	}
 	// @override
 	public get uniqueKey(): string { return ''; } // XXX

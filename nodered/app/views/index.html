@@ -38,6 +38,7 @@
 										<div class="wh-1 flex centering"><img data-bind="attr: { src: `http://www.google.com/s2/favicons?domain=${domain}` }"></div>
 									</div>
 									<div class="w-8 h-1 absolute abs-top flex just-center" data-bind="visible: entry.focus === type">
+										<!-- component: { 'name': 'toolbar', params: { context: $data, route: 'buttons/post', buttons: [ 'bookmark' ] } } --><!-- /ko -->
 										<div class="fc-w w-5 h-1 flex arounding">
 											<i class="wh-hq round-hq border flex centering hover fa fa-cloud-download" data-bind="click: downloaded, css: { 'fc-b': store === true }"></i>
 											<i class="wh-hq round-hq border flex centering hover fa fa-bookmark" data-bind="click: bookmarked, css: { 'fc-r': bookmark === true }"></i>
@@ -98,7 +99,7 @@
 										</div>
 									</div>
 									<div class="w-8 h-10 absolute abs-bottom">
-										<div class="w-8 h-9 wrap scroll-y">
+										<div class="w-8 h-9 wrap scroll-y scroll-hide">
 											<div class="w-8 h-1 flex centering"><span class="line-b-g">name</span></div>
 											<div class="w-8 h-hq flex centering"><i class="w-1 h-hq flex centering fa fa-key"></i><input class="w-7 h-hq less transparent" data-bind="value: name"></div>
 											<div class="w-8 h-1 flex centering"><span class="line-b-g">select</span><i class="w-1 h-1 flex centering fa fa-plus hover" data-bind="click: addedSelect"></i></div>
