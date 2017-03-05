@@ -1,3 +1,6 @@
+.color_primary  { composes: fc-1 from '../../../public/css/style.css'; }
+.color_nagative { composes: fc-5 from '../../../public/css/style.css'; }
+
 .dock_none {}
 .dock_fill { composes: fill from '../../../public/css/style.css'; }
 

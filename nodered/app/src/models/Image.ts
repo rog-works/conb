@@ -21,13 +21,13 @@ export default class Image extends Model {
 		this._init();
 	}
 	private _init(): void {
-		if (this._canLoad(this.uri)) {
+		if (this._shouldLoad(this.uri)) {
 			this._load(this._parseUri(this.uri));
 		} else {
 			this.src = this.uri;
 		}
 	}
-	private _canLoad(uri: string): boolean {
+	private _shouldLoad(uri: string): boolean {
 		return /^images\/[^?]+[?].+$/.test(uri);
 	}
 	private _parseUri(uri: string): [string, string] {

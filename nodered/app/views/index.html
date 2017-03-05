@@ -33,11 +33,11 @@
 						<div class="post bc-1 w-8 h-11 m-q1 left relative shadow-1" data-bind="css: css">
 							<!-- ko foreach: entry.attrs -->
 								<!-- ko if: type === 'post' -->
-									<!-- ko component: { name: 'panel', params: { anchor: 'bottom', align: 'center', position: 'absolute', w: 8, h: 10, children: [ $data.image ] } } --><!-- /ko -->
+									<!-- ko component: { name: 'panel', params: { styles: 'bottom center absolute 8 10', children: [ $data.image ] } } --><!-- /ko -->
 									<div class="bc-g w-8 h-1 absolute abs-top shadow-1">
-										<div class="wh-1 flex centering"><img data-bind="attr: { src: `http://www.google.com/s2/favicons?domain=${domain}` }"></div>
+										<!-- ko component: { name: 'panel', params: { styles: 'center 1 1', children: [ { type: 'image', uri: `http://www.google.com/s2/favicons?domain=${domain}` } ] } } --><!-- /ko -->
 									</div>
-									<div class="w-8 h-1 absolute abs-top flex just-center" data-bind="visible: entry.focus === type">
+									<div class="w-8 h-1 absolute abs-top flex centering" data-bind="visible: entry.focus === type">
 										<!-- ko component: { 'name': 'toolbar', params: { context: $data, types: [ 'download', 'bookmark', 'favorite', 'store', 'unretention' ] } } --><!-- /ko -->
 									</div>
 									<div class="w-8 h-3 absolute abs-bottom" data-bind="visible: entry.focus === type">
@@ -49,7 +49,7 @@
 									</div>
 								<!-- /ko -->
 								<!-- ko if: type === 'tags' -->
-									<div class="fc-w w-8 h-1 absolute abs-top flex just-center" data-bind="visible: entry.focus === type">
+									<div class="fc-w w-8 h-1 absolute abs-top flex centering" data-bind="visible: entry.focus === type">
 										<div class="w-6 h-1 flex arounding">
 											<i class="bc-w fc-g flex centering w-1 h-hq fa fa-tag hover" data-bind="click: tagged.bind($data, $data.input.value)"></i>
 											<input class="w-5 h-hq less" type="text" placeholder="Input tag name" data-bind="value: input.value, event: { keyup: input.onKeyup.bind($data.input) }">
