@@ -1,1 +1,17 @@
-<i data-bind="css: css, click: click"></i>
+<!-- ko with: context -->
+	<!-- ko if: $parent.buttonType === 'download' -->
+		<i class="wh-hq round-hq border flex centering hover fa fa-cloud-download" data-bind="css: { 'fc-b': store }, click: downloaded"></i>
+	<!-- /ko -->
+	<!-- ko if: $parent.buttonType === 'bookmark' -->
+		<i class="wh-hq round-hq border flex centering hover fa fa-bookmark" data-bind="css: { 'fc-r': bookmark }, click: bookmarked"></i>
+	<!-- /ko -->
+	<!-- ko if: $parent.buttonType === 'favorite' -->
+		<i class="wh-hq round-hq border flex centering hover fa fa-thumbs-up" data-bind="css: { 'fc-y': favorite }, click: favorited"></i>
+	<!-- /ko -->
+	<!-- ko if: $parent.buttonType === 'store' -->
+		<i class="wh-hq round-hq border flex centering hover fa fa-check" data-bind="click: stored"></i>
+	<!-- /ko -->
+	<!-- ko if: $parent.buttonType === 'unretention' -->
+		<i class="wh-hq round-hq border flex centering hover fa fa-trash" data-bind="click: unretentioned"></i>
+	<!-- /ko -->
+<!-- /ko -->

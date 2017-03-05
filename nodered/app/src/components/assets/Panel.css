@@ -1,26 +1,30 @@
-.dockNone {}
-.dockFill {
-	composes: fill from '../../../public/css/style.css';
-}
+.dock_none {}
+.dock_fill { composes: fill from '../../../public/css/style.css'; }
 
-.alignNone {}
-.alignCenter {
-	composes: flex centering from '../../../public/css/style.css';
-}
+.align_none   {}
+.align_center { composes: flex centering from '../../../public/css/style.css'; }
+.align_around { composes: flex arounding from '../../../public/css/style.css'; }
 
-.anchorNone {}
-.anchorLeft {}
-.anchorBotton {
-	composes: abs-bottom from '../../../public/css/style.css';
-}
+.anchor_none {}
+.anchor_left {}
+.anchor_bottom { composes: abs-bottom from '../../../public/css/style.css'; }
 
-.positionNone {}
-.positionAbsolute {
-	composes: absolute from '../../../public/css/style.css';
-}
+.position_none     {}
+.position_absolute { composes: absolute from '../../../public/css/style.css'; }
 
-.whq { composes: w-hq from '../../../public/css/style.css'; }
-.w8  { composes:  w-8 from '../../../public/css/style.css'; }
-.hhq { composes: h-hq from '../../../public/css/style.css'; }
-.h10 { composes: h-10 from '../../../public/css/style.css'; }
+.w_hq { composes: w-hq from '../../../public/css/style.css'; }
+.w_1  { composes: w-1  from '../../../public/css/style.css'; }
+.w_2  { composes: w-2  from '../../../public/css/style.css'; }
+.w_3  { composes: w-3  from '../../../public/css/style.css'; }
+.w_4  { composes: w-4  from '../../../public/css/style.css'; }
+.w_5  { composes: w-5  from '../../../public/css/style.css'; }
+.w_8  { composes: w-8  from '../../../public/css/style.css'; }
 
+.h_hq { composes: h-hq from '../../../public/css/style.css'; }
+.h_1  { composes: h-1  from '../../../public/css/style.css'; }
+.h_2  { composes: h-2  from '../../../public/css/style.css'; }
+.h_3  { composes: h-3  from '../../../public/css/style.css'; }
+.h_4  { composes: h-4  from '../../../public/css/style.css'; }
+.h_5  { composes: h-5  from '../../../public/css/style.css'; }
+.h_8  { composes: h-8  from '../../../public/css/style.css'; }
+.h_10 { composes: h-10 from '../../../public/css/style.css'; }

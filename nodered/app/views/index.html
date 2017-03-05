@@ -38,14 +38,7 @@
 										<div class="wh-1 flex centering"><img data-bind="attr: { src: `http://www.google.com/s2/favicons?domain=${domain}` }"></div>
 									</div>
 									<div class="w-8 h-1 absolute abs-top flex just-center" data-bind="visible: entry.focus === type">
-										<!-- component: { 'name': 'toolbar', params: { context: $data, route: 'buttons/post', buttons: [ 'bookmark' ] } } --><!-- /ko -->
-										<div class="fc-w w-5 h-1 flex arounding">
-											<i class="wh-hq round-hq border flex centering hover fa fa-cloud-download" data-bind="click: downloaded, css: { 'fc-b': store === true }"></i>
-											<i class="wh-hq round-hq border flex centering hover fa fa-bookmark" data-bind="click: bookmarked, css: { 'fc-r': bookmark === true }"></i>
-											<i class="wh-hq round-hq border flex centering hover fa fa-thumbs-up" data-bind="click: favorited, css: { 'fc-y': favorite === true }"></i>
-											<i class="wh-hq round-hq border flex centering hover fa fa-check" data-bind="click: stored"></i>
-											<i class="wh-hq round-hq border flex centering hover fa fa-trash" data-bind="click: unretentioned"></i>
-										</div>
+										<!-- ko component: { 'name': 'toolbar', params: { context: $data, types: [ 'download', 'bookmark', 'favorite', 'store', 'unretention' ] } } --><!-- /ko -->
 									</div>
 									<div class="w-8 h-3 absolute abs-bottom" data-bind="visible: entry.focus === type">
 										<div class="h-h"></div>
