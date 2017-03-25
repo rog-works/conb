@@ -155,7 +155,7 @@ export default class Main {
 		return true;
 	}
 	private _onSelect (sender: any, event: MouseEvent): boolean {
-		// this._getEntriesByRange(this.selector.range).forEach(entry => entry.selected = !entry.selected);
+		this._getEntriesByRange(this.selector.range).forEach(entry => entry.selected = !entry.selected);
 		return true;
 	}
 	private _getEntriesByRange(selectRange: Range): Entry[] {

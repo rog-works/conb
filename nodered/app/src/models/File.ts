@@ -35,7 +35,8 @@ export default class File extends Model {
 	public static save(url: string, dir: string): void {
 		DAO.self.send('download', {
 			url: url,
-			path: `${Path.normalize(dir)}/`
+			dir: `${Path.normalize(dir)}/`,
+			filename: Path.filename(url)
 		});
 	}
 	// @override
