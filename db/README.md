@@ -6,6 +6,11 @@ Cheet sheet
 $ docker exec nodered-db mongoexport -d nodered -c entry | gzip > .backup/nodered.entry-`date +%y%m%d`.json.gz
 ```
 
+## Import
+```
+$ mongoimport -d nodered -c entry --file=/data/db/nodered.entry-170314_2.json
+```
+
 ## Find
 
 * Regular expression
