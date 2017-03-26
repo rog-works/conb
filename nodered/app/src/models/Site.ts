@@ -1,6 +1,7 @@
 import * as ko from 'knockout-es5';
 import DAO from '../lib/DAO';
 import Query from '../lib/Query';
+import URI from '../lib/URI';
 import {default as URIBuilder, URIEntity} from '../lib/URIBuilder';
 import {Model, ModelEntity, Serializer} from './Model';
 
@@ -85,8 +86,7 @@ export default class Site extends Model {
 	public get domain(): string {
 		return this.from.host;
 	}
-	public async load<T extends ModelEntity>(params: any = {}): Promise<T[]> {
-		const uri = URIBuilder.create(this.from.export(), params);
+	public async load<T extends ModelEntity>(uri: URI): Promise<T[]> {
 		return await Query.select(Param.toValues(this.select))
 			.from(uri.full)
 			.where(this.where)
@@ -106,5 +106,8 @@ export default class Site extends Model {
 	}
 	public removedQuery(query: Param): void {
 		this.from.queries.remove(query);
+	}
+	public createUri(params: any): URI {
+		return URIBuilder.create(this.from.export(), params);
 	}
 }

@@ -72,7 +72,7 @@ export default class Files extends Model { // XXX Posts???
 		}
 		const uri = new URI(url);
 		const site = siteEntries[0].getAttr<Site>('site');
-		const postEntities = await site.load<PostEntity>({ path: uri.path });
+		const postEntities = await site.load<PostEntity>(site.createUri({ path: uri.path }));
 		for (const postEntity of postEntities) {
 			const entity = {
 				type: 'entry',

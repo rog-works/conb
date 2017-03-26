@@ -50,6 +50,9 @@ export default class URI {
 	public get path(): string {
 		return this._path;
 	}
+	public get queryKeys(): string[] {
+		return Object.keys(this._queries);
+	}
 	public query(key: string): string {
 		return this._queries[key] || '';
 	}

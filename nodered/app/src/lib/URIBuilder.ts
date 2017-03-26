@@ -10,13 +10,26 @@ export interface URIEntity {
 
 export default class URIBuilder {
 	public static create(entity: URIEntity, params: any): URI {
-		const uri = [
+		const _uri = [
 			`${entity.scheme}://`,
 			entity.host,
 			URIBuilder._buildPath(entity.path, params),
 			URIBuilder._buildQueries(entity.queries, params)
 		].join('');
-		return new URI(uri);
+		return new URI(_uri);
+	}
+	public static recreate(uri: URI, params: any): URI { // FIXME
+		const queries: string[] = [];
+		for (const key of uri.queryKeys) {
+			queries.push(`${uri.query(key)} as ${key}`);
+		}
+		const _uri = [
+			`${uri.scheme}://`,
+			uri.host,
+			URIBuilder._buildPath(uri.path, params),
+			URIBuilder._buildQueries(queries, params)
+		].join('');
+		return new URI(_uri);
 	}
 	public static _buildPath(path: string, params: any): string {
 		return Util.evaluate<string>(params, path);

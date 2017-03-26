@@ -3,6 +3,7 @@ import EventEmitter from '../lib/EventEmitter';
 import DAO from '../lib/DAO';
 import Path from '../lib/Path';
 import Query from '../lib/Query';
+import URI from '../lib/URI';
 import ModelFactory from './ModelFactory';
 import {default as Entry, EntryEntity} from './Entry';
 import {default as Post, PostEntity} from './Post';
@@ -48,7 +49,7 @@ export default class Entries extends EventEmitter {
 		if (!matches || matches.length !== 3) {
 			throw new Error(`Unexpected query. ${query}`);
 		}
-		const uri = matches[1];
+		const uri = /^http/.test(matches[1]) ? matches[1] : `/sites/posts/${matches[1]}`;
 		const wheres = matches[2] || '';
 		const params: any = { page: page };
 		for (const where of wheres.split(/\s+and\s+/)) {
@@ -65,10 +66,10 @@ export default class Entries extends EventEmitter {
 				}
 			}
 		}
-		this._loadPosts(`/sites/posts/${uri}`, params);
+		this._loadPosts(uri, params);
 	}
 	private async _loadPosts(uri: string, params: any): Promise<void> {
-		const where = { ['attrs.site.name']: uri.substr('/sites/'.length) };
+		const where = /^http/.test(uri) ? { ['attrs.site.from.host']: new URI(uri).host } : { ['attrs.site.name']: uri.substr('/sites/'.length) };
 		const siteEntries = await Entry.find({
 			where: where,
 			skip: 0,
@@ -78,7 +79,8 @@ export default class Entries extends EventEmitter {
 			throw new Error(`Site not found. ${uri}`);
 		}
 		const site = siteEntries[0].getAttr<Site>('site');
-		const entities = await site.load<EntryEntity>(params);
+		const loadUri = /^http/.test(uri) ? new URI(uri) : site.createUri(params);
+		const entities = await site.load<EntryEntity>(loadUri);
 		for (const entity of entities) {
 			const entry = ModelFactory.self.create<Entry>(entity);
 			entry.get();
