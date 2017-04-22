@@ -9,7 +9,7 @@ export default class Searcher extends EventEmitter {
 	public readonly path: Input
 	public readonly query: Input
 	public readonly filter: Input
-	public readonly page: { curr: Input, next: Input }
+	public readonly page: { curr: Input, next: Input, auto: boolean }
 	public readonly css: any
 	public readonly urls: Option[]
 	public readonly events: any
@@ -21,7 +21,8 @@ export default class Searcher extends EventEmitter {
 		this.filter = new Input();
 		this.page = {
 			curr: new Input(1),
-			next: new Input(1)
+			next: new Input(1),
+			auto: true
 		};
 		this.urls = [];
 		this.events = {
@@ -31,6 +32,7 @@ export default class Searcher extends EventEmitter {
 		this.url.on('cancel', this._onCancel.bind(this));
 		this.url.on('keyup', this._onKeyup.bind(this));
 		ko.track(this, ['urls']);
+		ko.track(this.page, ['auto']); // XXX
 	}
 	private _onAccept(sender: any): boolean {
 		this.emit('accept', sender);
@@ -68,5 +70,11 @@ export default class Searcher extends EventEmitter {
 		this.filter.value = '';
 		this.page.curr.number = 1;
 		this.page.next.number = 1;
+	}
+	public get canAutoPager(): boolean {
+		return this.url.value.length > 0 && this.page.auto && this.page.next.number === this.page.curr.number;
+	}
+	public toggleAutoPager() {
+		this.page.auto = !this.page.auto;
 	}
 }

@@ -165,7 +165,7 @@
 			<i class="fc-w wh-1 flex centering font-3 fa" data-bind="css: { 'fa-wifi': wsObserver.connected === true, 'fa-warning': wsObserver.connected === false }"></i>
 			<i class="fc-w wh-1 flex centering font-3 fa" data-bind="css: webObserver.css"></i>
 			<i class="fc-w wh-1 flex centering font-3 fa fa-plus hover" data-bind="click: addedSite"></i>
-			<i class="fc-w wh-1 flex centering font-3 fa fa-question hover" data-bind="click: entries.test.bind($data.entries)"></i>
+			<i class="fc-w wh-1 flex centering font-3 fa hover" data-bind="css: { 'fa-arrow-right': searcher.page.auto === true, 'fa-remove': searcher.page.auto === false }, click: searcher.toggleAutoPager.bind($data.searcher)"></i>
 			<!-- ko if: focus === 'entry' -->
 				<i class="fc-w wh-1 flex centering font-3 fa fa-cloud-download hover" data-bind="click: entries.downloaded.bind($data.entries)"></i>
 				<i class="fc-w wh-1 flex centering font-3 fa fa-trash hover" data-bind="click: entries.cleared.bind($data.entries)"></i>

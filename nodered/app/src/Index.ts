@@ -144,7 +144,7 @@ export default class Main {
 	}
 	private _onBottom (sender: any, event: any): boolean {
 		// console.log('bottom');
-		if (this.entries.list.length > 0 && this.searcher.url.value.length > 0 && this.searcher.page.next.number === this.searcher.page.curr.number) {
+		if (this.entries.list.length > 0 && this.searcher.canAutoPager) {
 			this.entries.load(
 				this.searcher.url.value,
 				this.searcher.path.value,
