@@ -6,5 +6,4 @@ services:
     build: ../webpack/docker
     volumes:
       - ../nodered/app:/opt
-      
     command: 'npm run build'

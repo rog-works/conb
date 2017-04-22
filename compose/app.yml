@@ -13,3 +13,7 @@ services:
       - ../nodered/nodes/node-red-node-pluck:/data/node_modules/node-red-node-pluck
     ports:
       - 1880:1880
+    logging:
+      options:
+        max-size: '256k'
+        max-file: '1'
