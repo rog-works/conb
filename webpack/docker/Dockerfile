@@ -1,3 +1,3 @@
-FROM node:7.4-slim
+FROM node:7.9-alpine
 
 WORKDIR /opt
