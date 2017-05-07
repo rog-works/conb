@@ -6,5 +6,6 @@ services:
     build: ../db/docker
     volumes:
       - /data:/data/db
+      - ../.backup:/root/.backup
     ports:
       - 27017:27017
