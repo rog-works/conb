@@ -19,7 +19,7 @@
 							<div class="w-1 fill-y grow-1">
 								<div class="fill flex arounding">
 									<i class="wh-1 flex centering"><img src="image/favicon-w16.png"></i>
-									<i class="fc-g bc-w w-1 h-hq flex centering fa fa-search hover" data-bind="click: searched"></i>
+									<a class="fc-g bc-w w-1 h-hq flex centering fa fa-search hover" data-bind="click: searched"></a>
 									<input type="text" class="fill-x h-hq less" placeholder="Search" list="list" data-bind="value: searcher.url.value, event: searcher.events, hasFocus: searcher.url.focus">
 									<div class="bc-w w-1 h-hq flex centering" data-bind="text: searcher.page.curr.number"></div>
 								</div>
@@ -41,11 +41,11 @@
 										</div>
 										<div class="w-8 h-1 absolute abs-top flex just-center" data-bind="visible: entry.focus === type">
 											<div class="fc-w w-5 h-1 flex arounding">
-												<i class="wh-hq round-hq border flex centering hover fa fa-cloud-download" data-bind="click: downloaded, css: { 'fc-b': store === true }"></i>
-												<i class="wh-hq round-hq border flex centering hover fa fa-bookmark" data-bind="click: bookmarked, css: { 'fc-r': bookmark === true }"></i>
-												<i class="wh-hq round-hq border flex centering hover fa fa-thumbs-up" data-bind="click: favorited, css: { 'fc-y': favorite === true }"></i>
-												<i class="wh-hq round-hq border flex centering hover fa fa-check" data-bind="click: stored"></i>
-												<i class="wh-hq round-hq border flex centering hover fa fa-trash" data-bind="click: unretentioned"></i>
+												<a class="wh-hq round-hq border flex centering hover fa fa-cloud-download" data-bind="click: downloaded, css: { 'fc-b': store === true }"></a>
+												<a class="wh-hq round-hq border flex centering hover fa fa-bookmark" data-bind="click: bookmarked, css: { 'fc-r': bookmark === true }"></a>
+												<a class="wh-hq round-hq border flex centering hover fa fa-thumbs-up" data-bind="click: favorited, css: { 'fc-y': favorite === true }"></a>
+												<a class="wh-hq round-hq border flex centering hover fa fa-check" data-bind="click: stored"></a>
+												<a class="wh-hq round-hq border flex centering hover fa fa-trash" data-bind="click: unretentioned"></a>
 											</div>
 										</div>
 										<div class="w-8 h-3 absolute abs-bottom" data-bind="visible: entry.focus === type">
@@ -59,22 +59,22 @@
 									<!-- ko if: type === 'tags' -->
 										<div class="fc-w w-8 h-1 absolute abs-top flex just-center" data-bind="visible: entry.focus === type">
 											<div class="w-6 h-1 flex arounding">
-												<i class="bc-w fc-g flex centering w-1 h-hq fa fa-tag hover" data-bind="click: tagged.bind($data, $data.input.value)"></i>
+												<a class="bc-w fc-g flex centering w-1 h-hq fa fa-tag hover" data-bind="click: tagged.bind($data, $data.input.value)"></a>
 												<input class="w-5 h-hq less" type="text" placeholder="Input tag name" data-bind="value: input.value, event: { keyup: input.onKeyup.bind($data.input) }">
 											</div>
 										</div>
 										<div class="fc-w bc-b trans w-8 h-10 absolute abs-bottom" data-bind="visible: entry.focus === type, foreach: tags">
 											<div class="flex row-center left pr-q1">
-												<i class="fa fa-remove hover" data-bind="click: $parent.untagged.bind($parent, $data)"></i>
-												<div class="hover hover-g" data-bind="text: name, click: $root.searched2.bind($root, `from ${entry.getAttr('post').site.replace('posts/show/', '')} where tags in ${name}`)"></div>
+												<a class="fa fa-remove hover" data-bind="click: $parent.untagged.bind($parent, $data)"></a>
+												<div class="hover hover-g"><a data-bind="text: name, click: $root.searched2.bind($root, `from ${entry.getAttr('post').site.replace('posts/show/', '')} where tags in ${name}`)"></a></div>
 											</div>
 										</div>
 									<!-- /ko -->
 									<!-- ko if: type === 'files' -->
 										<div class="fc-w w-8 h-1 absolute abs-top flex just-center" data-bind="visible: entry.focus === type">
 											<div class="w-2 h-1 flex arounding">
-												<i class="wh-hq round-hq border flex centering hover fa" data-bind="click: loaded.bind($data, $parent.getAttr('post').href, $parent.getAttr('post').site), css: { 'fa-folder': state === 'closed', 'fa-folder-open': state === 'opened', 'fa-spin': state === 'loading', 'fa-refresh': state === 'loading' }"></i>
-												<i class="wh-hq round-hq border flex centering hover fa fa-cloud-download" data-bind="click: downloaded.bind($data, $parent), css: { 'fc-b': store === true }"></i>
+												<a class="wh-hq round-hq border flex centering hover fa" data-bind="click: loaded.bind($data, $parent.getAttr('post').href, $parent.getAttr('post').site), css: { 'fa-folder': state === 'closed', 'fa-folder-open': state === 'opened', 'fa-spin': state === 'loading', 'fa-refresh': state === 'loading' }"></a>
+												<a class="wh-hq round-hq border flex centering hover fa fa-cloud-download" data-bind="click: downloaded.bind($data, $parent), css: { 'fc-b': store === true }"></a>
 											</div>
 										</div>
 										<div class="fc-w bc-b trans w-8 h-10 absolute abs-bottom wrap scroll-y" data-bind="visible: entry.focus === type, foreach: entries">
@@ -94,16 +94,16 @@
 										</div>
 										<div class="fc-w w-8 h-1 absolute abs-top flex just-center">
 											<div class="w-3 h-1 flex arounding">
-												<i class="wh-hq round-hq border flex centering hover fa fa-search" data-bind="click: $root.searched2.bind($root, $data.querify)"></i>
-												<i class="wh-hq round-hq border flex centering hover fa fa-save" data-bind="click: saved"></i>
-												<i class="wh-hq round-hq border flex centering hover fa fa-trash" data-bind="click: deleted"></i>
+												<a class="wh-hq round-hq border flex centering hover fa fa-search" data-bind="click: $root.searched2.bind($root, $data.querify)"></a>
+												<a class="wh-hq round-hq border flex centering hover fa fa-save" data-bind="click: saved"></a>
+												<a class="wh-hq round-hq border flex centering hover fa fa-trash" data-bind="click: deleted"></a>
 											</div>
 										</div>
 										<div class="w-8 h-10 absolute abs-bottom">
 											<div class="w-8 h-9 wrap scroll-y scroll-hide">
 												<div class="w-8 h-1 flex centering"><span class="line-b-g">name</span></div>
 												<div class="w-8 h-hq flex centering"><i class="w-1 h-hq flex centering fa fa-key"></i><input class="w-7 h-hq less transparent" data-bind="value: name"></div>
-												<div class="w-8 h-1 flex centering"><span class="line-b-g">select</span><i class="w-1 h-1 flex centering fa fa-plus hover" data-bind="click: addedSelect"></i></div>
+												<div class="w-8 h-1 flex centering"><span class="line-b-g">select</span><a class="w-1 h-1 flex centering fa fa-plus hover" data-bind="click: addedSelect"></a></div>
 												<div class="w-8" data-bind="foreach: select">
 													<div class="w-8 h-hq flex centering">
 														<i class="w-1 h-hq flex centering fa" data-bind="css: { 'fa-question': /type$/.test(value), 'fa-globe': /uri$/.test(value), 'fa-link': /href$/.test(value), 'fa-file-image-o': /src$/.test(value), 'fa-pencil': /text$/.test(value), 'fa-clock-o': /date$/.test(value), 'fa-send': /site$/.test(value), 'fa-tags': /tags$/.test(value), 'fa-files-o': /files$/.test(value) }"></i>
@@ -114,10 +114,10 @@
 												<div class="w-8 h-hq flex centering"><i class="w-1 h-hq flex centering fa fa-cog"></i><input class="w-7 h-hq less transparent" data-bind="value: from.scheme"></div>
 												<div class="w-8 h-hq flex centering"><i class="w-1 h-hq flex centering fa fa-user"></i><input class="w-7 h-hq less transparent" data-bind="value: from.host"></div>
 												<div class="w-8 h-hq flex centering"><i class="w-1 h-hq flex centering fa fa-file-o"></i><input class="w-7 h-hq less transparent" data-bind="value: from.path"></div>
-												<div class="w-8 h-1 flex centering"><span class="line-b-g">from.queries</span><i class="w-1 h-1 flex centering fa fa-plus hover" data-bind="click: addedQuery"></i></div>
+												<div class="w-8 h-1 flex centering"><span class="line-b-g">from.queries</span><a class="w-1 h-1 flex centering fa fa-plus hover" data-bind="click: addedQuery"></a></div>
 												<div class="w-8" data-bind="foreach: from.queries">
 													<div class="w-8 h-hq flex centering">
-														<i class="w-1 h-hq flex centering fa fa-remove" data-bind="click: $parent.removedQuery.bind($parent, $data)"></i>
+														<a class="w-1 h-hq flex centering fa fa-remove" data-bind="click: $parent.removedQuery.bind($parent, $data)"></a>
 														<input class="w-7 h-hq less transparent" data-bind="value: value">
 													</div>
 												</div>
@@ -129,12 +129,12 @@
 								<!-- /ko -->
 								<!-- remove entry -->
 								<div class="w-1 h-1 absolute abs-top abs-right">
-									<i class="fc-w wh-1 flex centering fa fa-remove hover" data-bind="click: $root.entries.remove.bind($root.entries, entry)"></i>
+									<a class="fc-w wh-1 flex centering fa fa-remove hover" data-bind="click: $root.entries.remove.bind($root.entries, entry)"></a>
 								</div>
 								<!-- attr pager -->
 								<div class="w-8 h-1 absolute abs-bottom flex just-center">
 									<div class="fc-g w-3 h-1 flex arounding" data-bind="foreach: attrs">
-										<i class="wh-1 flex centering hover fa" data-bind="click: entry.focused.bind(entry, $data), css: { 'fa-dot-circle-o': entry.focus === type, 'fa-circle-o': entry.focus !== type }"></i>
+										<a class="wh-1 flex centering hover fa" data-bind="click: entry.focused.bind(entry, $data), css: { 'fa-dot-circle-o': entry.focus === type, 'fa-circle-o': entry.focus !== type }"></a>
 									</div>
 								</div>
 							</div>
@@ -148,7 +148,7 @@
 							<div class="w-1 fill-y grow-1">
 								<div class="w-2 h-1 grow-0 flex arounding">
 									<i class="wh-1 flex centering"><img src="image/favicon-w16.png"></i>
-									<i class="fc-w wh-1 flex centering font-3 fa fa-trash hover" data-bind="click: logger.clear.bind($data.logger)"></i>
+									<a class="fc-w wh-1 flex centering font-3 fa fa-trash hover" data-bind="click: logger.clear.bind($data.logger)"></a>
 								</div>
 							</div>
 						</div>
@@ -160,15 +160,15 @@
 			</div>
 			<!-- toolbar -->
 			<div class="bc-g w-1 fill-y grow-0">
-				<i class="fc-w wh-1 flex centering font-3 fa fa-globe hover" data-bind="css: { primary: focus === 'entry' }, click: focused.bind($data, 'entry')"></i>
-				<i class="fc-w wh-1 flex centering font-3 fa fa-commenting hover" data-bind="css: { primary: focus === 'log' }, click: focused.bind($data, 'log')"></i>
-				<i class="fc-w wh-1 flex centering font-3 fa" data-bind="css: { 'fa-wifi': wsObserver.connected === true, 'fa-warning': wsObserver.connected === false }"></i>
-				<i class="fc-w wh-1 flex centering font-3 fa" data-bind="css: webObserver.css"></i>
-				<i class="fc-w wh-1 flex centering font-3 fa fa-plus hover" data-bind="click: addedSite"></i>
-				<i class="fc-w wh-1 flex centering font-3 fa hover" data-bind="css: { 'fa-arrow-right': searcher.page.auto === true, 'fa-remove': searcher.page.auto === false }, click: searcher.toggleAutoPager.bind($data.searcher)"></i>
+				<a class="fc-w wh-1 flex centering font-3 fa fa-globe hover" data-bind="css: { primary: focus === 'entry' }, click: focused.bind($data, 'entry')"></a>
+				<a class="fc-w wh-1 flex centering font-3 fa fa-commenting hover" data-bind="css: { primary: focus === 'log' }, click: focused.bind($data, 'log')"></a>
+				<a class="fc-w wh-1 flex centering font-3 fa" data-bind="css: { 'fa-wifi': wsObserver.connected === true, 'fa-warning': wsObserver.connected === false }"></a>
+				<a class="fc-w wh-1 flex centering font-3 fa" data-bind="css: webObserver.css"></a>
+				<a class="fc-w wh-1 flex centering font-3 fa fa-plus hover" data-bind="click: addedSite"></a>
+				<a class="fc-w wh-1 flex centering font-3 fa hover" data-bind="css: { 'fa-arrow-right': searcher.page.auto === true, 'fa-remove': searcher.page.auto === false }, click: searcher.toggleAutoPager.bind($data.searcher)"></a>
 				<!-- ko if: focus === 'entry' -->
-					<i class="fc-w wh-1 flex centering font-3 fa fa-cloud-download hover" data-bind="click: entries.downloaded.bind($data.entries)"></i>
-					<i class="fc-w wh-1 flex centering font-3 fa fa-trash hover" data-bind="click: entries.cleared.bind($data.entries)"></i>
+					<a class="fc-w wh-1 flex centering font-3 fa fa-cloud-download hover" data-bind="click: entries.downloaded.bind($data.entries)"></a>
+					<a class="fc-w wh-1 flex centering font-3 fa fa-trash hover" data-bind="click: entries.cleared.bind($data.entries)"></a>
 				<!-- /ko -->
 			</div>
 		</div>
